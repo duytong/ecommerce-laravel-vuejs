@@ -16,3 +16,13 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+// Route::get('admin/{table}/{perPage}/search', 'Admin\ApiController@search');
+
+Route::group(['prefix' => 'admin'], function () {
+	Route::resource('users', 'Api\UserController', ['except' => ['index']]);
+	Route::get('users/index/{perPage}', 'Api\UserController@index')->name('users.index');
+	Route::resource('roles', 'Api\RoleController', ['except' => ['index']]);
+	Route::get('roles/index/{perPage}', 'Api\RoleController@index')->name('roles.index');
+});
