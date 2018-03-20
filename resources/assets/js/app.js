@@ -26,8 +26,8 @@ Vue.component('v-table', require('./components/Table.vue'));
 Vue.component('v-form', require('./components/Form.vue'));
 
 const app = new Vue({
-    el: '#app',
-    router
+	el: '#app',
+	router
 });
 
 router.afterEach(route => {
