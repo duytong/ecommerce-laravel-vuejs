@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -179,8 +179,8 @@ module.exports = function normalizeComponent (
 "use strict";
 
 
-var bind = __webpack_require__(7);
-var isBuffer = __webpack_require__(68);
+var bind = __webpack_require__(9);
+var isBuffer = __webpack_require__(69);
 
 /*global toString:true*/
 
@@ -511,479 +511,192 @@ module.exports = g;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
- * Toastr
- * Copyright 2012-2015
- * Authors: John Papa, Hans Fjällemark, and Tim Ferrell.
- * All Rights Reserved.
- * Use, reproduction, distribution, and modification of this code is subject to the terms and
- * conditions of the MIT license, available at http://www.opensource.org/licenses/mit-license.php
- *
- * ARIA Support: Greta Krafsig
- *
- * Project: https://github.com/CodeSeven/toastr
- */
-/* global define */
-(function (define) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(6)], __WEBPACK_AMD_DEFINE_RESULT__ = (function ($) {
-        return (function () {
-            var $container;
-            var listener;
-            var toastId = 0;
-            var toastType = {
-                error: 'error',
-                info: 'info',
-                success: 'success',
-                warning: 'warning'
-            };
+// shim for using process in browser
+var process = module.exports = {};
 
-            var toastr = {
-                clear: clear,
-                remove: remove,
-                error: error,
-                getContainer: getContainer,
-                info: info,
-                options: {},
-                subscribe: subscribe,
-                success: success,
-                version: '2.1.4',
-                warning: warning
-            };
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
 
-            var previousToast;
+var cachedSetTimeout;
+var cachedClearTimeout;
 
-            return toastr;
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
 
-            ////////////////
 
-            function error(message, title, optionsOverride) {
-                return notify({
-                    type: toastType.error,
-                    iconClass: getOptions().iconClasses.error,
-                    message: message,
-                    optionsOverride: optionsOverride,
-                    title: title
-                });
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
             }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
 
-            function getContainer(options, create) {
-                if (!options) { options = getOptions(); }
-                $container = $('#' + options.containerId);
-                if ($container.length) {
-                    return $container;
-                }
-                if (create) {
-                    $container = createContainer(options);
-                }
-                return $container;
-            }
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
 
-            function info(message, title, optionsOverride) {
-                return notify({
-                    type: toastType.info,
-                    iconClass: getOptions().iconClasses.info,
-                    message: message,
-                    optionsOverride: optionsOverride,
-                    title: title
-                });
-            }
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
 
-            function subscribe(callback) {
-                listener = callback;
-            }
+function noop() {}
 
-            function success(message, title, optionsOverride) {
-                return notify({
-                    type: toastType.success,
-                    iconClass: getOptions().iconClasses.success,
-                    message: message,
-                    optionsOverride: optionsOverride,
-                    title: title
-                });
-            }
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
 
-            function warning(message, title, optionsOverride) {
-                return notify({
-                    type: toastType.warning,
-                    iconClass: getOptions().iconClasses.warning,
-                    message: message,
-                    optionsOverride: optionsOverride,
-                    title: title
-                });
-            }
+process.listeners = function (name) { return [] }
 
-            function clear($toastElement, clearOptions) {
-                var options = getOptions();
-                if (!$container) { getContainer(options); }
-                if (!clearToast($toastElement, options, clearOptions)) {
-                    clearContainer(options);
-                }
-            }
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
 
-            function remove($toastElement) {
-                var options = getOptions();
-                if (!$container) { getContainer(options); }
-                if ($toastElement && $(':focus', $toastElement).length === 0) {
-                    removeToast($toastElement);
-                    return;
-                }
-                if ($container.children().length) {
-                    $container.remove();
-                }
-            }
-
-            // internal functions
-
-            function clearContainer (options) {
-                var toastsToClear = $container.children();
-                for (var i = toastsToClear.length - 1; i >= 0; i--) {
-                    clearToast($(toastsToClear[i]), options);
-                }
-            }
-
-            function clearToast ($toastElement, options, clearOptions) {
-                var force = clearOptions && clearOptions.force ? clearOptions.force : false;
-                if ($toastElement && (force || $(':focus', $toastElement).length === 0)) {
-                    $toastElement[options.hideMethod]({
-                        duration: options.hideDuration,
-                        easing: options.hideEasing,
-                        complete: function () { removeToast($toastElement); }
-                    });
-                    return true;
-                }
-                return false;
-            }
-
-            function createContainer(options) {
-                $container = $('<div/>')
-                    .attr('id', options.containerId)
-                    .addClass(options.positionClass);
-
-                $container.appendTo($(options.target));
-                return $container;
-            }
-
-            function getDefaults() {
-                return {
-                    tapToDismiss: true,
-                    toastClass: 'toast',
-                    containerId: 'toast-container',
-                    debug: false,
-
-                    showMethod: 'fadeIn', //fadeIn, slideDown, and show are built into jQuery
-                    showDuration: 300,
-                    showEasing: 'swing', //swing and linear are built into jQuery
-                    onShown: undefined,
-                    hideMethod: 'fadeOut',
-                    hideDuration: 1000,
-                    hideEasing: 'swing',
-                    onHidden: undefined,
-                    closeMethod: false,
-                    closeDuration: false,
-                    closeEasing: false,
-                    closeOnHover: true,
-
-                    extendedTimeOut: 1000,
-                    iconClasses: {
-                        error: 'toast-error',
-                        info: 'toast-info',
-                        success: 'toast-success',
-                        warning: 'toast-warning'
-                    },
-                    iconClass: 'toast-info',
-                    positionClass: 'toast-top-right',
-                    timeOut: 5000, // Set timeOut and extendedTimeOut to 0 to make it sticky
-                    titleClass: 'toast-title',
-                    messageClass: 'toast-message',
-                    escapeHtml: false,
-                    target: 'body',
-                    closeHtml: '<button type="button">&times;</button>',
-                    closeClass: 'toast-close-button',
-                    newestOnTop: true,
-                    preventDuplicates: false,
-                    progressBar: false,
-                    progressClass: 'toast-progress',
-                    rtl: false
-                };
-            }
-
-            function publish(args) {
-                if (!listener) { return; }
-                listener(args);
-            }
-
-            function notify(map) {
-                var options = getOptions();
-                var iconClass = map.iconClass || options.iconClass;
-
-                if (typeof (map.optionsOverride) !== 'undefined') {
-                    options = $.extend(options, map.optionsOverride);
-                    iconClass = map.optionsOverride.iconClass || iconClass;
-                }
-
-                if (shouldExit(options, map)) { return; }
-
-                toastId++;
-
-                $container = getContainer(options, true);
-
-                var intervalId = null;
-                var $toastElement = $('<div/>');
-                var $titleElement = $('<div/>');
-                var $messageElement = $('<div/>');
-                var $progressElement = $('<div/>');
-                var $closeElement = $(options.closeHtml);
-                var progressBar = {
-                    intervalId: null,
-                    hideEta: null,
-                    maxHideTime: null
-                };
-                var response = {
-                    toastId: toastId,
-                    state: 'visible',
-                    startTime: new Date(),
-                    options: options,
-                    map: map
-                };
-
-                personalizeToast();
-
-                displayToast();
-
-                handleEvents();
-
-                publish(response);
-
-                if (options.debug && console) {
-                    console.log(response);
-                }
-
-                return $toastElement;
-
-                function escapeHtml(source) {
-                    if (source == null) {
-                        source = '';
-                    }
-
-                    return source
-                        .replace(/&/g, '&amp;')
-                        .replace(/"/g, '&quot;')
-                        .replace(/'/g, '&#39;')
-                        .replace(/</g, '&lt;')
-                        .replace(/>/g, '&gt;');
-                }
-
-                function personalizeToast() {
-                    setIcon();
-                    setTitle();
-                    setMessage();
-                    setCloseButton();
-                    setProgressBar();
-                    setRTL();
-                    setSequence();
-                    setAria();
-                }
-
-                function setAria() {
-                    var ariaValue = '';
-                    switch (map.iconClass) {
-                        case 'toast-success':
-                        case 'toast-info':
-                            ariaValue =  'polite';
-                            break;
-                        default:
-                            ariaValue = 'assertive';
-                    }
-                    $toastElement.attr('aria-live', ariaValue);
-                }
-
-                function handleEvents() {
-                    if (options.closeOnHover) {
-                        $toastElement.hover(stickAround, delayedHideToast);
-                    }
-
-                    if (!options.onclick && options.tapToDismiss) {
-                        $toastElement.click(hideToast);
-                    }
-
-                    if (options.closeButton && $closeElement) {
-                        $closeElement.click(function (event) {
-                            if (event.stopPropagation) {
-                                event.stopPropagation();
-                            } else if (event.cancelBubble !== undefined && event.cancelBubble !== true) {
-                                event.cancelBubble = true;
-                            }
-
-                            if (options.onCloseClick) {
-                                options.onCloseClick(event);
-                            }
-
-                            hideToast(true);
-                        });
-                    }
-
-                    if (options.onclick) {
-                        $toastElement.click(function (event) {
-                            options.onclick(event);
-                            hideToast();
-                        });
-                    }
-                }
-
-                function displayToast() {
-                    $toastElement.hide();
-
-                    $toastElement[options.showMethod](
-                        {duration: options.showDuration, easing: options.showEasing, complete: options.onShown}
-                    );
-
-                    if (options.timeOut > 0) {
-                        intervalId = setTimeout(hideToast, options.timeOut);
-                        progressBar.maxHideTime = parseFloat(options.timeOut);
-                        progressBar.hideEta = new Date().getTime() + progressBar.maxHideTime;
-                        if (options.progressBar) {
-                            progressBar.intervalId = setInterval(updateProgress, 10);
-                        }
-                    }
-                }
-
-                function setIcon() {
-                    if (map.iconClass) {
-                        $toastElement.addClass(options.toastClass).addClass(iconClass);
-                    }
-                }
-
-                function setSequence() {
-                    if (options.newestOnTop) {
-                        $container.prepend($toastElement);
-                    } else {
-                        $container.append($toastElement);
-                    }
-                }
-
-                function setTitle() {
-                    if (map.title) {
-                        var suffix = map.title;
-                        if (options.escapeHtml) {
-                            suffix = escapeHtml(map.title);
-                        }
-                        $titleElement.append(suffix).addClass(options.titleClass);
-                        $toastElement.append($titleElement);
-                    }
-                }
-
-                function setMessage() {
-                    if (map.message) {
-                        var suffix = map.message;
-                        if (options.escapeHtml) {
-                            suffix = escapeHtml(map.message);
-                        }
-                        $messageElement.append(suffix).addClass(options.messageClass);
-                        $toastElement.append($messageElement);
-                    }
-                }
-
-                function setCloseButton() {
-                    if (options.closeButton) {
-                        $closeElement.addClass(options.closeClass).attr('role', 'button');
-                        $toastElement.prepend($closeElement);
-                    }
-                }
-
-                function setProgressBar() {
-                    if (options.progressBar) {
-                        $progressElement.addClass(options.progressClass);
-                        $toastElement.prepend($progressElement);
-                    }
-                }
-
-                function setRTL() {
-                    if (options.rtl) {
-                        $toastElement.addClass('rtl');
-                    }
-                }
-
-                function shouldExit(options, map) {
-                    if (options.preventDuplicates) {
-                        if (map.message === previousToast) {
-                            return true;
-                        } else {
-                            previousToast = map.message;
-                        }
-                    }
-                    return false;
-                }
-
-                function hideToast(override) {
-                    var method = override && options.closeMethod !== false ? options.closeMethod : options.hideMethod;
-                    var duration = override && options.closeDuration !== false ?
-                        options.closeDuration : options.hideDuration;
-                    var easing = override && options.closeEasing !== false ? options.closeEasing : options.hideEasing;
-                    if ($(':focus', $toastElement).length && !override) {
-                        return;
-                    }
-                    clearTimeout(progressBar.intervalId);
-                    return $toastElement[method]({
-                        duration: duration,
-                        easing: easing,
-                        complete: function () {
-                            removeToast($toastElement);
-                            clearTimeout(intervalId);
-                            if (options.onHidden && response.state !== 'hidden') {
-                                options.onHidden();
-                            }
-                            response.state = 'hidden';
-                            response.endTime = new Date();
-                            publish(response);
-                        }
-                    });
-                }
-
-                function delayedHideToast() {
-                    if (options.timeOut > 0 || options.extendedTimeOut > 0) {
-                        intervalId = setTimeout(hideToast, options.extendedTimeOut);
-                        progressBar.maxHideTime = parseFloat(options.extendedTimeOut);
-                        progressBar.hideEta = new Date().getTime() + progressBar.maxHideTime;
-                    }
-                }
-
-                function stickAround() {
-                    clearTimeout(intervalId);
-                    progressBar.hideEta = 0;
-                    $toastElement.stop(true, true)[options.showMethod](
-                        {duration: options.showDuration, easing: options.showEasing}
-                    );
-                }
-
-                function updateProgress() {
-                    var percentage = ((progressBar.hideEta - (new Date().getTime())) / progressBar.maxHideTime) * 100;
-                    $progressElement.width(percentage + '%');
-                }
-            }
-
-            function getOptions() {
-                return $.extend({}, getDefaults(), toastr.options);
-            }
-
-            function removeToast($toastElement) {
-                if (!$container) { $container = getContainer(); }
-                if ($toastElement.is(':visible')) {
-                    return;
-                }
-                $toastElement.remove();
-                $toastElement = null;
-                if ($container.children().length === 0) {
-                    $container.remove();
-                    previousToast = undefined;
-                }
-            }
-
-        })();
-    }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-}(__webpack_require__(26)));
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
 
 
 /***/ }),
@@ -994,7 +707,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(1);
-var normalizeHeaderName = __webpack_require__(70);
+var normalizeHeaderName = __webpack_require__(71);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -1010,10 +723,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(9);
+    adapter = __webpack_require__(10);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(9);
+    adapter = __webpack_require__(10);
   }
   return adapter;
 }
@@ -1088,7 +801,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 5 */
@@ -3722,6 +3435,530 @@ if (inBrowser && window.Vue) {
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(26)
+/* template */
+var __vue_template__ = __webpack_require__(28)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\User\\Form.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-08b0366e", Component.options)
+  } else {
+    hotAPI.reload("data-v-08b0366e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+ * Toastr
+ * Copyright 2012-2015
+ * Authors: John Papa, Hans Fjällemark, and Tim Ferrell.
+ * All Rights Reserved.
+ * Use, reproduction, distribution, and modification of this code is subject to the terms and
+ * conditions of the MIT license, available at http://www.opensource.org/licenses/mit-license.php
+ *
+ * ARIA Support: Greta Krafsig
+ *
+ * Project: https://github.com/CodeSeven/toastr
+ */
+/* global define */
+(function (define) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(8)], __WEBPACK_AMD_DEFINE_RESULT__ = (function ($) {
+        return (function () {
+            var $container;
+            var listener;
+            var toastId = 0;
+            var toastType = {
+                error: 'error',
+                info: 'info',
+                success: 'success',
+                warning: 'warning'
+            };
+
+            var toastr = {
+                clear: clear,
+                remove: remove,
+                error: error,
+                getContainer: getContainer,
+                info: info,
+                options: {},
+                subscribe: subscribe,
+                success: success,
+                version: '2.1.4',
+                warning: warning
+            };
+
+            var previousToast;
+
+            return toastr;
+
+            ////////////////
+
+            function error(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.error,
+                    iconClass: getOptions().iconClasses.error,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function getContainer(options, create) {
+                if (!options) { options = getOptions(); }
+                $container = $('#' + options.containerId);
+                if ($container.length) {
+                    return $container;
+                }
+                if (create) {
+                    $container = createContainer(options);
+                }
+                return $container;
+            }
+
+            function info(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.info,
+                    iconClass: getOptions().iconClasses.info,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function subscribe(callback) {
+                listener = callback;
+            }
+
+            function success(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.success,
+                    iconClass: getOptions().iconClasses.success,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function warning(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.warning,
+                    iconClass: getOptions().iconClasses.warning,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function clear($toastElement, clearOptions) {
+                var options = getOptions();
+                if (!$container) { getContainer(options); }
+                if (!clearToast($toastElement, options, clearOptions)) {
+                    clearContainer(options);
+                }
+            }
+
+            function remove($toastElement) {
+                var options = getOptions();
+                if (!$container) { getContainer(options); }
+                if ($toastElement && $(':focus', $toastElement).length === 0) {
+                    removeToast($toastElement);
+                    return;
+                }
+                if ($container.children().length) {
+                    $container.remove();
+                }
+            }
+
+            // internal functions
+
+            function clearContainer (options) {
+                var toastsToClear = $container.children();
+                for (var i = toastsToClear.length - 1; i >= 0; i--) {
+                    clearToast($(toastsToClear[i]), options);
+                }
+            }
+
+            function clearToast ($toastElement, options, clearOptions) {
+                var force = clearOptions && clearOptions.force ? clearOptions.force : false;
+                if ($toastElement && (force || $(':focus', $toastElement).length === 0)) {
+                    $toastElement[options.hideMethod]({
+                        duration: options.hideDuration,
+                        easing: options.hideEasing,
+                        complete: function () { removeToast($toastElement); }
+                    });
+                    return true;
+                }
+                return false;
+            }
+
+            function createContainer(options) {
+                $container = $('<div/>')
+                    .attr('id', options.containerId)
+                    .addClass(options.positionClass);
+
+                $container.appendTo($(options.target));
+                return $container;
+            }
+
+            function getDefaults() {
+                return {
+                    tapToDismiss: true,
+                    toastClass: 'toast',
+                    containerId: 'toast-container',
+                    debug: false,
+
+                    showMethod: 'fadeIn', //fadeIn, slideDown, and show are built into jQuery
+                    showDuration: 300,
+                    showEasing: 'swing', //swing and linear are built into jQuery
+                    onShown: undefined,
+                    hideMethod: 'fadeOut',
+                    hideDuration: 1000,
+                    hideEasing: 'swing',
+                    onHidden: undefined,
+                    closeMethod: false,
+                    closeDuration: false,
+                    closeEasing: false,
+                    closeOnHover: true,
+
+                    extendedTimeOut: 1000,
+                    iconClasses: {
+                        error: 'toast-error',
+                        info: 'toast-info',
+                        success: 'toast-success',
+                        warning: 'toast-warning'
+                    },
+                    iconClass: 'toast-info',
+                    positionClass: 'toast-top-right',
+                    timeOut: 5000, // Set timeOut and extendedTimeOut to 0 to make it sticky
+                    titleClass: 'toast-title',
+                    messageClass: 'toast-message',
+                    escapeHtml: false,
+                    target: 'body',
+                    closeHtml: '<button type="button">&times;</button>',
+                    closeClass: 'toast-close-button',
+                    newestOnTop: true,
+                    preventDuplicates: false,
+                    progressBar: false,
+                    progressClass: 'toast-progress',
+                    rtl: false
+                };
+            }
+
+            function publish(args) {
+                if (!listener) { return; }
+                listener(args);
+            }
+
+            function notify(map) {
+                var options = getOptions();
+                var iconClass = map.iconClass || options.iconClass;
+
+                if (typeof (map.optionsOverride) !== 'undefined') {
+                    options = $.extend(options, map.optionsOverride);
+                    iconClass = map.optionsOverride.iconClass || iconClass;
+                }
+
+                if (shouldExit(options, map)) { return; }
+
+                toastId++;
+
+                $container = getContainer(options, true);
+
+                var intervalId = null;
+                var $toastElement = $('<div/>');
+                var $titleElement = $('<div/>');
+                var $messageElement = $('<div/>');
+                var $progressElement = $('<div/>');
+                var $closeElement = $(options.closeHtml);
+                var progressBar = {
+                    intervalId: null,
+                    hideEta: null,
+                    maxHideTime: null
+                };
+                var response = {
+                    toastId: toastId,
+                    state: 'visible',
+                    startTime: new Date(),
+                    options: options,
+                    map: map
+                };
+
+                personalizeToast();
+
+                displayToast();
+
+                handleEvents();
+
+                publish(response);
+
+                if (options.debug && console) {
+                    console.log(response);
+                }
+
+                return $toastElement;
+
+                function escapeHtml(source) {
+                    if (source == null) {
+                        source = '';
+                    }
+
+                    return source
+                        .replace(/&/g, '&amp;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                }
+
+                function personalizeToast() {
+                    setIcon();
+                    setTitle();
+                    setMessage();
+                    setCloseButton();
+                    setProgressBar();
+                    setRTL();
+                    setSequence();
+                    setAria();
+                }
+
+                function setAria() {
+                    var ariaValue = '';
+                    switch (map.iconClass) {
+                        case 'toast-success':
+                        case 'toast-info':
+                            ariaValue =  'polite';
+                            break;
+                        default:
+                            ariaValue = 'assertive';
+                    }
+                    $toastElement.attr('aria-live', ariaValue);
+                }
+
+                function handleEvents() {
+                    if (options.closeOnHover) {
+                        $toastElement.hover(stickAround, delayedHideToast);
+                    }
+
+                    if (!options.onclick && options.tapToDismiss) {
+                        $toastElement.click(hideToast);
+                    }
+
+                    if (options.closeButton && $closeElement) {
+                        $closeElement.click(function (event) {
+                            if (event.stopPropagation) {
+                                event.stopPropagation();
+                            } else if (event.cancelBubble !== undefined && event.cancelBubble !== true) {
+                                event.cancelBubble = true;
+                            }
+
+                            if (options.onCloseClick) {
+                                options.onCloseClick(event);
+                            }
+
+                            hideToast(true);
+                        });
+                    }
+
+                    if (options.onclick) {
+                        $toastElement.click(function (event) {
+                            options.onclick(event);
+                            hideToast();
+                        });
+                    }
+                }
+
+                function displayToast() {
+                    $toastElement.hide();
+
+                    $toastElement[options.showMethod](
+                        {duration: options.showDuration, easing: options.showEasing, complete: options.onShown}
+                    );
+
+                    if (options.timeOut > 0) {
+                        intervalId = setTimeout(hideToast, options.timeOut);
+                        progressBar.maxHideTime = parseFloat(options.timeOut);
+                        progressBar.hideEta = new Date().getTime() + progressBar.maxHideTime;
+                        if (options.progressBar) {
+                            progressBar.intervalId = setInterval(updateProgress, 10);
+                        }
+                    }
+                }
+
+                function setIcon() {
+                    if (map.iconClass) {
+                        $toastElement.addClass(options.toastClass).addClass(iconClass);
+                    }
+                }
+
+                function setSequence() {
+                    if (options.newestOnTop) {
+                        $container.prepend($toastElement);
+                    } else {
+                        $container.append($toastElement);
+                    }
+                }
+
+                function setTitle() {
+                    if (map.title) {
+                        var suffix = map.title;
+                        if (options.escapeHtml) {
+                            suffix = escapeHtml(map.title);
+                        }
+                        $titleElement.append(suffix).addClass(options.titleClass);
+                        $toastElement.append($titleElement);
+                    }
+                }
+
+                function setMessage() {
+                    if (map.message) {
+                        var suffix = map.message;
+                        if (options.escapeHtml) {
+                            suffix = escapeHtml(map.message);
+                        }
+                        $messageElement.append(suffix).addClass(options.messageClass);
+                        $toastElement.append($messageElement);
+                    }
+                }
+
+                function setCloseButton() {
+                    if (options.closeButton) {
+                        $closeElement.addClass(options.closeClass).attr('role', 'button');
+                        $toastElement.prepend($closeElement);
+                    }
+                }
+
+                function setProgressBar() {
+                    if (options.progressBar) {
+                        $progressElement.addClass(options.progressClass);
+                        $toastElement.prepend($progressElement);
+                    }
+                }
+
+                function setRTL() {
+                    if (options.rtl) {
+                        $toastElement.addClass('rtl');
+                    }
+                }
+
+                function shouldExit(options, map) {
+                    if (options.preventDuplicates) {
+                        if (map.message === previousToast) {
+                            return true;
+                        } else {
+                            previousToast = map.message;
+                        }
+                    }
+                    return false;
+                }
+
+                function hideToast(override) {
+                    var method = override && options.closeMethod !== false ? options.closeMethod : options.hideMethod;
+                    var duration = override && options.closeDuration !== false ?
+                        options.closeDuration : options.hideDuration;
+                    var easing = override && options.closeEasing !== false ? options.closeEasing : options.hideEasing;
+                    if ($(':focus', $toastElement).length && !override) {
+                        return;
+                    }
+                    clearTimeout(progressBar.intervalId);
+                    return $toastElement[method]({
+                        duration: duration,
+                        easing: easing,
+                        complete: function () {
+                            removeToast($toastElement);
+                            clearTimeout(intervalId);
+                            if (options.onHidden && response.state !== 'hidden') {
+                                options.onHidden();
+                            }
+                            response.state = 'hidden';
+                            response.endTime = new Date();
+                            publish(response);
+                        }
+                    });
+                }
+
+                function delayedHideToast() {
+                    if (options.timeOut > 0 || options.extendedTimeOut > 0) {
+                        intervalId = setTimeout(hideToast, options.extendedTimeOut);
+                        progressBar.maxHideTime = parseFloat(options.extendedTimeOut);
+                        progressBar.hideEta = new Date().getTime() + progressBar.maxHideTime;
+                    }
+                }
+
+                function stickAround() {
+                    clearTimeout(intervalId);
+                    progressBar.hideEta = 0;
+                    $toastElement.stop(true, true)[options.showMethod](
+                        {duration: options.showDuration, easing: options.showEasing}
+                    );
+                }
+
+                function updateProgress() {
+                    var percentage = ((progressBar.hideEta - (new Date().getTime())) / progressBar.maxHideTime) * 100;
+                    $progressElement.width(percentage + '%');
+                }
+            }
+
+            function getOptions() {
+                return $.extend({}, getDefaults(), toastr.options);
+            }
+
+            function removeToast($toastElement) {
+                if (!$container) { $container = getContainer(); }
+                if ($toastElement.is(':visible')) {
+                    return;
+                }
+                $toastElement.remove();
+                $toastElement = null;
+                if ($container.children().length === 0) {
+                    $container.remove();
+                    previousToast = undefined;
+                }
+            }
+
+        })();
+    }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+}(__webpack_require__(27)));
+
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -14092,7 +14329,7 @@ return jQuery;
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14110,209 +14347,19 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(1);
-var settle = __webpack_require__(71);
-var buildURL = __webpack_require__(73);
-var parseHeaders = __webpack_require__(74);
-var isURLSameOrigin = __webpack_require__(75);
-var createError = __webpack_require__(10);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(76);
+var settle = __webpack_require__(72);
+var buildURL = __webpack_require__(74);
+var parseHeaders = __webpack_require__(75);
+var isURLSameOrigin = __webpack_require__(76);
+var createError = __webpack_require__(11);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(77);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -14409,7 +14456,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(77);
+      var cookies = __webpack_require__(78);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -14487,13 +14534,13 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(72);
+var enhanceError = __webpack_require__(73);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -14512,7 +14559,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14524,7 +14571,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14550,23 +14597,23 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(14);
+__webpack_require__(15);
 __webpack_require__(103);
 module.exports = __webpack_require__(104);
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_router__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vee_validate__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vee_validate__ = __webpack_require__(63);
 
 
 
@@ -14577,9 +14624,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(63);
+__webpack_require__(64);
+__webpack_require__(16).polyfill();
 
-window.Vue = __webpack_require__(85);
+window.Vue = __webpack_require__(86);
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 Vue.use(__WEBPACK_IMPORTED_MODULE_2_vee_validate__["a" /* default */]);
@@ -14590,9 +14638,9 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_2_vee_validate__["a" /* default */]);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('breadcrumb', __webpack_require__(88));
-Vue.component('v-table', __webpack_require__(91));
-Vue.component('v-form', __webpack_require__(100));
+Vue.component('breadcrumb', __webpack_require__(89));
+Vue.component('v-table', __webpack_require__(92));
+Vue.component('v-form', __webpack_require__(101));
 
 var app = new Vue({
   el: '#app',
@@ -14604,7 +14652,1193 @@ __WEBPACK_IMPORTED_MODULE_1__routes__["a" /* default */].afterEach(function (rou
 });
 
 /***/ }),
-/* 15 */
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process, global) {/*!
+ * @overview es6-promise - a tiny implementation of Promises/A+.
+ * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
+ * @license   Licensed under MIT license
+ *            See https://raw.githubusercontent.com/stefanpenner/es6-promise/master/LICENSE
+ * @version   v4.2.4+314e4831
+ */
+
+(function (global, factory) {
+	 true ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.ES6Promise = factory());
+}(this, (function () { 'use strict';
+
+function objectOrFunction(x) {
+  var type = typeof x;
+  return x !== null && (type === 'object' || type === 'function');
+}
+
+function isFunction(x) {
+  return typeof x === 'function';
+}
+
+
+
+var _isArray = void 0;
+if (Array.isArray) {
+  _isArray = Array.isArray;
+} else {
+  _isArray = function (x) {
+    return Object.prototype.toString.call(x) === '[object Array]';
+  };
+}
+
+var isArray = _isArray;
+
+var len = 0;
+var vertxNext = void 0;
+var customSchedulerFn = void 0;
+
+var asap = function asap(callback, arg) {
+  queue[len] = callback;
+  queue[len + 1] = arg;
+  len += 2;
+  if (len === 2) {
+    // If len is 2, that means that we need to schedule an async flush.
+    // If additional callbacks are queued before the queue is flushed, they
+    // will be processed by this flush that we are scheduling.
+    if (customSchedulerFn) {
+      customSchedulerFn(flush);
+    } else {
+      scheduleFlush();
+    }
+  }
+};
+
+function setScheduler(scheduleFn) {
+  customSchedulerFn = scheduleFn;
+}
+
+function setAsap(asapFn) {
+  asap = asapFn;
+}
+
+var browserWindow = typeof window !== 'undefined' ? window : undefined;
+var browserGlobal = browserWindow || {};
+var BrowserMutationObserver = browserGlobal.MutationObserver || browserGlobal.WebKitMutationObserver;
+var isNode = typeof self === 'undefined' && typeof process !== 'undefined' && {}.toString.call(process) === '[object process]';
+
+// test for web worker but not in IE10
+var isWorker = typeof Uint8ClampedArray !== 'undefined' && typeof importScripts !== 'undefined' && typeof MessageChannel !== 'undefined';
+
+// node
+function useNextTick() {
+  // node version 0.10.x displays a deprecation warning when nextTick is used recursively
+  // see https://github.com/cujojs/when/issues/410 for details
+  return function () {
+    return process.nextTick(flush);
+  };
+}
+
+// vertx
+function useVertxTimer() {
+  if (typeof vertxNext !== 'undefined') {
+    return function () {
+      vertxNext(flush);
+    };
+  }
+
+  return useSetTimeout();
+}
+
+function useMutationObserver() {
+  var iterations = 0;
+  var observer = new BrowserMutationObserver(flush);
+  var node = document.createTextNode('');
+  observer.observe(node, { characterData: true });
+
+  return function () {
+    node.data = iterations = ++iterations % 2;
+  };
+}
+
+// web worker
+function useMessageChannel() {
+  var channel = new MessageChannel();
+  channel.port1.onmessage = flush;
+  return function () {
+    return channel.port2.postMessage(0);
+  };
+}
+
+function useSetTimeout() {
+  // Store setTimeout reference so es6-promise will be unaffected by
+  // other code modifying setTimeout (like sinon.useFakeTimers())
+  var globalSetTimeout = setTimeout;
+  return function () {
+    return globalSetTimeout(flush, 1);
+  };
+}
+
+var queue = new Array(1000);
+function flush() {
+  for (var i = 0; i < len; i += 2) {
+    var callback = queue[i];
+    var arg = queue[i + 1];
+
+    callback(arg);
+
+    queue[i] = undefined;
+    queue[i + 1] = undefined;
+  }
+
+  len = 0;
+}
+
+function attemptVertx() {
+  try {
+    var vertx = Function('return this')().require('vertx');
+    vertxNext = vertx.runOnLoop || vertx.runOnContext;
+    return useVertxTimer();
+  } catch (e) {
+    return useSetTimeout();
+  }
+}
+
+var scheduleFlush = void 0;
+// Decide what async method to use to triggering processing of queued callbacks:
+if (isNode) {
+  scheduleFlush = useNextTick();
+} else if (BrowserMutationObserver) {
+  scheduleFlush = useMutationObserver();
+} else if (isWorker) {
+  scheduleFlush = useMessageChannel();
+} else if (browserWindow === undefined && "function" === 'function') {
+  scheduleFlush = attemptVertx();
+} else {
+  scheduleFlush = useSetTimeout();
+}
+
+function then(onFulfillment, onRejection) {
+  var parent = this;
+
+  var child = new this.constructor(noop);
+
+  if (child[PROMISE_ID] === undefined) {
+    makePromise(child);
+  }
+
+  var _state = parent._state;
+
+
+  if (_state) {
+    var callback = arguments[_state - 1];
+    asap(function () {
+      return invokeCallback(_state, child, callback, parent._result);
+    });
+  } else {
+    subscribe(parent, child, onFulfillment, onRejection);
+  }
+
+  return child;
+}
+
+/**
+  `Promise.resolve` returns a promise that will become resolved with the
+  passed `value`. It is shorthand for the following:
+
+  ```javascript
+  let promise = new Promise(function(resolve, reject){
+    resolve(1);
+  });
+
+  promise.then(function(value){
+    // value === 1
+  });
+  ```
+
+  Instead of writing the above, your code now simply becomes the following:
+
+  ```javascript
+  let promise = Promise.resolve(1);
+
+  promise.then(function(value){
+    // value === 1
+  });
+  ```
+
+  @method resolve
+  @static
+  @param {Any} value value that the returned promise will be resolved with
+  Useful for tooling.
+  @return {Promise} a promise that will become fulfilled with the given
+  `value`
+*/
+function resolve$1(object) {
+  /*jshint validthis:true */
+  var Constructor = this;
+
+  if (object && typeof object === 'object' && object.constructor === Constructor) {
+    return object;
+  }
+
+  var promise = new Constructor(noop);
+  resolve(promise, object);
+  return promise;
+}
+
+var PROMISE_ID = Math.random().toString(36).substring(2);
+
+function noop() {}
+
+var PENDING = void 0;
+var FULFILLED = 1;
+var REJECTED = 2;
+
+var TRY_CATCH_ERROR = { error: null };
+
+function selfFulfillment() {
+  return new TypeError("You cannot resolve a promise with itself");
+}
+
+function cannotReturnOwn() {
+  return new TypeError('A promises callback cannot return that same promise.');
+}
+
+function getThen(promise) {
+  try {
+    return promise.then;
+  } catch (error) {
+    TRY_CATCH_ERROR.error = error;
+    return TRY_CATCH_ERROR;
+  }
+}
+
+function tryThen(then$$1, value, fulfillmentHandler, rejectionHandler) {
+  try {
+    then$$1.call(value, fulfillmentHandler, rejectionHandler);
+  } catch (e) {
+    return e;
+  }
+}
+
+function handleForeignThenable(promise, thenable, then$$1) {
+  asap(function (promise) {
+    var sealed = false;
+    var error = tryThen(then$$1, thenable, function (value) {
+      if (sealed) {
+        return;
+      }
+      sealed = true;
+      if (thenable !== value) {
+        resolve(promise, value);
+      } else {
+        fulfill(promise, value);
+      }
+    }, function (reason) {
+      if (sealed) {
+        return;
+      }
+      sealed = true;
+
+      reject(promise, reason);
+    }, 'Settle: ' + (promise._label || ' unknown promise'));
+
+    if (!sealed && error) {
+      sealed = true;
+      reject(promise, error);
+    }
+  }, promise);
+}
+
+function handleOwnThenable(promise, thenable) {
+  if (thenable._state === FULFILLED) {
+    fulfill(promise, thenable._result);
+  } else if (thenable._state === REJECTED) {
+    reject(promise, thenable._result);
+  } else {
+    subscribe(thenable, undefined, function (value) {
+      return resolve(promise, value);
+    }, function (reason) {
+      return reject(promise, reason);
+    });
+  }
+}
+
+function handleMaybeThenable(promise, maybeThenable, then$$1) {
+  if (maybeThenable.constructor === promise.constructor && then$$1 === then && maybeThenable.constructor.resolve === resolve$1) {
+    handleOwnThenable(promise, maybeThenable);
+  } else {
+    if (then$$1 === TRY_CATCH_ERROR) {
+      reject(promise, TRY_CATCH_ERROR.error);
+      TRY_CATCH_ERROR.error = null;
+    } else if (then$$1 === undefined) {
+      fulfill(promise, maybeThenable);
+    } else if (isFunction(then$$1)) {
+      handleForeignThenable(promise, maybeThenable, then$$1);
+    } else {
+      fulfill(promise, maybeThenable);
+    }
+  }
+}
+
+function resolve(promise, value) {
+  if (promise === value) {
+    reject(promise, selfFulfillment());
+  } else if (objectOrFunction(value)) {
+    handleMaybeThenable(promise, value, getThen(value));
+  } else {
+    fulfill(promise, value);
+  }
+}
+
+function publishRejection(promise) {
+  if (promise._onerror) {
+    promise._onerror(promise._result);
+  }
+
+  publish(promise);
+}
+
+function fulfill(promise, value) {
+  if (promise._state !== PENDING) {
+    return;
+  }
+
+  promise._result = value;
+  promise._state = FULFILLED;
+
+  if (promise._subscribers.length !== 0) {
+    asap(publish, promise);
+  }
+}
+
+function reject(promise, reason) {
+  if (promise._state !== PENDING) {
+    return;
+  }
+  promise._state = REJECTED;
+  promise._result = reason;
+
+  asap(publishRejection, promise);
+}
+
+function subscribe(parent, child, onFulfillment, onRejection) {
+  var _subscribers = parent._subscribers;
+  var length = _subscribers.length;
+
+
+  parent._onerror = null;
+
+  _subscribers[length] = child;
+  _subscribers[length + FULFILLED] = onFulfillment;
+  _subscribers[length + REJECTED] = onRejection;
+
+  if (length === 0 && parent._state) {
+    asap(publish, parent);
+  }
+}
+
+function publish(promise) {
+  var subscribers = promise._subscribers;
+  var settled = promise._state;
+
+  if (subscribers.length === 0) {
+    return;
+  }
+
+  var child = void 0,
+      callback = void 0,
+      detail = promise._result;
+
+  for (var i = 0; i < subscribers.length; i += 3) {
+    child = subscribers[i];
+    callback = subscribers[i + settled];
+
+    if (child) {
+      invokeCallback(settled, child, callback, detail);
+    } else {
+      callback(detail);
+    }
+  }
+
+  promise._subscribers.length = 0;
+}
+
+function tryCatch(callback, detail) {
+  try {
+    return callback(detail);
+  } catch (e) {
+    TRY_CATCH_ERROR.error = e;
+    return TRY_CATCH_ERROR;
+  }
+}
+
+function invokeCallback(settled, promise, callback, detail) {
+  var hasCallback = isFunction(callback),
+      value = void 0,
+      error = void 0,
+      succeeded = void 0,
+      failed = void 0;
+
+  if (hasCallback) {
+    value = tryCatch(callback, detail);
+
+    if (value === TRY_CATCH_ERROR) {
+      failed = true;
+      error = value.error;
+      value.error = null;
+    } else {
+      succeeded = true;
+    }
+
+    if (promise === value) {
+      reject(promise, cannotReturnOwn());
+      return;
+    }
+  } else {
+    value = detail;
+    succeeded = true;
+  }
+
+  if (promise._state !== PENDING) {
+    // noop
+  } else if (hasCallback && succeeded) {
+    resolve(promise, value);
+  } else if (failed) {
+    reject(promise, error);
+  } else if (settled === FULFILLED) {
+    fulfill(promise, value);
+  } else if (settled === REJECTED) {
+    reject(promise, value);
+  }
+}
+
+function initializePromise(promise, resolver) {
+  try {
+    resolver(function resolvePromise(value) {
+      resolve(promise, value);
+    }, function rejectPromise(reason) {
+      reject(promise, reason);
+    });
+  } catch (e) {
+    reject(promise, e);
+  }
+}
+
+var id = 0;
+function nextId() {
+  return id++;
+}
+
+function makePromise(promise) {
+  promise[PROMISE_ID] = id++;
+  promise._state = undefined;
+  promise._result = undefined;
+  promise._subscribers = [];
+}
+
+function validationError() {
+  return new Error('Array Methods must be provided an Array');
+}
+
+var Enumerator = function () {
+  function Enumerator(Constructor, input) {
+    this._instanceConstructor = Constructor;
+    this.promise = new Constructor(noop);
+
+    if (!this.promise[PROMISE_ID]) {
+      makePromise(this.promise);
+    }
+
+    if (isArray(input)) {
+      this.length = input.length;
+      this._remaining = input.length;
+
+      this._result = new Array(this.length);
+
+      if (this.length === 0) {
+        fulfill(this.promise, this._result);
+      } else {
+        this.length = this.length || 0;
+        this._enumerate(input);
+        if (this._remaining === 0) {
+          fulfill(this.promise, this._result);
+        }
+      }
+    } else {
+      reject(this.promise, validationError());
+    }
+  }
+
+  Enumerator.prototype._enumerate = function _enumerate(input) {
+    for (var i = 0; this._state === PENDING && i < input.length; i++) {
+      this._eachEntry(input[i], i);
+    }
+  };
+
+  Enumerator.prototype._eachEntry = function _eachEntry(entry, i) {
+    var c = this._instanceConstructor;
+    var resolve$$1 = c.resolve;
+
+
+    if (resolve$$1 === resolve$1) {
+      var _then = getThen(entry);
+
+      if (_then === then && entry._state !== PENDING) {
+        this._settledAt(entry._state, i, entry._result);
+      } else if (typeof _then !== 'function') {
+        this._remaining--;
+        this._result[i] = entry;
+      } else if (c === Promise$1) {
+        var promise = new c(noop);
+        handleMaybeThenable(promise, entry, _then);
+        this._willSettleAt(promise, i);
+      } else {
+        this._willSettleAt(new c(function (resolve$$1) {
+          return resolve$$1(entry);
+        }), i);
+      }
+    } else {
+      this._willSettleAt(resolve$$1(entry), i);
+    }
+  };
+
+  Enumerator.prototype._settledAt = function _settledAt(state, i, value) {
+    var promise = this.promise;
+
+
+    if (promise._state === PENDING) {
+      this._remaining--;
+
+      if (state === REJECTED) {
+        reject(promise, value);
+      } else {
+        this._result[i] = value;
+      }
+    }
+
+    if (this._remaining === 0) {
+      fulfill(promise, this._result);
+    }
+  };
+
+  Enumerator.prototype._willSettleAt = function _willSettleAt(promise, i) {
+    var enumerator = this;
+
+    subscribe(promise, undefined, function (value) {
+      return enumerator._settledAt(FULFILLED, i, value);
+    }, function (reason) {
+      return enumerator._settledAt(REJECTED, i, reason);
+    });
+  };
+
+  return Enumerator;
+}();
+
+/**
+  `Promise.all` accepts an array of promises, and returns a new promise which
+  is fulfilled with an array of fulfillment values for the passed promises, or
+  rejected with the reason of the first passed promise to be rejected. It casts all
+  elements of the passed iterable to promises as it runs this algorithm.
+
+  Example:
+
+  ```javascript
+  let promise1 = resolve(1);
+  let promise2 = resolve(2);
+  let promise3 = resolve(3);
+  let promises = [ promise1, promise2, promise3 ];
+
+  Promise.all(promises).then(function(array){
+    // The array here would be [ 1, 2, 3 ];
+  });
+  ```
+
+  If any of the `promises` given to `all` are rejected, the first promise
+  that is rejected will be given as an argument to the returned promises's
+  rejection handler. For example:
+
+  Example:
+
+  ```javascript
+  let promise1 = resolve(1);
+  let promise2 = reject(new Error("2"));
+  let promise3 = reject(new Error("3"));
+  let promises = [ promise1, promise2, promise3 ];
+
+  Promise.all(promises).then(function(array){
+    // Code here never runs because there are rejected promises!
+  }, function(error) {
+    // error.message === "2"
+  });
+  ```
+
+  @method all
+  @static
+  @param {Array} entries array of promises
+  @param {String} label optional string for labeling the promise.
+  Useful for tooling.
+  @return {Promise} promise that is fulfilled when all `promises` have been
+  fulfilled, or rejected if any of them become rejected.
+  @static
+*/
+function all(entries) {
+  return new Enumerator(this, entries).promise;
+}
+
+/**
+  `Promise.race` returns a new promise which is settled in the same way as the
+  first passed promise to settle.
+
+  Example:
+
+  ```javascript
+  let promise1 = new Promise(function(resolve, reject){
+    setTimeout(function(){
+      resolve('promise 1');
+    }, 200);
+  });
+
+  let promise2 = new Promise(function(resolve, reject){
+    setTimeout(function(){
+      resolve('promise 2');
+    }, 100);
+  });
+
+  Promise.race([promise1, promise2]).then(function(result){
+    // result === 'promise 2' because it was resolved before promise1
+    // was resolved.
+  });
+  ```
+
+  `Promise.race` is deterministic in that only the state of the first
+  settled promise matters. For example, even if other promises given to the
+  `promises` array argument are resolved, but the first settled promise has
+  become rejected before the other promises became fulfilled, the returned
+  promise will become rejected:
+
+  ```javascript
+  let promise1 = new Promise(function(resolve, reject){
+    setTimeout(function(){
+      resolve('promise 1');
+    }, 200);
+  });
+
+  let promise2 = new Promise(function(resolve, reject){
+    setTimeout(function(){
+      reject(new Error('promise 2'));
+    }, 100);
+  });
+
+  Promise.race([promise1, promise2]).then(function(result){
+    // Code here never runs
+  }, function(reason){
+    // reason.message === 'promise 2' because promise 2 became rejected before
+    // promise 1 became fulfilled
+  });
+  ```
+
+  An example real-world use case is implementing timeouts:
+
+  ```javascript
+  Promise.race([ajax('foo.json'), timeout(5000)])
+  ```
+
+  @method race
+  @static
+  @param {Array} promises array of promises to observe
+  Useful for tooling.
+  @return {Promise} a promise which settles in the same way as the first passed
+  promise to settle.
+*/
+function race(entries) {
+  /*jshint validthis:true */
+  var Constructor = this;
+
+  if (!isArray(entries)) {
+    return new Constructor(function (_, reject) {
+      return reject(new TypeError('You must pass an array to race.'));
+    });
+  } else {
+    return new Constructor(function (resolve, reject) {
+      var length = entries.length;
+      for (var i = 0; i < length; i++) {
+        Constructor.resolve(entries[i]).then(resolve, reject);
+      }
+    });
+  }
+}
+
+/**
+  `Promise.reject` returns a promise rejected with the passed `reason`.
+  It is shorthand for the following:
+
+  ```javascript
+  let promise = new Promise(function(resolve, reject){
+    reject(new Error('WHOOPS'));
+  });
+
+  promise.then(function(value){
+    // Code here doesn't run because the promise is rejected!
+  }, function(reason){
+    // reason.message === 'WHOOPS'
+  });
+  ```
+
+  Instead of writing the above, your code now simply becomes the following:
+
+  ```javascript
+  let promise = Promise.reject(new Error('WHOOPS'));
+
+  promise.then(function(value){
+    // Code here doesn't run because the promise is rejected!
+  }, function(reason){
+    // reason.message === 'WHOOPS'
+  });
+  ```
+
+  @method reject
+  @static
+  @param {Any} reason value that the returned promise will be rejected with.
+  Useful for tooling.
+  @return {Promise} a promise rejected with the given `reason`.
+*/
+function reject$1(reason) {
+  /*jshint validthis:true */
+  var Constructor = this;
+  var promise = new Constructor(noop);
+  reject(promise, reason);
+  return promise;
+}
+
+function needsResolver() {
+  throw new TypeError('You must pass a resolver function as the first argument to the promise constructor');
+}
+
+function needsNew() {
+  throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
+}
+
+/**
+  Promise objects represent the eventual result of an asynchronous operation. The
+  primary way of interacting with a promise is through its `then` method, which
+  registers callbacks to receive either a promise's eventual value or the reason
+  why the promise cannot be fulfilled.
+
+  Terminology
+  -----------
+
+  - `promise` is an object or function with a `then` method whose behavior conforms to this specification.
+  - `thenable` is an object or function that defines a `then` method.
+  - `value` is any legal JavaScript value (including undefined, a thenable, or a promise).
+  - `exception` is a value that is thrown using the throw statement.
+  - `reason` is a value that indicates why a promise was rejected.
+  - `settled` the final resting state of a promise, fulfilled or rejected.
+
+  A promise can be in one of three states: pending, fulfilled, or rejected.
+
+  Promises that are fulfilled have a fulfillment value and are in the fulfilled
+  state.  Promises that are rejected have a rejection reason and are in the
+  rejected state.  A fulfillment value is never a thenable.
+
+  Promises can also be said to *resolve* a value.  If this value is also a
+  promise, then the original promise's settled state will match the value's
+  settled state.  So a promise that *resolves* a promise that rejects will
+  itself reject, and a promise that *resolves* a promise that fulfills will
+  itself fulfill.
+
+
+  Basic Usage:
+  ------------
+
+  ```js
+  let promise = new Promise(function(resolve, reject) {
+    // on success
+    resolve(value);
+
+    // on failure
+    reject(reason);
+  });
+
+  promise.then(function(value) {
+    // on fulfillment
+  }, function(reason) {
+    // on rejection
+  });
+  ```
+
+  Advanced Usage:
+  ---------------
+
+  Promises shine when abstracting away asynchronous interactions such as
+  `XMLHttpRequest`s.
+
+  ```js
+  function getJSON(url) {
+    return new Promise(function(resolve, reject){
+      let xhr = new XMLHttpRequest();
+
+      xhr.open('GET', url);
+      xhr.onreadystatechange = handler;
+      xhr.responseType = 'json';
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.send();
+
+      function handler() {
+        if (this.readyState === this.DONE) {
+          if (this.status === 200) {
+            resolve(this.response);
+          } else {
+            reject(new Error('getJSON: `' + url + '` failed with status: [' + this.status + ']'));
+          }
+        }
+      };
+    });
+  }
+
+  getJSON('/posts.json').then(function(json) {
+    // on fulfillment
+  }, function(reason) {
+    // on rejection
+  });
+  ```
+
+  Unlike callbacks, promises are great composable primitives.
+
+  ```js
+  Promise.all([
+    getJSON('/posts'),
+    getJSON('/comments')
+  ]).then(function(values){
+    values[0] // => postsJSON
+    values[1] // => commentsJSON
+
+    return values;
+  });
+  ```
+
+  @class Promise
+  @param {Function} resolver
+  Useful for tooling.
+  @constructor
+*/
+
+var Promise$1 = function () {
+  function Promise(resolver) {
+    this[PROMISE_ID] = nextId();
+    this._result = this._state = undefined;
+    this._subscribers = [];
+
+    if (noop !== resolver) {
+      typeof resolver !== 'function' && needsResolver();
+      this instanceof Promise ? initializePromise(this, resolver) : needsNew();
+    }
+  }
+
+  /**
+  The primary way of interacting with a promise is through its `then` method,
+  which registers callbacks to receive either a promise's eventual value or the
+  reason why the promise cannot be fulfilled.
+   ```js
+  findUser().then(function(user){
+    // user is available
+  }, function(reason){
+    // user is unavailable, and you are given the reason why
+  });
+  ```
+   Chaining
+  --------
+   The return value of `then` is itself a promise.  This second, 'downstream'
+  promise is resolved with the return value of the first promise's fulfillment
+  or rejection handler, or rejected if the handler throws an exception.
+   ```js
+  findUser().then(function (user) {
+    return user.name;
+  }, function (reason) {
+    return 'default name';
+  }).then(function (userName) {
+    // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
+    // will be `'default name'`
+  });
+   findUser().then(function (user) {
+    throw new Error('Found user, but still unhappy');
+  }, function (reason) {
+    throw new Error('`findUser` rejected and we're unhappy');
+  }).then(function (value) {
+    // never reached
+  }, function (reason) {
+    // if `findUser` fulfilled, `reason` will be 'Found user, but still unhappy'.
+    // If `findUser` rejected, `reason` will be '`findUser` rejected and we're unhappy'.
+  });
+  ```
+  If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
+   ```js
+  findUser().then(function (user) {
+    throw new PedagogicalException('Upstream error');
+  }).then(function (value) {
+    // never reached
+  }).then(function (value) {
+    // never reached
+  }, function (reason) {
+    // The `PedgagocialException` is propagated all the way down to here
+  });
+  ```
+   Assimilation
+  ------------
+   Sometimes the value you want to propagate to a downstream promise can only be
+  retrieved asynchronously. This can be achieved by returning a promise in the
+  fulfillment or rejection handler. The downstream promise will then be pending
+  until the returned promise is settled. This is called *assimilation*.
+   ```js
+  findUser().then(function (user) {
+    return findCommentsByAuthor(user);
+  }).then(function (comments) {
+    // The user's comments are now available
+  });
+  ```
+   If the assimliated promise rejects, then the downstream promise will also reject.
+   ```js
+  findUser().then(function (user) {
+    return findCommentsByAuthor(user);
+  }).then(function (comments) {
+    // If `findCommentsByAuthor` fulfills, we'll have the value here
+  }, function (reason) {
+    // If `findCommentsByAuthor` rejects, we'll have the reason here
+  });
+  ```
+   Simple Example
+  --------------
+   Synchronous Example
+   ```javascript
+  let result;
+   try {
+    result = findResult();
+    // success
+  } catch(reason) {
+    // failure
+  }
+  ```
+   Errback Example
+   ```js
+  findResult(function(result, err){
+    if (err) {
+      // failure
+    } else {
+      // success
+    }
+  });
+  ```
+   Promise Example;
+   ```javascript
+  findResult().then(function(result){
+    // success
+  }, function(reason){
+    // failure
+  });
+  ```
+   Advanced Example
+  --------------
+   Synchronous Example
+   ```javascript
+  let author, books;
+   try {
+    author = findAuthor();
+    books  = findBooksByAuthor(author);
+    // success
+  } catch(reason) {
+    // failure
+  }
+  ```
+   Errback Example
+   ```js
+   function foundBooks(books) {
+   }
+   function failure(reason) {
+   }
+   findAuthor(function(author, err){
+    if (err) {
+      failure(err);
+      // failure
+    } else {
+      try {
+        findBoooksByAuthor(author, function(books, err) {
+          if (err) {
+            failure(err);
+          } else {
+            try {
+              foundBooks(books);
+            } catch(reason) {
+              failure(reason);
+            }
+          }
+        });
+      } catch(error) {
+        failure(err);
+      }
+      // success
+    }
+  });
+  ```
+   Promise Example;
+   ```javascript
+  findAuthor().
+    then(findBooksByAuthor).
+    then(function(books){
+      // found books
+  }).catch(function(reason){
+    // something went wrong
+  });
+  ```
+   @method then
+  @param {Function} onFulfilled
+  @param {Function} onRejected
+  Useful for tooling.
+  @return {Promise}
+  */
+
+  /**
+  `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
+  as the catch block of a try/catch statement.
+  ```js
+  function findAuthor(){
+  throw new Error('couldn't find that author');
+  }
+  // synchronous
+  try {
+  findAuthor();
+  } catch(reason) {
+  // something went wrong
+  }
+  // async with promises
+  findAuthor().catch(function(reason){
+  // something went wrong
+  });
+  ```
+  @method catch
+  @param {Function} onRejection
+  Useful for tooling.
+  @return {Promise}
+  */
+
+
+  Promise.prototype.catch = function _catch(onRejection) {
+    return this.then(null, onRejection);
+  };
+
+  /**
+    `finally` will be invoked regardless of the promise's fate just as native
+    try/catch/finally behaves
+  
+    Synchronous example:
+  
+    ```js
+    findAuthor() {
+      if (Math.random() > 0.5) {
+        throw new Error();
+      }
+      return new Author();
+    }
+  
+    try {
+      return findAuthor(); // succeed or fail
+    } catch(error) {
+      return findOtherAuther();
+    } finally {
+      // always runs
+      // doesn't affect the return value
+    }
+    ```
+  
+    Asynchronous example:
+  
+    ```js
+    findAuthor().catch(function(reason){
+      return findOtherAuther();
+    }).finally(function(){
+      // author was either found, or not
+    });
+    ```
+  
+    @method finally
+    @param {Function} callback
+    @return {Promise}
+  */
+
+
+  Promise.prototype.finally = function _finally(callback) {
+    var promise = this;
+    var constructor = promise.constructor;
+
+    return promise.then(function (value) {
+      return constructor.resolve(callback()).then(function () {
+        return value;
+      });
+    }, function (reason) {
+      return constructor.resolve(callback()).then(function () {
+        throw reason;
+      });
+    });
+  };
+
+  return Promise;
+}();
+
+Promise$1.prototype.then = then;
+Promise$1.all = all;
+Promise$1.race = race;
+Promise$1.resolve = resolve$1;
+Promise$1.reject = reject$1;
+Promise$1._setScheduler = setScheduler;
+Promise$1._setAsap = setAsap;
+Promise$1._asap = asap;
+
+/*global self*/
+function polyfill() {
+  var local = void 0;
+
+  if (typeof global !== 'undefined') {
+    local = global;
+  } else if (typeof self !== 'undefined') {
+    local = self;
+  } else {
+    try {
+      local = Function('return this')();
+    } catch (e) {
+      throw new Error('polyfill failed because global object is unavailable in this environment');
+    }
+  }
+
+  var P = local.Promise;
+
+  if (P) {
+    var promiseToString = null;
+    try {
+      promiseToString = Object.prototype.toString.call(P.resolve());
+    } catch (e) {
+      // silently ignored
+    }
+
+    if (promiseToString === '[object Promise]' && !P.cast) {
+      return;
+    }
+  }
+
+  local.Promise = Promise$1;
+}
+
+// Strange compat..
+Promise$1.polyfill = polyfill;
+Promise$1.Promise = Promise$1;
+
+return Promise$1;
+
+})));
+
+
+
+//# sourceMappingURL=es6-promise.map
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(2)))
+
+/***/ }),
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14616,32 +15850,32 @@ var routes = [
 // Dashboard.
 {
 	path: '/',
-	component: __webpack_require__(16),
+	component: __webpack_require__(18),
 	meta: { title: 'Dashboard' }
 },
 
 // Users.
 {
 	path: '/users',
-	component: __webpack_require__(19),
+	component: __webpack_require__(21),
 	meta: { title: 'User' }
 }, {
 	path: '/users/create',
-	component: __webpack_require__(22),
+	component: __webpack_require__(24),
 	meta: {
 		title: 'Create',
 		breadcrumb: '/User/Create'
 	}
 }, {
 	path: '/users/:id',
-	component: __webpack_require__(29),
+	component: __webpack_require__(30),
 	meta: {
 		title: 'Show',
 		breadcrumb: 'User/Show'
 	}
 }, {
 	path: '/users/:id/edit',
-	component: __webpack_require__(32),
+	component: __webpack_require__(33),
 	meta: {
 		title: 'Edit',
 		breadcrumb: 'User/Edit'
@@ -14651,25 +15885,25 @@ var routes = [
 // Roles.
 {
 	path: '/roles',
-	component: __webpack_require__(35),
+	component: __webpack_require__(36),
 	meta: { title: 'Role' }
 }, {
 	path: '/roles/create',
-	component: __webpack_require__(38),
+	component: __webpack_require__(39),
 	meta: {
 		title: 'Create',
 		breadcrumb: '/Role/Create'
 	}
 }, {
 	path: '/roles/:id',
-	component: __webpack_require__(39),
+	component: __webpack_require__(40),
 	meta: {
 		title: 'Show',
 		breadcrumb: 'Role/Show'
 	}
 }, {
 	path: '/roles/:id/edit',
-	component: __webpack_require__(40),
+	component: __webpack_require__(41),
 	meta: {
 		title: 'Edit',
 		breadcrumb: 'Role/Edit'
@@ -14679,49 +15913,49 @@ var routes = [
 // Categories.
 {
 	path: '/categorys',
-	component: __webpack_require__(41),
+	component: __webpack_require__(42),
 	meta: { title: 'Category' }
 },
 
 // Products.
 {
 	path: '/products',
-	component: __webpack_require__(44),
+	component: __webpack_require__(45),
 	meta: { title: 'Product' }
 },
 
 // Tag.
 {
 	path: '/tags',
-	component: __webpack_require__(47),
+	component: __webpack_require__(48),
 	meta: { title: 'Tag' }
 },
 
 // Orders.
 {
 	path: '/orders',
-	component: __webpack_require__(50),
+	component: __webpack_require__(51),
 	meta: { title: 'Order' }
 },
 
 // Transactions.
 {
 	path: '/transactions',
-	component: __webpack_require__(53),
+	component: __webpack_require__(54),
 	meta: { title: 'Transaction' }
 },
 
 // Contacts.
 {
 	path: '/contacts',
-	component: __webpack_require__(56),
+	component: __webpack_require__(57),
 	meta: { title: 'Contact' }
 },
 
 // Notifications.
 {
 	path: '/notifications',
-	component: __webpack_require__(59),
+	component: __webpack_require__(60),
 	meta: { title: 'Notification' }
 }];
 
@@ -14730,15 +15964,15 @@ var routes = [
 }));
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(17)
+var __vue_script__ = __webpack_require__(19)
 /* template */
-var __vue_template__ = __webpack_require__(18)
+var __vue_template__ = __webpack_require__(20)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -14777,7 +16011,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14806,7 +16040,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -14847,15 +16081,15 @@ if (false) {
 }
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(20)
+var __vue_script__ = __webpack_require__(22)
 /* template */
-var __vue_template__ = __webpack_require__(21)
+var __vue_template__ = __webpack_require__(23)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -14894,7 +16128,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14919,7 +16153,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -14960,15 +16194,15 @@ if (false) {
 }
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(23)
+var __vue_script__ = __webpack_require__(25)
 /* template */
-var __vue_template__ = __webpack_require__(28)
+var __vue_template__ = __webpack_require__(29)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -15007,12 +16241,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Form__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Form__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Form___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Form__);
 //
 //
@@ -15030,63 +16264,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	components: { UserForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a }
+  components: { UserForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a },
+  data: function data() {
+    return {
+      user: {},
+      selected: []
+    };
+  }
 });
 
 /***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-var __vue_script__ = __webpack_require__(25)
-/* template */
-var __vue_template__ = __webpack_require__(27)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\User\\Form.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-08b0366e", Component.options)
-  } else {
-    hotAPI.reload("data-v-08b0366e", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toastr__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toastr__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toastr__);
 //
 //
@@ -15151,23 +16344,64 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['user'],
+  props: ['user', 'options', 'selected'],
   data: function data() {
     return {
+      roles: [],
+      passwordOptions: this.options,
+      rolesSelected: this.selected,
       loading: false,
-      errorMessage: []
+      errorsMessage: {}
     };
+  },
+  created: function created() {
+    this.loadRoles();
   },
 
   methods: {
-    onSubmit: function onSubmit() {
+    loadRoles: function loadRoles() {
       var _this = this;
 
+      var columns = ['id', 'display_name'];
+
+      axios.get('api/admin/roles/index/' + columns).then(function (response) {
+        _this.roles = response.data;
+      });
+    },
+    processFile: function processFile(event) {
+      this.user.avatar = event.target.files[0];
+    },
+    onSubmit: function onSubmit() {
+      var _this2 = this;
+
       if (!this.errors.items.length) {
+        this.user.roles_id = this.rolesSelected;
 
         var url = 'api/admin/users' + (this.user.id ? '/' + this.user.id : '');
         var method = this.user.id ? 'patch' : 'post';
@@ -15175,20 +16409,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         axios[method](url, this.user).then(function (response) {
           __WEBPACK_IMPORTED_MODULE_0_toastr___default.a.success(action + ' successfully!');
-          _this.$router.push('/users');
+          _this2.$router.push('/users');
         }, function (error) {
-          _this.errorMessage = error.response.data.errors;
+          _this2.errorsMessage = error.response.data.errors;
         });
       }
     },
-    removeErrorMessage: function removeErrorMessage() {
-      this.errorMessage = [];
+    removeErrorsMessage: function removeErrorsMessage() {
+      this.errorsMessage = {};
     }
   }
 });
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -15197,7 +16431,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -15208,6 +16442,7 @@ var render = function() {
     "form",
     {
       staticClass: "form",
+      attrs: { enctype: "multipart/form-data" },
       on: {
         submit: function($event) {
           $event.preventDefault()
@@ -15272,7 +16507,7 @@ var render = function() {
               staticClass: "form__group",
               class: {
                 "form__group--invalid":
-                  _vm.errors.has("email") || _vm.errorMessage.email
+                  _vm.errors.has("email") || _vm.errorsMessage.email
               }
             },
             [
@@ -15299,7 +16534,7 @@ var render = function() {
                 attrs: { type: "text", name: "email" },
                 domProps: { value: _vm.user.email },
                 on: {
-                  keyup: _vm.removeErrorMessage,
+                  keyup: _vm.removeErrorsMessage,
                   input: function($event) {
                     if ($event.target.composing) {
                       return
@@ -15313,8 +16548,8 @@ var render = function() {
                 _vm._v(_vm._s(_vm.errors.first("email")))
               ]),
               _vm._v(" "),
-              _vm.errorMessage.email
-                ? _c("strong", [_vm._v(_vm._s(_vm.errorMessage.email[0]))])
+              _vm.errorsMessage.email
+                ? _c("strong", [_vm._v(_vm._s(_vm.errorsMessage.email[0]))])
                 : _vm._e()
             ]
           ),
@@ -15449,61 +16684,196 @@ var render = function() {
             })
           ]),
           _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "form__group",
-              class: { "form__group--invalid": _vm.errors.has("password") }
-            },
-            [
-              _c("label", { staticClass: "form__label" }, [_vm._v("Password")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.user.password,
-                    expression: "user.password"
-                  },
-                  {
-                    name: "validate",
-                    rawName: "v-validate",
-                    value: "required|min:6|confirmed:password_confirmation",
-                    expression:
-                      "'required|min:6|confirmed:password_confirmation'"
-                  }
-                ],
-                staticClass: "form__control input",
-                attrs: { type: "password", name: "password" },
-                domProps: { value: _vm.user.password },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.user, "password", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("strong", { staticClass: "form__invalid-text" }, [
-                _vm._v(_vm._s(_vm.errors.first("password")))
+          _vm.user.id
+            ? _c("div", { staticClass: "form__group" }, [
+                _c("label", { staticClass: "form__label" }, [
+                  _vm._v("Password")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "radio radio--password" }, [
+                  _c("div", { staticClass: "radio__group" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.passwordOptions,
+                          expression: "passwordOptions"
+                        }
+                      ],
+                      staticClass: "radio__input",
+                      attrs: { type: "radio", id: "keep", value: "keep" },
+                      domProps: {
+                        checked: _vm._q(_vm.passwordOptions, "keep")
+                      },
+                      on: {
+                        change: function($event) {
+                          _vm.passwordOptions = "keep"
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("label", { attrs: { for: "keep" } }, [
+                      _vm._v("Do not change password.")
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "radio__group" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.passwordOptions,
+                          expression: "passwordOptions"
+                        }
+                      ],
+                      staticClass: "radio__input",
+                      attrs: { type: "radio", id: "new", value: "new" },
+                      domProps: { checked: _vm._q(_vm.passwordOptions, "new") },
+                      on: {
+                        change: function($event) {
+                          _vm.passwordOptions = "new"
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("label", { attrs: { for: "new" } }, [
+                      _vm._v("Set new password.")
+                    ])
+                  ])
+                ])
               ])
-            ]
-          ),
+            : _vm._e(),
           _vm._v(" "),
-          _vm._m(4),
+          !_vm.passwordOptions || _vm.passwordOptions === "new"
+            ? _c(
+                "div",
+                {
+                  staticClass: "form__group",
+                  class: { "form__group--invalid": _vm.errors.has("password") }
+                },
+                [
+                  _c("label", { staticClass: "form__label" }, [
+                    _vm._v("Password")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.user.password,
+                        expression: "user.password"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "required|min:6|confirmed:password_confirmation",
+                        expression:
+                          "'required|min:6|confirmed:password_confirmation'"
+                      }
+                    ],
+                    staticClass: "form__control input",
+                    attrs: { type: "password", name: "password" },
+                    domProps: { value: _vm.user.password },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.user, "password", $event.target.value)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("strong", { staticClass: "form__invalid-text" }, [
+                    _vm._v(_vm._s(_vm.errors.first("password")))
+                  ])
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.passwordOptions || _vm.passwordOptions === "new"
+            ? _c("div", { staticClass: "form__group" }, [
+                _c("label", { staticClass: "form__label" }, [
+                  _vm._v("Confirm Password")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "form__control input",
+                  attrs: { type: "password", name: "password_confirmation" }
+                })
+              ])
+            : _vm._e(),
           _vm._v(" "),
           _c("div", { staticClass: "form__group" }, [
-            _vm._m(5),
+            _vm._m(4),
             _vm._v(" "),
             _c(
               "div",
               { staticClass: "checkbox" },
-              [_vm._t("roles-selected")],
-              2
+              _vm._l(_vm.roles, function(role) {
+                return _c("div", { staticClass: "checkbox__group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.rolesSelected,
+                        expression: "rolesSelected"
+                      }
+                    ],
+                    staticClass: "checkbox__input",
+                    attrs: { type: "checkbox", id: role.id },
+                    domProps: {
+                      value: role.id,
+                      checked: Array.isArray(_vm.rolesSelected)
+                        ? _vm._i(_vm.rolesSelected, role.id) > -1
+                        : _vm.rolesSelected
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.rolesSelected,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = role.id,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 && (_vm.rolesSelected = $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.rolesSelected = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.rolesSelected = $$c
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("label", { attrs: { for: role.id } }, [
+                    _vm._v(_vm._s(role.display_name))
+                  ])
+                ])
+              })
             )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form__group" }, [
+            _c("label", { staticClass: "form__label" }, [_vm._v("Avatar")]),
+            _vm._v(" "),
+            _c("input", {
+              attrs: { type: "file" },
+              on: {
+                change: function($event) {
+                  _vm.processFile($event)
+                }
+              }
+            })
           ])
         ]),
         _vm._v(" "),
@@ -15553,19 +16923,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form__group" }, [
-      _c("label", { staticClass: "form__label" }, [_vm._v("Confirm Password")]),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "form__control input",
-        attrs: { type: "password", name: "password_confirmation" }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("label", { staticClass: "form__label" }, [
       _vm._v("Role"),
       _c("small", { staticClass: "form__help" }, [_vm._v("(Optional)")])
@@ -15582,7 +16939,7 @@ if (false) {
 }
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -15598,6 +16955,7 @@ var render = function() {
         [
           _c(
             "user-form",
+            { attrs: { user: _vm.user, selected: _vm.selected } },
             [
               _c("template", { slot: "button-action" }, [
                 _c(
@@ -15630,15 +16988,15 @@ if (false) {
 }
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(30)
+var __vue_script__ = __webpack_require__(31)
 /* template */
-var __vue_template__ = __webpack_require__(31)
+var __vue_template__ = __webpack_require__(32)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -15677,7 +17035,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15770,7 +17128,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -15897,15 +17255,15 @@ if (false) {
 }
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(33)
+var __vue_script__ = __webpack_require__(34)
 /* template */
-var __vue_template__ = __webpack_require__(34)
+var __vue_template__ = __webpack_require__(35)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -15944,20 +17302,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Form__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Form__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Form___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Form__);
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -15978,13 +17329,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       user: {},
-      roles: [],
-      rolesSelected: []
+      options: 'keep',
+      selected: [],
+      childDataLoaded: false
     };
   },
   created: function created() {
     this.loadUser();
-    this.loadRoles();
   },
 
   methods: {
@@ -15993,23 +17344,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       axios.get('api/admin/users/' + this.$route.params.id).then(function (response) {
         _this.user = response.data.user;
-        _this.rolesSelected = response.data.roles;
-      });
-    },
-    loadRoles: function loadRoles() {
-      var _this2 = this;
-
-      var columns = ['id', 'display_name'];
-
-      axios.get('api/admin/roles/index/' + columns).then(function (response) {
-        _this2.roles = response.data;
+        _this.selected = response.data.roles;
+        _this.childDataLoaded = true;
       });
     }
   }
 });
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -16023,75 +17366,31 @@ var render = function() {
         "template",
         { slot: "form" },
         [
-          _c(
-            "user-form",
-            { attrs: { user: _vm.user } },
-            [
-              _c(
-                "template",
-                { slot: "roles-selected" },
-                _vm._l(_vm.roles, function(role) {
-                  return _c("div", { staticClass: "checkbox__group" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.rolesSelected,
-                          expression: "rolesSelected"
-                        }
-                      ],
-                      staticClass: "checkbox__input",
-                      attrs: { type: "checkbox", id: role.id },
-                      domProps: {
-                        value: role.id,
-                        checked: Array.isArray(_vm.rolesSelected)
-                          ? _vm._i(_vm.rolesSelected, role.id) > -1
-                          : _vm.rolesSelected
+          _vm.childDataLoaded
+            ? _c(
+                "user-form",
+                {
+                  attrs: {
+                    user: _vm.user,
+                    options: _vm.options,
+                    selected: _vm.selected
+                  }
+                },
+                [
+                  _c("template", { slot: "button-action" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn--success btn--raised",
+                        attrs: { type: "submit" }
                       },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.rolesSelected,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = role.id,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 && (_vm.rolesSelected = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.rolesSelected = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.rolesSelected = $$c
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("label", { attrs: { for: role.id } }, [
-                      _vm._v(_vm._s(role.display_name))
-                    ])
+                      [_vm._v("Update")]
+                    )
                   ])
-                })
-              ),
-              _vm._v(" "),
-              _c("template", { slot: "button-action" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn--success btn--raised",
-                    attrs: { type: "submit" }
-                  },
-                  [_vm._v("Update")]
-                )
-              ])
-            ],
-            2
-          )
+                ],
+                2
+              )
+            : _vm._e()
         ],
         1
       )
@@ -16110,15 +17409,15 @@ if (false) {
 }
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(36)
+var __vue_script__ = __webpack_require__(37)
 /* template */
-var __vue_template__ = __webpack_require__(37)
+var __vue_template__ = __webpack_require__(38)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -16157,7 +17456,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16189,7 +17488,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -16230,7 +17529,7 @@ if (false) {
 }
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var normalizeComponent = __webpack_require__(0)
@@ -16260,7 +17559,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var normalizeComponent = __webpack_require__(0)
@@ -16290,7 +17589,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var normalizeComponent = __webpack_require__(0)
@@ -16320,15 +17619,15 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(42)
+var __vue_script__ = __webpack_require__(43)
 /* template */
-var __vue_template__ = __webpack_require__(43)
+var __vue_template__ = __webpack_require__(44)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -16367,7 +17666,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16396,7 +17695,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -16437,15 +17736,15 @@ if (false) {
 }
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(45)
+var __vue_script__ = __webpack_require__(46)
 /* template */
-var __vue_template__ = __webpack_require__(46)
+var __vue_template__ = __webpack_require__(47)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -16484,7 +17783,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16513,7 +17812,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -16554,15 +17853,15 @@ if (false) {
 }
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(48)
+var __vue_script__ = __webpack_require__(49)
 /* template */
-var __vue_template__ = __webpack_require__(49)
+var __vue_template__ = __webpack_require__(50)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -16601,7 +17900,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16630,7 +17929,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -16671,15 +17970,15 @@ if (false) {
 }
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(51)
+var __vue_script__ = __webpack_require__(52)
 /* template */
-var __vue_template__ = __webpack_require__(52)
+var __vue_template__ = __webpack_require__(53)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -16718,7 +18017,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16747,7 +18046,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -16788,15 +18087,15 @@ if (false) {
 }
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(54)
+var __vue_script__ = __webpack_require__(55)
 /* template */
-var __vue_template__ = __webpack_require__(55)
+var __vue_template__ = __webpack_require__(56)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -16835,7 +18134,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16864,7 +18163,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -16907,15 +18206,15 @@ if (false) {
 }
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(57)
+var __vue_script__ = __webpack_require__(58)
 /* template */
-var __vue_template__ = __webpack_require__(58)
+var __vue_template__ = __webpack_require__(59)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -16954,7 +18253,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16983,7 +18282,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -17024,15 +18323,15 @@ if (false) {
 }
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(60)
+var __vue_script__ = __webpack_require__(61)
 /* template */
-var __vue_template__ = __webpack_require__(61)
+var __vue_template__ = __webpack_require__(62)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -17071,7 +18370,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17100,7 +18399,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -17143,7 +18442,7 @@ if (false) {
 }
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24170,11 +25469,11 @@ var index_esm = {
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(64);
+window._ = __webpack_require__(65);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -24183,7 +25482,7 @@ window._ = __webpack_require__(64);
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(6);
+  window.$ = window.jQuery = __webpack_require__(8);
 } catch (e) {}
 
 /**
@@ -24192,7 +25491,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(66);
+window.axios = __webpack_require__(67);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -24228,7 +25527,7 @@ if (token) {
 // });
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -41330,10 +42629,10 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(65)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(66)(module)))
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -41361,21 +42660,21 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(67);
+module.exports = __webpack_require__(68);
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(1);
-var bind = __webpack_require__(7);
-var Axios = __webpack_require__(69);
+var bind = __webpack_require__(9);
+var Axios = __webpack_require__(70);
 var defaults = __webpack_require__(4);
 
 /**
@@ -41409,15 +42708,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(12);
-axios.CancelToken = __webpack_require__(83);
-axios.isCancel = __webpack_require__(11);
+axios.Cancel = __webpack_require__(13);
+axios.CancelToken = __webpack_require__(84);
+axios.isCancel = __webpack_require__(12);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(84);
+axios.spread = __webpack_require__(85);
 
 module.exports = axios;
 
@@ -41426,7 +42725,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports) {
 
 /*!
@@ -41453,7 +42752,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41461,8 +42760,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(4);
 var utils = __webpack_require__(1);
-var InterceptorManager = __webpack_require__(78);
-var dispatchRequest = __webpack_require__(79);
+var InterceptorManager = __webpack_require__(79);
+var dispatchRequest = __webpack_require__(80);
 
 /**
  * Create a new instance of Axios
@@ -41539,7 +42838,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41558,13 +42857,13 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(10);
+var createError = __webpack_require__(11);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -41591,7 +42890,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41619,7 +42918,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41692,7 +42991,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41752,7 +43051,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41827,7 +43126,7 @@ module.exports = (
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41870,7 +43169,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41930,7 +43229,7 @@ module.exports = (
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41989,18 +43288,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(1);
-var transformData = __webpack_require__(80);
-var isCancel = __webpack_require__(11);
+var transformData = __webpack_require__(81);
+var isCancel = __webpack_require__(12);
 var defaults = __webpack_require__(4);
-var isAbsoluteURL = __webpack_require__(81);
-var combineURLs = __webpack_require__(82);
+var isAbsoluteURL = __webpack_require__(82);
+var combineURLs = __webpack_require__(83);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -42082,7 +43381,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42109,7 +43408,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42130,7 +43429,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42151,13 +43450,13 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(12);
+var Cancel = __webpack_require__(13);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -42215,7 +43514,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42249,7 +43548,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53212,10 +54511,10 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(86).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(87).setImmediate))
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var apply = Function.prototype.apply;
@@ -53268,7 +54567,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(87);
+__webpack_require__(88);
 // On some exotic environments, it's not clear which object `setimmeidate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -53282,7 +54581,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -53472,18 +54771,18 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(3)))
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(89)
+var __vue_script__ = __webpack_require__(90)
 /* template */
-var __vue_template__ = __webpack_require__(90)
+var __vue_template__ = __webpack_require__(91)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -53522,7 +54821,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -53567,7 +54866,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -53611,15 +54910,15 @@ if (false) {
 }
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(92)
+var __vue_script__ = __webpack_require__(93)
 /* template */
-var __vue_template__ = __webpack_require__(99)
+var __vue_template__ = __webpack_require__(100)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -53658,16 +54957,16 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toastr__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toastr__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toastr__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Pagination__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Pagination__ = __webpack_require__(94);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Pagination__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__DeleteConfirmation__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__DeleteConfirmation__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__DeleteConfirmation___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__DeleteConfirmation__);
 //
 //
@@ -53846,14 +55145,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     search: function search(perPage) {
       var _this3 = this;
 
-      if (this.items.length) {
-        var url = this.apiUrl + this.apiName + this.perPage + '/search?q=' + this.keywords;
+      var url = this.apiUrl + this.apiName + '/' + this.perPage + '/search?q=' + this.keywords;
 
-        axios.get(url).then(function (response) {
-          _this3.pagination = response.data;
-          _this3.items = response.data.data;
-        });
-      }
+      axios.get(url).then(function (response) {
+        _this3.pagination = response.data;
+        _this3.items = response.data.data;
+      });
     },
     deleteData: function deleteData(id) {
       var _this4 = this;
@@ -53883,15 +55180,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(94)
+var __vue_script__ = __webpack_require__(95)
 /* template */
-var __vue_template__ = __webpack_require__(95)
+var __vue_template__ = __webpack_require__(96)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -53930,7 +55227,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -54033,7 +55330,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -54181,15 +55478,15 @@ if (false) {
 }
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(97)
+var __vue_script__ = __webpack_require__(98)
 /* template */
-var __vue_template__ = __webpack_require__(98)
+var __vue_template__ = __webpack_require__(99)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -54228,7 +55525,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -54253,30 +55550,89 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['selected'],
+  props: ['id', 'selected'],
   computed: {
+    questionConfirmation: function questionConfirmation() {
+      return this.selected ? 'Are you sure you want to delete ' + this.textItemSingularOrPlural + ' selected?' : 'Are you sure you want to delete this item?';
+    },
     textItemSingularOrPlural: function textItemSingularOrPlural() {
-      return this.selected.length > 1 ? this.selected.length + ' items' : 'item';
+      if (this.selected) {
+        return this.selected.length > 1 ? this.selected.length + ' items' : 'item';
+      } else {
+        return 'item';
+      }
     }
   },
   methods: {
-    deleteData: function deleteData() {
-      this.$emit('deleteData');
+    deleteData: function deleteData(id) {
+      this.$emit('deleteData', id);
     }
   }
 });
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("div", { staticClass: "dialog" }, [
+    _c("div", { staticClass: "dialog__wrapper" }, [
+      _c("div", { staticClass: "dialog__content" }, [
+        _c("div", { staticClass: "dialog__header" }, [
+          _c("strong", [_vm._v(_vm._s(_vm.questionConfirmation))])
+        ]),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "dialog__footer" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn--secondary js-dismiss-dialog",
+              attrs: { type: "button" }
+            },
+            [_vm._v("No, Keep " + _vm._s(_vm.textItemSingularOrPlural))]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn--danger js-dismiss-dialog",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  _vm.deleteData(_vm.id)
+                }
+              }
+            },
+            [_vm._v("Yes, Delete " + _vm._s(_vm.textItemSingularOrPlural))]
+          )
+        ]),
+        _vm._v(" "),
+        _c("a", {
+          staticClass: "close js-dismiss-dialog",
+          attrs: { href: "#" }
+        })
+      ])
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dialog__body" }, [
+      _vm._v(
+        "Delete an item will permanently remove it and all its relations. "
+      ),
+      _c("strong", [_vm._v("Warning: This can not undone.")])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -54287,7 +55643,7 @@ if (false) {
 }
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -54305,11 +55661,6 @@ var render = function() {
           [
             _vm._t("button-create"),
             _vm._v(" "),
-            _c("delete-confirmation", {
-              attrs: { selected: _vm.selected },
-              on: { deleteData: _vm.deleteData }
-            }),
-            _vm._v(" "),
             _c(
               "button",
               {
@@ -54321,15 +55672,16 @@ var render = function() {
                     expression: "selected.length"
                   }
                 ],
-                staticClass: "btn btn--danger btn--raised",
-                attrs: {
-                  "data-toggle": "modal",
-                  "data-target": "#deleteConfirmModal",
-                  disabled: _vm.loading
-                }
+                staticClass: "btn btn--danger btn--raised js-dialog",
+                attrs: { disabled: _vm.loading }
               },
               [_vm._v("Delete")]
-            )
+            ),
+            _vm._v(" "),
+            _c("delete-confirmation", {
+              attrs: { selected: _vm.selected },
+              on: { deleteData: _vm.deleteData }
+            })
           ],
           2
         ),
@@ -54552,16 +55904,16 @@ var render = function() {
                             _c(
                               "a",
                               {
-                                staticClass: "dropdown__item",
-                                attrs: { href: "#" },
-                                on: {
-                                  click: function($event) {
-                                    _vm.deleteData(item.id)
-                                  }
-                                }
+                                staticClass: "dropdown__item js-dialog",
+                                attrs: { href: "#" }
                               },
                               [_vm._v("Delete")]
-                            )
+                            ),
+                            _vm._v(" "),
+                            _c("delete-confirmation", {
+                              attrs: { id: item.id },
+                              on: { deleteData: _vm.deleteData }
+                            })
                           ],
                           1
                         )
@@ -54626,13 +55978,13 @@ if (false) {
 }
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(101)
+var __vue_script__ = null
 /* template */
 var __vue_template__ = __webpack_require__(102)
 /* template functional */
@@ -54671,26 +56023,6 @@ if (false) {(function () {
 
 module.exports = Component.exports
 
-
-/***/ }),
-/* 101 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 /* 102 */
@@ -54766,20 +56098,28 @@ $(function () {
 
 // Dialog.
 $(function () {
-	$('.js-dialog').click(function (e) {
+	$(document).on('click', '.js-dialog', function (e) {
 		e.stopPropagation();
+		e.preventDefault();
 
-		$('.dialog').addClass('show');
+		$(e.target).next('.dialog').addClass('show');
 		$('body').addClass('dialog-open');
 	});
 
-	$('.js-dismiss-dialog').click(function (e) {
+	$(document).on('click', '.js-dismiss-dialog', function (e) {
+		e.preventDefault();
+
 		$('.dialog').removeClass('show');
 		$('body').removeClass('dialog-open');
 	});
 
+	$(document).on('click', '.dialog__content', function (e) {
+		e.stopPropagation();
+	});
+
 	$(document).click(function (e) {
-		$('.dialog__wrapper').not($('.dialog__wrapper').has($(e.target))).parent('.dialog').removeClass('show').parents('body').removeClass('dialog-open');
+		$('.dialog').removeClass('show');
+		$('body').removeClass('dialog-open');
 	});
 });
 

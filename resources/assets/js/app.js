@@ -9,6 +9,7 @@ import VeeValidate from 'vee-validate';
  */
 
 require('./bootstrap');
+require('es6-promise').polyfill();
 
 window.Vue = require('vue');
 
