@@ -926,14 +926,14 @@ table .checkbox__input + label::after {
   display: flex;
 }
 
-.radio--password {
+.radio--column {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
 }
 
-.radio--password .radio__group {
+.radio--column .radio__group {
   margin-right: 0;
   margin-bottom: 1rem;
 }
