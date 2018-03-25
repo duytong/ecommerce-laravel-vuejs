@@ -372,16 +372,6 @@ template {
   opacity: 0.65;
 }
 
-.btn.btn--raised {
-  -webkit-box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-          box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-}
-
-.btn.btn--raised:hover {
-  -webkit-box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-          box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-}
-
 .btn--primary {
   background-color: #3498db;
 }
@@ -522,7 +512,7 @@ template {
 
 .pagination__item.active .pagination__link {
   color: #fff;
-  background-color: #00b894;
+  background-color: #00cec9;
   pointer-events: none;
   cursor: auto;
 }
@@ -541,11 +531,11 @@ template {
   padding: 0 1rem;
   text-align: center;
   border-radius: 0.25rem;
-  color: #2c3e50;
+  color: #34495e;
 }
 
 .pagination__link:hover {
-  color: #00b894;
+  color: #00cec9;
 }
 
 @media (max-width: 575px) {
@@ -584,19 +574,23 @@ template {
   margin-bottom: 1.5rem;
 }
 
-.datatable__action,
-.datatable__handle,
-.datatable__footer {
+.datatable__handle {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  margin-bottom: 1.5rem;
 }
 
-.datatable__action {
-  margin-bottom: 1.5rem;
+.datatable__filter {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 .datatable__select {
@@ -616,7 +610,57 @@ template {
   overflow-x: auto;
 }
 
+.datatable .checkbox__input + label {
+  margin-left: 0;
+}
+
+.datatable .checkbox__input + label::before {
+  top: -14px;
+  left: -16px;
+}
+
+.datatable .checkbox__input + label::after {
+  top: -13px;
+  left: -10px;
+}
+
+.datatable__action {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.datatable__action a.btn {
+  min-width: 2rem;
+  height: 2rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0;
+  margin-right: 0.5rem;
+}
+
+.datatable__action a.btn:last-child {
+  margin-right: 0;
+}
+
+.datatable__action i {
+  font-size: inherit;
+}
+
 .datatable__footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -627,11 +671,11 @@ template {
   margin: 0.75rem auto 0;
 }
 
-.datatable table {
+table {
   width: 100%;
 }
 
-.datatable tbody tr {
+tbody tr {
   -webkit-animation: opacity 0.3s ease-in-out;
           animation: opacity 0.3s ease-in-out;
 }
@@ -656,32 +700,18 @@ template {
   }
 }
 
-.datatable th,
-.datatable td {
+th,
+td {
   padding: 0.75rem;
   white-space: nowrap;
 }
 
-.datatable th {
+th {
   text-transform: uppercase;
 }
 
-.datatable .checkbox__input + label {
-  margin-left: 0;
-}
-
-.datatable .checkbox__input + label::before {
-  top: -14px;
-  left: -16px;
-}
-
-.datatable .checkbox__input + label::after {
-  top: -13px;
-  left: -10px;
-}
-
 @media (max-width: 575px) {
-  .datatable__action {
+  .datatable__handle {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
@@ -691,11 +721,11 @@ template {
             align-items: center;
   }
 
-  .datatable__action .btn:last-of-type {
+  .datatable__handle .btn:last-of-type {
     margin-top: 1.5rem;
   }
 
-  .datatable__handle {
+  .datatable__filter {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
@@ -1086,8 +1116,8 @@ template {
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
-  border: 4px solid rgba(26, 188, 156, 0.3);
-  border-top-color: #1abc9c;
+  border: 4px solid rgba(0, 206, 201, 0.3);
+  border-top-color: #00cec9;
   margin: 0.75rem auto 0;
   -webkit-animation: rotate 1s infinite;
           animation: rotate 1s infinite;
@@ -1217,7 +1247,6 @@ aside {
     z-index: 2;
     -webkit-transform: translateX(-100%);
             transform: translateX(-100%);
-    background-color: #fff;
     -webkit-box-shadow: 0 0 2rem 0.0625rem rgba(0, 0, 0, 0.15);
             box-shadow: 0 0 2rem 0.0625rem rgba(0, 0, 0, 0.15);
   }

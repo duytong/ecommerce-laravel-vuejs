@@ -14732,9 +14732,9 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_2_vee_validate__["a" /* default */]);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('card', __webpack_require__(139));
-Vue.component('breadcrumb', __webpack_require__(113));
-Vue.component('v-table', __webpack_require__(116));
+Vue.component('card', __webpack_require__(113));
+Vue.component('breadcrumb', __webpack_require__(115));
+Vue.component('v-table', __webpack_require__(118));
 
 var app = new Vue({
   el: '#app',
@@ -17448,7 +17448,7 @@ var render = function() {
           _c(
             "router-link",
             {
-              staticClass: "btn btn--primary btn--raised",
+              staticClass: "btn btn--primary",
               attrs: { to: "/permissions/create" }
             },
             [_vm._v("New permission")]
@@ -56828,9 +56828,80 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(114)
+var __vue_script__ = null
 /* template */
-var __vue_template__ = __webpack_require__(115)
+var __vue_template__ = __webpack_require__(114)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Card.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4cf53df2", Component.options)
+  } else {
+    hotAPI.reload("data-v-4cf53df2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card__header" }, [_c("breadcrumb")], 1),
+    _vm._v(" "),
+    _c("div", { staticClass: "card__body" }, [_vm._t("content")], 2)
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4cf53df2", module.exports)
+  }
+}
+
+/***/ }),
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(116)
+/* template */
+var __vue_template__ = __webpack_require__(117)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -56869,7 +56940,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 114 */
+/* 116 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56906,7 +56977,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 115 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -56948,15 +57019,15 @@ if (false) {
 }
 
 /***/ }),
-/* 116 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(117)
+var __vue_script__ = __webpack_require__(119)
 /* template */
-var __vue_template__ = __webpack_require__(124)
+var __vue_template__ = __webpack_require__(126)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -56995,17 +57066,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 117 */
+/* 119 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toastr__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toastr__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Pagination__ = __webpack_require__(118);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Pagination__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Pagination__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ConfirmDelete__ = __webpack_require__(141);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ConfirmDelete__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ConfirmDelete___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__ConfirmDelete__);
+//
 //
 //
 //
@@ -57107,7 +57179,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       items: [],
       pagination: {},
       perPage: 10,
-      options: [{ text: '10', value: 10 }, { text: '25', value: 25 }, { text: '50', value: 50 }, { text: '100', value: 100 }],
+      perPageOptions: [10, 25, 50, 100],
       selected: [],
       keywords: '',
       loading: false,
@@ -57126,9 +57198,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       set: function set(value) {
         var selected = [];
 
-        this.items.forEach(function (item) {
-          selected.push(item.id);
-        });
+        if (value) {
+          this.items.forEach(function (item) {
+            selected.push(item.id);
+          });
+        }
 
         this.selected = selected;
       }
@@ -57215,21 +57289,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         _this4.loading = false;
         _this4.loadData(_this4.perPage);
         _this4.selected = [];
+
+        console.log(response);
       });
     }
   }
 });
 
 /***/ }),
-/* 118 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(119)
+var __vue_script__ = __webpack_require__(121)
 /* template */
-var __vue_template__ = __webpack_require__(120)
+var __vue_template__ = __webpack_require__(122)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -57268,7 +57344,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 119 */
+/* 121 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57371,7 +57447,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 120 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -57519,10 +57595,178 @@ if (false) {
 }
 
 /***/ }),
-/* 121 */,
-/* 122 */,
-/* 123 */,
+/* 123 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(124)
+/* template */
+var __vue_template__ = __webpack_require__(125)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\ConfirmDelete.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1d0645b8", Component.options)
+  } else {
+    hotAPI.reload("data-v-1d0645b8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
 /* 124 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['id', 'selected'],
+  computed: {
+    question: function question() {
+      if (this.selected) {
+        var missingText = this.textItemSingularOrPlural + 'selected?';
+      } else {
+        var missingText = 'this item?';
+      }
+
+      return 'Are you sure you want to delete ' + missingText;
+    },
+    textItemSingularOrPlural: function textItemSingularOrPlural() {
+      if (this.selected) {
+        return this.selected.length > 1 ? this.selected.length + ' items' : 'item';
+      } else {
+        return 'item';
+      }
+    }
+  },
+  methods: {
+    deleteData: function deleteData(id) {
+      this.$emit('deleteData', id);
+    }
+  }
+});
+
+/***/ }),
+/* 125 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "dialog" }, [
+    _c("div", { staticClass: "dialog__wrapper" }, [
+      _c("div", { staticClass: "dialog__content" }, [
+        _c("div", { staticClass: "dialog__header" }, [
+          _c("strong", [_vm._v(_vm._s(_vm.question))])
+        ]),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "dialog__footer" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn--secondary js-dismiss-dialog",
+              attrs: { type: "button" }
+            },
+            [_vm._v("No, Keep " + _vm._s(_vm.textItemSingularOrPlural))]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn--danger js-dismiss-dialog",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  _vm.deleteData(_vm.id)
+                }
+              }
+            },
+            [_vm._v("Yes, Delete " + _vm._s(_vm.textItemSingularOrPlural))]
+          )
+        ]),
+        _vm._v(" "),
+        _c("a", {
+          staticClass: "close js-dismiss-dialog",
+          attrs: { href: "#" }
+        })
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dialog__body" }, [
+      _vm._v(
+        "Delete an item will permanently remove it and all its relations. "
+      ),
+      _c("strong", [_vm._v("Warning: This can not undone.")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1d0645b8", module.exports)
+  }
+}
+
+/***/ }),
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -57537,7 +57781,7 @@ var render = function() {
           _c("div", { staticClass: "datatable__header" }, [
             _c(
               "div",
-              { staticClass: "datatable__action" },
+              { staticClass: "datatable__handle" },
               [
                 _vm._t("button-create"),
                 _vm._v(" "),
@@ -57545,7 +57789,7 @@ var render = function() {
                   ? _c(
                       "button",
                       {
-                        staticClass: "btn btn--danger btn--raised js-dialog",
+                        staticClass: "btn btn--danger js-dialog",
                         attrs: { disabled: _vm.loading }
                       },
                       [_vm._v("Delete")]
@@ -57560,7 +57804,7 @@ var render = function() {
               2
             ),
             _vm._v(" "),
-            _c("div", { staticClass: "datatable__handle" }, [
+            _c("div", { staticClass: "datatable__filter" }, [
               _c("div", { staticClass: "datatable__select" }, [
                 _c("span", [_vm._v("Show")]),
                 _vm._v(" "),
@@ -57597,10 +57841,12 @@ var render = function() {
                       ]
                     }
                   },
-                  _vm._l(_vm.options, function(option) {
-                    return _c("option", { domProps: { value: option.value } }, [
-                      _vm._v(_vm._s(option.text))
-                    ])
+                  _vm._l(_vm.perPageOptions, function(perPageOption) {
+                    return _c(
+                      "option",
+                      { domProps: { value: perPageOption } },
+                      [_vm._v(_vm._s(perPageOption))]
+                    )
                   })
                 ),
                 _vm._v(" "),
@@ -57746,64 +57992,55 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _c("td", [
-                        _c("div", { staticClass: "dropdown" }, [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "dropdown__toggle js-dropdown",
-                              attrs: { href: "#" }
-                            },
-                            [_c("i", { staticClass: "icon-options" })]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "dropdown__menu" },
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  staticClass: "dropdown__item",
-                                  attrs: {
-                                    to: "/" + _vm.tableName + "/" + item.id
-                                  }
-                                },
-                                [_vm._v("Show")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "router-link",
-                                {
-                                  staticClass: "dropdown__item",
-                                  attrs: {
-                                    to:
-                                      "/" +
-                                      _vm.tableName +
-                                      "/" +
-                                      item.id +
-                                      "/edit"
-                                  }
-                                },
-                                [_vm._v("Edit")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "dropdown__item js-dialog",
-                                  attrs: { href: "#" }
-                                },
-                                [_vm._v("Delete")]
-                              ),
-                              _vm._v(" "),
-                              _c("confirm-delete", {
-                                attrs: { id: item.id },
-                                on: { deleteData: _vm.deleteData }
-                              })
-                            ],
-                            1
-                          )
-                        ])
+                        _c(
+                          "div",
+                          { staticClass: "datatable__action" },
+                          [
+                            _c(
+                              "router-link",
+                              {
+                                staticClass: "btn btn--primary",
+                                attrs: {
+                                  to: "/" + _vm.tableName + "/" + item.id,
+                                  title: "Show"
+                                }
+                              },
+                              [_c("i", { staticClass: "icon-info" })]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "router-link",
+                              {
+                                staticClass: "btn btn--success",
+                                attrs: {
+                                  to:
+                                    "/" +
+                                    _vm.tableName +
+                                    "/" +
+                                    item.id +
+                                    "/edit",
+                                  title: "Edit"
+                                }
+                              },
+                              [_c("i", { staticClass: "icon-pencil" })]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn--danger js-dialog",
+                                attrs: { href: "#", title: "delete" }
+                              },
+                              [_c("i", { staticClass: "icon-trash" })]
+                            ),
+                            _vm._v(" "),
+                            _c("confirm-delete", {
+                              attrs: { id: item.id },
+                              on: { deleteData: _vm.deleteData }
+                            })
+                          ],
+                          1
+                        )
                       ])
                     ],
                     2
@@ -57870,8 +58107,6 @@ if (false) {
 }
 
 /***/ }),
-/* 125 */,
-/* 126 */,
 /* 127 */
 /***/ (function(module, exports) {
 
@@ -57951,258 +58186,6 @@ $(function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 129 */,
-/* 130 */,
-/* 131 */,
-/* 132 */,
-/* 133 */,
-/* 134 */,
-/* 135 */,
-/* 136 */,
-/* 137 */,
-/* 138 */,
-/* 139 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-var __vue_script__ = null
-/* template */
-var __vue_template__ = __webpack_require__(140)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\Card.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4cf53df2", Component.options)
-  } else {
-    hotAPI.reload("data-v-4cf53df2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 140 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "card__header" }, [_c("breadcrumb")], 1),
-    _vm._v(" "),
-    _c("div", { staticClass: "card__body" }, [_vm._t("content")], 2)
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-4cf53df2", module.exports)
-  }
-}
-
-/***/ }),
-/* 141 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-var __vue_script__ = __webpack_require__(142)
-/* template */
-var __vue_template__ = __webpack_require__(143)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\ConfirmDelete.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1d0645b8", Component.options)
-  } else {
-    hotAPI.reload("data-v-1d0645b8", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 142 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['id', 'selected'],
-  computed: {
-    question: function question() {
-      if (this.selected) {
-        var missingText = this.textItemSingularOrPlural + 'selected?';
-      } else {
-        var missingText = 'this item?';
-      }
-
-      return 'Are you sure you want to delete ' + missingText;
-    },
-    textItemSingularOrPlural: function textItemSingularOrPlural() {
-      if (this.selected) {
-        return this.selected.length > 1 ? this.selected.length + ' items' : 'item';
-      } else {
-        return 'item';
-      }
-    }
-  },
-  methods: {
-    deleteData: function deleteData(id) {
-      this.$emit('deleteData', id);
-    }
-  }
-});
-
-/***/ }),
-/* 143 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "dialog" }, [
-    _c("div", { staticClass: "dialog__wrapper" }, [
-      _c("div", { staticClass: "dialog__content" }, [
-        _c("div", { staticClass: "dialog__header" }, [
-          _c("strong", [_vm._v(_vm._s(_vm.question))])
-        ]),
-        _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "dialog__footer" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn--secondary js-dismiss-dialog",
-              attrs: { type: "button" }
-            },
-            [_vm._v("No, Keep " + _vm._s(_vm.textItemSingularOrPlural))]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn--danger js-dismiss-dialog",
-              attrs: { type: "button" },
-              on: {
-                click: function($event) {
-                  _vm.deleteData(_vm.id)
-                }
-              }
-            },
-            [_vm._v("Yes, Delete " + _vm._s(_vm.textItemSingularOrPlural))]
-          )
-        ]),
-        _vm._v(" "),
-        _c("a", {
-          staticClass: "close js-dismiss-dialog",
-          attrs: { href: "#" }
-        })
-      ])
-    ])
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "dialog__body" }, [
-      _vm._v(
-        "Delete an item will permanently remove it and all its relations. "
-      ),
-      _c("strong", [_vm._v("Warning: This can not undone.")])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1d0645b8", module.exports)
-  }
-}
 
 /***/ })
 /******/ ]);
