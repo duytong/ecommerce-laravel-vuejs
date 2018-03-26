@@ -14735,6 +14735,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_2_vee_validate__["a" /* default */]);
 Vue.component('card', __webpack_require__(113));
 Vue.component('breadcrumb', __webpack_require__(115));
 Vue.component('v-table', __webpack_require__(118));
+Vue.component('v-form', __webpack_require__(139));
 
 var app = new Vue({
   el: '#app',
@@ -16409,7 +16410,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
 		data: function data() {
 				return {
-						tableFields: [{ th: 'Id', column: 'id' }, { th: 'Name', column: 'name' }, { th: 'Display Name', column: 'display_name' }, { th: 'Description', column: 'description' }]
+						tableFields: [{ th: 'Id', td: 'id' }, { th: 'Name', td: 'name' }, { th: 'Display Name', td: 'display_name' }, { th: 'Description', td: 'description' }]
 				};
 		}
 });
@@ -16432,10 +16433,7 @@ var render = function() {
         [
           _c(
             "router-link",
-            {
-              staticClass: "btn btn--primary btn--raised",
-              attrs: { to: "/roles/create" }
-            },
+            { staticClass: "btn btn--primary", attrs: { to: "/roles/create" } },
             [_vm._v("New role")]
           )
         ],
@@ -16518,21 +16516,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: { RoleForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a },
-  data: function data() {
-    return {
-      role: {},
-      selected: []
-    };
-  }
+	components: {
+		roleForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a
+	},
+	data: function data() {
+		return {
+			role: {},
+			selected: []
+		};
+	}
 });
 
 /***/ }),
@@ -16577,17 +16573,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['role', 'selected'],
+  props: {
+    role: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    selected: {
+      type: Array
+    }
+  },
   data: function data() {
     return {
+      apiUrl: 'api/admin/',
       permissions: [],
       permissionsSelected: this.selected,
       loading: false,
@@ -16595,36 +16598,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   created: function created() {
-    this.loadPermissions();
+    this.fetchPermissions();
   },
 
   methods: {
-    loadPermissions: function loadPermissions() {
+    fetchPermissions: function fetchPermissions() {
       var _this = this;
 
       var columns = ['id', 'display_name'];
+      var url = this.apiUrl + 'permissions/index/' + columns;
 
-      axios.get('api/admin/permissions/index/' + columns).then(function (response) {
+      axios.get(url).then(function (response) {
         _this.permissions = response.data;
       });
     },
     onSubmit: function onSubmit() {
       var _this2 = this;
 
-      if (!this.errors.items.length) {
-        this.role.permissions_id = this.permissionsSelected;
+      this.$validator.validateAll().then(function (result) {
+        if (result) {
+          _this2.role.permissions_id = _this2.permissionsSelected;
 
-        var url = 'api/admin/roles' + (this.role.id ? '/' + this.role.id : '');
-        var method = this.role.id ? 'patch' : 'post';
-        var action = this.role.id ? 'Updated' : 'Created';
+          var url = _this2.apiUrl + 'roles/' + (_this2.role.id ? _this2.role.id : '');
+          var method = _this2.role.id ? 'patch' : 'post';
+          var action = _this2.role.id ? 'Updated' : 'Created';
 
-        axios[method](url, this.role).then(function (response) {
-          __WEBPACK_IMPORTED_MODULE_0_toastr___default.a.success(action + ' successfully!');
-          _this2.$router.push('/roles');
-        }, function (error) {
-          _this2.errorsMessage = error.response.data.errors;
-        });
-      }
+          axios[method](url, _this2.role).then(function (response) {
+            __WEBPACK_IMPORTED_MODULE_0_toastr___default.a.success(action + ' successfully!');
+            _this2.$router.push('/roles');
+          }, function (error) {
+            _this2.errorsMessage = error.response.data.errors;
+          });
+        }
+      });
     },
     removeErrorsMessage: function removeErrorsMessage() {
       this.errorsMessage = {};
@@ -16652,208 +16658,191 @@ var render = function() {
       }
     },
     [
-      _c("div", { staticClass: "form__wrapper" }, [
-        _c("div", { staticClass: "form__data" }, [
-          _c(
-            "div",
-            {
-              staticClass: "form__group",
-              class: {
-                "form__group--invalid":
-                  _vm.errors.has("name") || _vm.errorsMessage.name
-              }
-            },
-            [
-              _c("label", { staticClass: "form__label" }, [_vm._v("Name")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.role.name,
-                    expression: "role.name"
-                  },
-                  {
-                    name: "validate",
-                    rawName: "v-validate",
-                    value: "required",
-                    expression: "'required'"
-                  }
-                ],
-                staticClass: "form__control input",
-                attrs: {
-                  id: "name",
-                  type: "text",
-                  name: "name",
-                  autofocus: ""
-                },
-                domProps: { value: _vm.role.name },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.role, "name", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("strong", { staticClass: "form__invalid-text" }, [
-                _vm._v(_vm._s(_vm.errors.first("name")))
-              ]),
-              _vm._v(" "),
-              _vm.errorsMessage.name
-                ? _c("strong", [_vm._v(_vm._s(_vm.errorsMessage.name[0]))])
-                : _vm._e()
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "form__group",
-              class: { "form__group--invalid": _vm.errors.has("display name") }
-            },
-            [
-              _vm._m(0),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.role.display_name,
-                    expression: "role.display_name"
-                  },
-                  {
-                    name: "validate",
-                    rawName: "v-validate",
-                    value: "required",
-                    expression: "'required'"
-                  }
-                ],
-                staticClass: "form__control input",
-                attrs: { type: "text", name: "display name" },
-                domProps: { value: _vm.role.display_name },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.role, "display_name", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("strong", { staticClass: "form__invalid-text" }, [
-                _vm._v(_vm._s(_vm.errors.first("display name")))
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "form__group",
-              class: { "form__group--invalid": _vm.errors.has("description") }
-            },
-            [
-              _vm._m(1),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.role.description,
-                    expression: "role.description"
-                  },
-                  {
-                    name: "validate",
-                    rawName: "v-validate",
-                    value: "required",
-                    expression: "'required'"
-                  }
-                ],
-                staticClass: "form__control input",
-                attrs: { type: "text", name: "description" },
-                domProps: { value: _vm.role.description },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.role, "description", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("strong", { staticClass: "form__invalid-text" }, [
-                _vm._v(_vm._s(_vm.errors.first("description")))
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "form__group" }, [
-            _vm._m(2),
+      _c("div", { staticClass: "form__data" }, [
+        _c(
+          "div",
+          {
+            staticClass: "form__group",
+            class: {
+              "form__group--invalid":
+                _vm.errors.has("name") || _vm.errorsMessage.name
+            }
+          },
+          [
+            _c("label", { staticClass: "form__label" }, [_vm._v("Name")]),
             _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "checkbox" },
-              _vm._l(_vm.permissions, function(permission) {
-                return _c("div", { staticClass: "checkbox__group" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.permissionsSelected,
-                        expression: "permissionsSelected"
-                      }
-                    ],
-                    staticClass: "checkbox__input",
-                    attrs: { type: "checkbox", id: permission.id },
-                    domProps: {
-                      value: permission.id,
-                      checked: Array.isArray(_vm.permissionsSelected)
-                        ? _vm._i(_vm.permissionsSelected, permission.id) > -1
-                        : _vm.permissionsSelected
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.permissionsSelected,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = permission.id,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              (_vm.permissionsSelected = $$a.concat([$$v]))
-                          } else {
-                            $$i > -1 &&
-                              (_vm.permissionsSelected = $$a
-                                .slice(0, $$i)
-                                .concat($$a.slice($$i + 1)))
-                          }
-                        } else {
-                          _vm.permissionsSelected = $$c
-                        }
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("label", { attrs: { for: permission.id } }, [
-                    _vm._v(_vm._s(permission.display_name))
-                  ])
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.role.name,
+                  expression: "role.name"
+                },
+                {
+                  name: "validate",
+                  rawName: "v-validate",
+                  value: "required",
+                  expression: "'required'"
+                }
+              ],
+              staticClass: "form__control",
+              attrs: { id: "name", type: "text", name: "name" },
+              domProps: { value: _vm.role.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.role, "name", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.errors.has("name")
+              ? _c("strong", { staticClass: "form__invalid-text" }, [
+                  _vm._v(_vm._s(_vm.errors.first("name")))
                 ])
-              })
-            )
-          ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.errorsMessage.name
+              ? _c("strong", [_vm._v(_vm._s(_vm.errorsMessage.name[0]))])
+              : _vm._e()
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "form__group" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.role.display_name,
+                expression: "role.display_name"
+              }
+            ],
+            staticClass: "form__control",
+            attrs: { type: "text" },
+            domProps: { value: _vm.role.display_name },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.role, "display_name", $event.target.value)
+              }
+            }
+          })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "form__action" }, [_vm._t("button-action")], 2)
+        _c("div", { staticClass: "form__group" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.role.description,
+                expression: "role.description"
+              }
+            ],
+            staticClass: "form__control",
+            attrs: { type: "text" },
+            domProps: { value: _vm.role.description },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.role, "description", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form__group" }, [
+          _vm._m(2),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "checkbox" },
+            _vm._l(_vm.permissions, function(permission) {
+              return _c("div", { staticClass: "checkbox__group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.permissionsSelected,
+                      expression: "permissionsSelected"
+                    }
+                  ],
+                  staticClass: "checkbox__input",
+                  attrs: { type: "checkbox", id: permission.id },
+                  domProps: {
+                    value: permission.id,
+                    checked: Array.isArray(_vm.permissionsSelected)
+                      ? _vm._i(_vm.permissionsSelected, permission.id) > -1
+                      : _vm.permissionsSelected
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.permissionsSelected,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = permission.id,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            (_vm.permissionsSelected = $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            (_vm.permissionsSelected = $$a
+                              .slice(0, $$i)
+                              .concat($$a.slice($$i + 1)))
+                        }
+                      } else {
+                        _vm.permissionsSelected = $$c
+                      }
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: permission.id } }, [
+                  _vm._v(_vm._s(permission.display_name))
+                ])
+              ])
+            })
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form__action" }, [
+        !_vm.role.id
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn--primary",
+                attrs: { type: "submit", disabled: _vm.loading }
+              },
+              [_vm._v("Create")]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.role.id
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn--success",
+                attrs: { type: "submit", disabled: _vm.loading }
+              },
+              [_vm._v("Update")]
+            )
+          : _vm._e()
       ])
     ]
   )
@@ -16909,25 +16898,9 @@ var render = function() {
     [
       _c(
         "template",
-        { slot: "form" },
+        { slot: "content" },
         [
-          _c(
-            "role-form",
-            { attrs: { role: _vm.role, selected: _vm.selected } },
-            [
-              _c("template", { slot: "button-action" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn--primary btn--raised",
-                    attrs: { type: "submit" }
-                  },
-                  [_vm._v("Create Role")]
-                )
-              ])
-            ],
-            2
-          )
+          _c("role-form", { attrs: { role: _vm.role, selected: _vm.selected } })
         ],
         1
       )
@@ -17037,52 +17010,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            user: {}
-        };
-    },
-    mounted: function mounted() {
-        this.fetchUser();
-    },
+  data: function data() {
+    return {
+      role: {}
+    };
+  },
+  created: function created() {
+    this.fetchRole();
+  },
 
-    methods: {
-        fetchUser: function fetchUser() {
-            var _this = this;
+  methods: {
+    fetchRole: function fetchRole() {
+      var _this = this;
 
-            axios.get("api/admin/users/" + this.$route.params.id).then(function (response) {
-                _this.user = response.data.user;
-                _this.user.created_at = response.data.created_at;
-                _this.user.updated_at = response.data.updated_at;
-                _this.user.roles = response.data.roles;
-            });
-        }
+      axios.get("api/admin/roles/" + this.$route.params.id).then(function (response) {
+        _this.role = response.data.role;
+        _this.role.created_at = response.data.created_at;
+        _this.role.updated_at = response.data.updated_at;
+      });
     }
+  }
 });
 
 /***/ }),
@@ -17094,112 +17043,63 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "card-header" }, [_vm._v("Basic info")]),
+    _c("div", { staticClass: "card__header" }, [_c("breadcrumb")], 1),
     _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "card-body" },
-      [
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Id:")]),
-          _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(_vm.user.id))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Name:")]),
-          _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(_vm.user.name))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Email:")]),
-          _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(_vm.user.email))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Date of birth:")]),
-          _vm._v(" "),
-          !_vm.user.date_of_birth
-            ? _c("em", [_vm._v("null")])
-            : _c("span", [_vm._v(_vm._s(_vm.user.date_of_birth))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Gender:")]),
-          _vm._v(" "),
-          !_vm.user.gender ? _c("em", [_vm._v("null")]) : _vm._e(),
-          _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(_vm.user.gender))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Phone:")]),
-          _vm._v(" "),
-          !_vm.user.phone ? _c("em", [_vm._v("null")]) : _vm._e(),
-          _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(_vm.user.phone))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Address:")]),
-          _vm._v(" "),
-          !_vm.user.address ? _c("em", [_vm._v("null")]) : _vm._e(),
-          _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(_vm.user.address))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Role:")]),
-          _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(_vm.user.role))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Verify:")]),
-          _vm._v(" "),
-          _vm.user.verify_token
-            ? _c("span", [_vm._v("not verified")])
-            : _c("span", [_vm._v("verified")])
-        ]),
-        _vm._v(" "),
+    _c("div", { staticClass: "card__body" }, [
+      _c("form", { staticClass: "form" }, [
         _c(
           "div",
-          { staticClass: "form__group" },
+          { staticClass: "form__wrapper" },
           [
-            _c("label", [_vm._v("Role:")]),
+            _c("div", { staticClass: "form__group" }, [
+              _c("label", [_vm._v("Id:")]),
+              _vm._v(" "),
+              _c("span", [_vm._v(_vm._s(_vm.role.id))])
+            ]),
             _vm._v(" "),
-            _vm._l(_vm.user.roles, function(role) {
-              return _c("span", [_vm._v(_vm._s(role))])
-            })
+            _c("div", { staticClass: "form__group" }, [
+              _c("label", [_vm._v("Name:")]),
+              _vm._v(" "),
+              _c("span", [_vm._v(_vm._s(_vm.role.name))])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form__group" }, [
+              _c("label", [_vm._v("Display Name:")]),
+              _vm._v(" "),
+              _c("span", [_vm._v(_vm._s(_vm.role.display_name))])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form__group" }, [
+              _c("label", [_vm._v("Description:")]),
+              _vm._v(" "),
+              _c("span", [_vm._v(_vm._s(_vm.role.description))])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form__group" }, [
+              _c("label", [_vm._v("Created at:")]),
+              _vm._v(" "),
+              _c("span", [_vm._v(_vm._s(_vm.role.created_at))])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form__group" }, [
+              _c("label", [_vm._v("Updated at:")]),
+              _vm._v(" "),
+              _c("span", [_vm._v(_vm._s(_vm.role.updated_at))])
+            ]),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "btn btn--success",
+                attrs: { to: "/roles/" + _vm.role.id + "/edit" }
+              },
+              [_vm._v("Edit")]
+            )
           ],
-          2
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Created at:")]),
-          _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(_vm.user.created_at))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _c("label", [_vm._v("Updated at:")]),
-          _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(_vm.user.updated_at))])
-        ]),
-        _vm._v(" "),
-        _c(
-          "router-link",
-          {
-            staticClass: "btn btn--success",
-            attrs: { to: "/user/" + _vm.user.id + "/edit" }
-          },
-          [_vm._v("Edit")]
+          1
         )
-      ],
-      1
-    )
+      ])
+    ])
   ])
 }
 var staticRenderFns = []
@@ -17537,11 +17437,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	components: { PermissionForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a },
-	data: function data() {
-		return {
-			permission: {}
-		};
+	components: {
+		permissionForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a
 	}
 });
 
@@ -17631,15 +17528,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['permission'],
+  props: {
+    initialPermission: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
   data: function data() {
     return {
-      permissionCreate: this.permission,
       permissionType: 'basic',
+      permission: this.initialPermission,
       resource: '',
       crudOptions: ['Create', 'Read', 'Update', 'Delete'],
       crudSelected: ['Create', 'Read', 'Update', 'Delete'],
@@ -17658,41 +17584,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     crudDescription: function crudDescription(item) {
       return 'Allows a user to ' + item.toUpperCase() + ' a ' + this.resource.substr(0, 1).toUpperCase() + this.resource.substr(1).toLowerCase();
     },
-    onSubmit: function onSubmit() {
+    onSubmit: function onSubmit(scope) {
       var _this = this;
 
-      if (!this.errors.items.length) {
-        this.loading = true;
+      this.$validator.validateAll(scope).then(function (result) {
+        if (result) {
+          _this.loading = true;
 
-        if (!this.permission.id) {
-          this.permissionCreate.permission_type = this.permissionType;
+          if (!_this.initialPermission.id) {
+            _this.permission.permission_type = _this.permissionType;
 
-          if (this.permissionType === 'crud') {
-            this.permissionCreate.resource = this.resource;
-            this.permissionCreate.crud_selected = this.crudSelected;
+            if (_this.permissionType === 'crud') {
+              _this.permission.resource = _this.resource;
+              _this.permission.crud_selected = _this.crudSelected;
+            }
           }
+
+          var url = 'api/admin/permissions' + (_this.initialPermission.id ? '/' + _this.initialPermission.id : '');
+          var method = _this.initialPermission.id ? 'patch' : 'post';
+          var request = _this.initialPermission.id ? _this.initialPermission : _this.permission;
+          var action = _this.initialPermission.id ? 'Updated' : 'Created';
+
+          axios[method](url, request).then(function (response) {
+            __WEBPACK_IMPORTED_MODULE_0_toastr___default.a.success(action + ' successfully!');
+
+            if (method === 'post') {
+              _this.$router.push('/permissions');
+            } else {
+              _this.$router.push('/permissions/' + _this.$route.params.id);
+            }
+          }, function (error) {
+            _this.loading = false;
+            _this.errorsMessage = error.response.data.errors;
+          });
         }
-
-        var url = 'api/admin/permissions' + (this.permission.id ? '/' + this.permission.id : '');
-        var method = this.permission.id ? 'patch' : 'post';
-        var action = this.permission.id ? 'Updated' : 'Created';
-        var request = this.permission.id ? this.permission : this.permissionCreate;
-
-        axios[method](url, request).then(function (response) {
-          __WEBPACK_IMPORTED_MODULE_0_toastr___default.a.success(action + ' successfully!');
-
-          if (method === 'post') {
-            _this.$router.push('/permissions');
-          } else {
-            _this.$router.push('/permissions/' + _this.$route.params.id);
-          }
-        }, function (error) {
-          _this.loading = false;
-          _this.errorsMessage = error.response.data.errors;
-        }).catch(function (error) {
-          _this.loading = false;
-        });
-      }
+      });
     },
     removeErrorsMessage: function removeErrorsMessage() {
       this.errorsMessage = {};
@@ -17708,390 +17634,526 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "form",
-    {
-      staticClass: "form",
-      on: {
-        submit: function($event) {
-          $event.preventDefault()
-          return _vm.onSubmit($event)
+  return _c("div", [
+    _c(
+      "form",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.permissionType === "basic",
+            expression: "permissionType === 'basic'"
+          }
+        ],
+        staticClass: "form",
+        attrs: { "data-vv-scope": "basic" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            _vm.onSubmit("basic")
+          }
         }
-      }
-    },
-    [
-      _c("div", { staticClass: "form__wrapper" }, [
-        _c("div", { staticClass: "form__data" }, [
-          !_vm.permission.id
-            ? _c("div", { staticClass: "form__group" }, [
-                _c("label", { staticClass: "form__label" }, [
-                  _vm._v("Permission Type")
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "radio" }, [
-                  _c("div", { staticClass: "radio__group" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.permissionType,
-                          expression: "permissionType"
-                        }
-                      ],
-                      staticClass: "radio__input",
-                      attrs: { type: "radio", id: "basic", value: "basic" },
-                      domProps: {
-                        checked: _vm._q(_vm.permissionType, "basic")
-                      },
-                      on: {
-                        change: function($event) {
-                          _vm.permissionType = "basic"
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("label", { attrs: { for: "basic" } }, [
-                      _vm._v("Basic Permission")
-                    ])
+      },
+      [
+        _c("div", { staticClass: "form__wrapper" }, [
+          _c("div", { staticClass: "form__data" }, [
+            !_vm.initialPermission.id
+              ? _c("div", { staticClass: "form__group" }, [
+                  _c("label", { staticClass: "form__label" }, [
+                    _vm._v("Permission Type")
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "radio__group" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.permissionType,
-                          expression: "permissionType"
+                  _c("div", { staticClass: "radio" }, [
+                    _c("div", { staticClass: "radio__group" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.permissionType,
+                            expression: "permissionType"
+                          }
+                        ],
+                        staticClass: "radio__input",
+                        attrs: { type: "radio", id: "basic", value: "basic" },
+                        domProps: {
+                          checked: _vm._q(_vm.permissionType, "basic")
+                        },
+                        on: {
+                          change: function($event) {
+                            _vm.permissionType = "basic"
+                          }
                         }
-                      ],
-                      staticClass: "radio__input",
-                      attrs: { type: "radio", id: "crud", value: "crud" },
-                      domProps: { checked: _vm._q(_vm.permissionType, "crud") },
-                      on: {
-                        change: function($event) {
-                          _vm.permissionType = "crud"
-                        }
-                      }
-                    }),
+                      }),
+                      _vm._v(" "),
+                      _c("label", { attrs: { for: "basic" } }, [
+                        _vm._v("Basic Permission")
+                      ])
+                    ]),
                     _vm._v(" "),
-                    _c("label", { attrs: { for: "crud" } }, [
-                      _vm._v("CRUD Permission")
+                    _c("div", { staticClass: "radio__group" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.permissionType,
+                            expression: "permissionType"
+                          }
+                        ],
+                        staticClass: "radio__input",
+                        attrs: { type: "radio", id: "crud", value: "crud" },
+                        domProps: {
+                          checked: _vm._q(_vm.permissionType, "crud")
+                        },
+                        on: {
+                          change: function($event) {
+                            _vm.permissionType = "crud"
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("label", { attrs: { for: "crud" } }, [
+                        _vm._v("CRUD Permission")
+                      ])
                     ])
                   ])
                 ])
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.permissionType === "basic"
-            ? _c("div", [
-                _c(
-                  "div",
-                  {
-                    staticClass: "form__group",
-                    class: {
-                      "form__group--invalid":
-                        _vm.errors.has("name") || _vm.errorsMessage.name
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "form__group",
+                class: {
+                  "form__group--invalid":
+                    _vm.errors.has("basic.name") || _vm.errorsMessage.name
+                }
+              },
+              [
+                _c("label", { staticClass: "form__label" }, [_vm._v("Name")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.initialPermission.name,
+                      expression: "initialPermission.name"
+                    },
+                    {
+                      name: "validate",
+                      rawName: "v-validate",
+                      value: "required",
+                      expression: "'required'"
                     }
+                  ],
+                  staticClass: "form__control",
+                  attrs: { type: "text", id: "name", name: "name" },
+                  domProps: { value: _vm.initialPermission.name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.initialPermission,
+                        "name",
+                        $event.target.value
+                      )
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.has("basic.name")
+                  ? _c("strong", { staticClass: "form__invalid-text" }, [
+                      _vm._v(_vm._s(_vm.errors.first("basic.name")))
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.errorsMessage.name
+                  ? _c("strong", { staticClass: "form__invalid-text" }, [
+                      _vm._v(_vm._s(_vm.errorsMessage.name[0]))
+                    ])
+                  : _vm._e()
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "form__group" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.initialPermission.display_name,
+                    expression: "initialPermission.display_name"
+                  }
+                ],
+                staticClass: "form__control",
+                attrs: { type: "text", name: "display name" },
+                domProps: { value: _vm.initialPermission.display_name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.initialPermission,
+                      "display_name",
+                      $event.target.value
+                    )
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form__group" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.initialPermission.description,
+                    expression: "initialPermission.description"
+                  }
+                ],
+                staticClass: "form__control",
+                attrs: {
+                  type: "text",
+                  name: "description",
+                  placeholder: "Describe what this permission does"
+                },
+                domProps: { value: _vm.initialPermission.description },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.initialPermission,
+                      "description",
+                      $event.target.value
+                    )
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.permissionType,
+                  expression: "permissionType"
+                }
+              ],
+              attrs: { type: "hidden" },
+              domProps: { value: _vm.permissionType },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.permissionType = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form__action" }, [
+            !_vm.initialPermission.id
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn--primary",
+                    attrs: { type: "submit", disabled: _vm.loading }
                   },
-                  [
-                    _c("label", { staticClass: "form__label" }, [
-                      _vm._v("Name")
-                    ]),
-                    _vm._v(" "),
+                  [_vm._v("Create")]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.initialPermission.id
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn--success",
+                    attrs: { type: "submit", disabled: _vm.loading }
+                  },
+                  [_vm._v("Update")]
+                )
+              : _vm._e()
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "form",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.permissionType === "crud",
+            expression: "permissionType === 'crud'"
+          }
+        ],
+        staticClass: "form",
+        attrs: { "data-vv-scope": "crud" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            _vm.onSubmit("crud")
+          }
+        }
+      },
+      [
+        _c("div", { staticClass: "form__wrapper" }, [
+          _c("div", { staticClass: "form__data" }, [
+            _c("div", { staticClass: "form__group" }, [
+              _c("label", { staticClass: "form__label" }, [
+                _vm._v("Permission Type")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "radio" }, [
+                _c("div", { staticClass: "radio__group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.permissionType,
+                        expression: "permissionType"
+                      }
+                    ],
+                    staticClass: "radio__input",
+                    attrs: { type: "radio", id: "basic", value: "basic" },
+                    domProps: { checked: _vm._q(_vm.permissionType, "basic") },
+                    on: {
+                      change: function($event) {
+                        _vm.permissionType = "basic"
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("label", { attrs: { for: "basic" } }, [
+                    _vm._v("Basic Permission")
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "radio__group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.permissionType,
+                        expression: "permissionType"
+                      }
+                    ],
+                    staticClass: "radio__input",
+                    attrs: { type: "radio", id: "crud", value: "crud" },
+                    domProps: { checked: _vm._q(_vm.permissionType, "crud") },
+                    on: {
+                      change: function($event) {
+                        _vm.permissionType = "crud"
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("label", { attrs: { for: "crud" } }, [
+                    _vm._v("CRUD Permission")
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "form__group",
+                class: {
+                  "form__group--invalid": _vm.errors.has("crud.resource")
+                }
+              },
+              [
+                _c("label", { staticClass: "form__label" }, [
+                  _vm._v("Resource")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.resource,
+                      expression: "resource"
+                    },
+                    {
+                      name: "validate",
+                      rawName: "v-validate",
+                      value: "required",
+                      expression: "'required'"
+                    }
+                  ],
+                  staticClass: "form__control",
+                  attrs: {
+                    type: "text",
+                    id: "resource",
+                    name: "resource",
+                    placeholder: "The name of the resource",
+                    autofocus: ""
+                  },
+                  domProps: { value: _vm.resource },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.resource = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.has("crud.resource")
+                  ? _c("strong", { staticClass: "form__invalid-text" }, [
+                      _vm._v(_vm._s(_vm.errors.first("crud.resource")))
+                    ])
+                  : _vm._e()
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "form__group" }, [
+              _c(
+                "div",
+                { staticClass: "checkbox" },
+                _vm._l(_vm.crudOptions, function(crudOption) {
+                  return _c("div", { staticClass: "checkbox__group" }, [
                     _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.permission.name,
-                          expression: "permission.name"
-                        },
-                        {
-                          name: "validate",
-                          rawName: "v-validate",
-                          value: "required",
-                          expression: "'required'"
+                          value: _vm.crudSelected,
+                          expression: "crudSelected"
                         }
                       ],
-                      staticClass: "form__control input",
-                      attrs: { id: "name", type: "text", name: "name" },
-                      domProps: { value: _vm.permission.name },
+                      staticClass: "checkbox__input",
+                      attrs: { type: "checkbox", id: crudOption },
+                      domProps: {
+                        value: crudOption,
+                        checked: Array.isArray(_vm.crudSelected)
+                          ? _vm._i(_vm.crudSelected, crudOption) > -1
+                          : _vm.crudSelected
+                      },
                       on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
+                        change: function($event) {
+                          var $$a = _vm.crudSelected,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = crudOption,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 && (_vm.crudSelected = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.crudSelected = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.crudSelected = $$c
                           }
-                          _vm.$set(_vm.permission, "name", $event.target.value)
                         }
                       }
                     }),
                     _vm._v(" "),
-                    _c("strong", { staticClass: "form__invalid-text" }, [
-                      _vm._v(_vm._s(_vm.errors.first("name")))
-                    ]),
-                    _vm._v(" "),
-                    _vm.errorsMessage.name
-                      ? _c("strong", [
-                          _vm._v(_vm._s(_vm.errorsMessage.name[0]))
-                        ])
-                      : _vm._e()
-                  ]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "form__group" }, [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.permission.display_name,
-                        expression: "permission.display_name"
-                      }
-                    ],
-                    staticClass: "form__control input",
-                    attrs: { type: "text", name: "display name" },
-                    domProps: { value: _vm.permission.display_name },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.permission,
-                          "display_name",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form__group" }, [
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.permission.description,
-                        expression: "permission.description"
-                      }
-                    ],
-                    staticClass: "form__control input",
-                    attrs: {
-                      type: "text",
-                      name: "description",
-                      placeholder: "Describe what this permission does"
-                    },
-                    domProps: { value: _vm.permission.description },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.permission,
-                          "description",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.permissionType === "crud"
-            ? _c("div", [
-                _c("div", { staticClass: "form__group" }, [
-                  _c("label", { staticClass: "form__label" }, [
-                    _vm._v("Resource")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.resource,
-                        expression: "resource"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "required",
-                        expression: "'required'"
-                      }
-                    ],
-                    staticClass: "form__control input",
-                    attrs: {
-                      id: "name",
-                      type: "text",
-                      name: "name",
-                      placeholder: "The name of the resource",
-                      autofocus: ""
-                    },
-                    domProps: { value: _vm.resource },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.resource = $event.target.value
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form__group" }, [
-                  _c(
-                    "div",
-                    { staticClass: "checkbox" },
-                    _vm._l(_vm.crudOptions, function(crudOption) {
-                      return _c("div", { staticClass: "checkbox__group" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.crudSelected,
-                              expression: "crudSelected"
-                            }
-                          ],
-                          staticClass: "checkbox__input",
-                          attrs: { type: "checkbox", id: crudOption },
-                          domProps: {
-                            value: crudOption,
-                            checked: Array.isArray(_vm.crudSelected)
-                              ? _vm._i(_vm.crudSelected, crudOption) > -1
-                              : _vm.crudSelected
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.crudSelected,
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = crudOption,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    (_vm.crudSelected = $$a.concat([$$v]))
-                                } else {
-                                  $$i > -1 &&
-                                    (_vm.crudSelected = $$a
-                                      .slice(0, $$i)
-                                      .concat($$a.slice($$i + 1)))
-                                }
-                              } else {
-                                _vm.crudSelected = $$c
-                              }
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("label", { attrs: { for: crudOption } }, [
-                          _vm._v(_vm._s(crudOption))
-                        ])
-                      ])
-                    })
-                  )
-                ]),
-                _vm._v(" "),
-                _vm.resource.length > 0 && _vm.crudSelected.length > 0
-                  ? _c("div", { staticClass: "form__group" }, [
-                      _c("div", { staticClass: "table-responsive" }, [
-                        _c("table", [
-                          _vm._m(2),
-                          _vm._v(" "),
-                          _c(
-                            "tbody",
-                            _vm._l(_vm.crudSelected, function(item) {
-                              return _c("tr", [
-                                _c("td", {
-                                  domProps: {
-                                    textContent: _vm._s(_vm.crudName(item))
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("td", {
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.crudDisplayName(item)
-                                    )
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("td", {
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.crudDescription(item)
-                                    )
-                                  }
-                                })
-                              ])
-                            })
-                          )
-                        ])
-                      ])
+                    _c("label", { attrs: { for: crudOption } }, [
+                      _vm._v(_vm._s(crudOption))
                     ])
-                  : _vm._e()
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.permissionType,
-                expression: "permissionType"
-              }
-            ],
-            attrs: { type: "hidden" },
-            domProps: { value: _vm.permissionType },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+                  ])
+                })
+              )
+            ]),
+            _vm._v(" "),
+            _vm.resource.length && _vm.crudSelected.length
+              ? _c("div", { staticClass: "form__group" }, [
+                  _c("div", { staticClass: "datatable__body" }, [
+                    _c("table", [
+                      _vm._m(2),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.crudSelected, function(item) {
+                          return _c("tr", [
+                            _c("td", {
+                              domProps: {
+                                textContent: _vm._s(_vm.crudName(item))
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", {
+                              domProps: {
+                                textContent: _vm._s(_vm.crudDisplayName(item))
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", {
+                              domProps: {
+                                textContent: _vm._s(_vm.crudDescription(item))
+                              }
+                            })
+                          ])
+                        })
+                      )
+                    ])
+                  ])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.permissionType,
+                  expression: "permissionType"
                 }
-                _vm.permissionType = $event.target.value
+              ],
+              attrs: { type: "hidden" },
+              domProps: { value: _vm.permissionType },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.permissionType = $event.target.value
+                }
               }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__action" }, [
-          !_vm.permission.id
-            ? _c(
-                "button",
-                {
-                  staticClass: "btn btn--primary btn--raised",
-                  attrs: { type: "submit", disabled: _vm.loading }
-                },
-                [_vm._v("Create")]
-              )
-            : _vm._e(),
+            })
+          ]),
           _vm._v(" "),
-          _vm.permission.id
-            ? _c(
-                "button",
-                {
-                  staticClass: "btn btn--success btn--raised",
-                  attrs: { type: "submit", disabled: _vm.loading }
-                },
-                [_vm._v("Update")]
-              )
-            : _vm._e()
+          _c("div", { staticClass: "form__action" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn--primary",
+                attrs: { type: "submit", disabled: _vm.loading }
+              },
+              [_vm._v("Create")]
+            )
+          ])
         ])
-      ])
-    ]
-  )
+      ]
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -18146,14 +18208,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "card",
-    [
-      _c(
-        "template",
-        { slot: "content" },
-        [_c("permission-form", { attrs: { permission: _vm.permission } })],
-        1
-      )
-    ],
+    [_c("template", { slot: "content" }, [_c("permission-form")], 1)],
     2
   )
 }
@@ -18267,11 +18322,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   created: function created() {
-    this.loadPermission();
+    this.fetchPermission();
   },
 
   methods: {
-    loadPermission: function loadPermission() {
+    fetchPermission: function fetchPermission() {
       var _this = this;
 
       axios.get("api/admin/permissions/" + this.$route.params.id).then(function (response) {
@@ -18340,7 +18395,7 @@ var render = function() {
               "router-link",
               {
                 staticClass: "btn btn--success",
-                attrs: { to: "/permission/" + _vm.permission.id + "/edit" }
+                attrs: { to: "/permissions/" + _vm.permission.id + "/edit" }
               },
               [_vm._v("Edit")]
             )
@@ -18428,7 +18483,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: { PermissionForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a },
+  components: {
+    permissionForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a
+  },
   data: function data() {
     return {
       permission: {}
@@ -18463,7 +18520,11 @@ var render = function() {
       _c(
         "template",
         { slot: "content" },
-        [_c("permission-form", { attrs: { permission: _vm.permission } })],
+        [
+          _c("permission-form", {
+            attrs: { "initial-permission": _vm.permission }
+          })
+        ],
         1
       )
     ],
@@ -57151,8 +57212,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
@@ -57176,10 +57235,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       apiUrl: 'api/admin/' + this.tableName + '/',
-      items: [],
-      pagination: {},
       perPage: 10,
       perPageOptions: [10, 25, 50, 100],
+      items: [],
+      pagination: {},
       selected: [],
       keywords: '',
       loading: false,
@@ -57285,12 +57344,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var url = this.apiUrl + id;
       }
 
-      axios.delete(url).then(function (response) {
+      axios.delete(url).then(function () {
         _this4.loading = false;
         _this4.loadData(_this4.perPage);
         _this4.selected = [];
-
-        console.log(response);
       });
     }
   }
@@ -57671,7 +57728,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   computed: {
     question: function question() {
       if (this.selected) {
-        var missingText = this.textItemSingularOrPlural + 'selected?';
+        var missingText = this.textItemSingularOrPlural + ' selected?';
       } else {
         var missingText = 'this item?';
       }
@@ -57680,7 +57737,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     textItemSingularOrPlural: function textItemSingularOrPlural() {
       if (this.selected) {
-        return this.selected.length > 1 ? this.selected.length + ' items' : 'item';
+        return this.selected.length > 1 ? this.selected.length + ' items' : this.selected.length + ' item';
       } else {
         return 'item';
       }
@@ -57708,7 +57765,11 @@ var render = function() {
           _c("strong", [_vm._v(_vm._s(_vm.question))])
         ]),
         _vm._v(" "),
-        _vm._m(0),
+        _c("div", { staticClass: "dialog__body" }, [
+          _vm._v(
+            "Delete an item will permanently remove it and all its relations."
+          )
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "dialog__footer" }, [
           _c(
@@ -57743,19 +57804,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "dialog__body" }, [
-      _vm._v(
-        "Delete an item will permanently remove it and all its relations. "
-      ),
-      _c("strong", [_vm._v("Warning: This can not undone.")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -57781,7 +57830,7 @@ var render = function() {
           _c("div", { staticClass: "datatable__header" }, [
             _c(
               "div",
-              { staticClass: "datatable__handle" },
+              { staticClass: "datatable__behavior" },
               [
                 _vm._t("button-create"),
                 _vm._v(" "),
@@ -58078,16 +58127,15 @@ var render = function() {
           _vm._v(" "),
           _vm.loading ? _c("div", { staticClass: "loading" }) : _vm._e(),
           _vm._v(" "),
-          (!_vm.loading && _vm.noData) ||
-          (!_vm.loading && _vm.keywords.length && !_vm.items.length)
+          _vm.noData
             ? _c("div", { staticClass: "datatable__status" }, [
-                _vm.noData
-                  ? _c("span", [_vm._v("No data available in table")])
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.keywords.length && !_vm.items.length
-                  ? _c("span", [_vm._v("No matching records found")])
-                  : _vm._e()
+                _vm._v("No data available in table")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.keywords.length && !_vm.items.length
+            ? _c("div", { staticClass: "datatable__status" }, [
+                _vm._v("No matching records found")
               ])
             : _vm._e()
         ])
@@ -58186,6 +58234,87 @@ $(function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 129 */,
+/* 130 */,
+/* 131 */,
+/* 132 */,
+/* 133 */,
+/* 134 */,
+/* 135 */,
+/* 136 */,
+/* 137 */,
+/* 138 */,
+/* 139 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = null
+/* template */
+var __vue_template__ = __webpack_require__(140)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Form.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-13820e8a", Component.options)
+  } else {
+    hotAPI.reload("data-v-13820e8a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 140 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card card--form" }, [
+    _c("div", { staticClass: "card__header" }, [_c("breadcrumb")], 1),
+    _vm._v(" "),
+    _c("div", { staticClass: "card__body" }, [_vm._t("content")], 2)
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-13820e8a", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

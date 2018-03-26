@@ -25,6 +25,7 @@ Vue.use(VeeValidate);
 Vue.component('card', require('./components/Card.vue'));
 Vue.component('breadcrumb', require('./components/Breadcrumb.vue'));
 Vue.component('v-table', require('./components/Table.vue'));
+Vue.component('v-form', require('./components/Form.vue'));
 
 const app = new Vue({
 	el: '#app',
