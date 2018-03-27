@@ -14695,8 +14695,8 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(17);
-__webpack_require__(127);
-module.exports = __webpack_require__(128);
+__webpack_require__(129);
+module.exports = __webpack_require__(130);
 
 
 /***/ }),
@@ -14735,7 +14735,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_2_vee_validate__["a" /* default */]);
 Vue.component('card', __webpack_require__(113));
 Vue.component('breadcrumb', __webpack_require__(115));
 Vue.component('v-table', __webpack_require__(118));
-Vue.component('v-form', __webpack_require__(139));
+Vue.component('v-form', __webpack_require__(127));
 
 var app = new Vue({
   el: '#app',
@@ -16573,6 +16573,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -16601,6 +16609,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     this.fetchPermissions();
   },
 
+  computed: {
+    selectAll: {
+      get: function get() {
+        return this.permissions.length ? this.permissionsSelected.length === this.permissions.length : false;
+      },
+      set: function set(value) {
+        var selected = [];
+
+        if (value) {
+          this.permissions.forEach(function (permission) {
+            selected.push(permission.id);
+          });
+        }
+
+        this.permissionsSelected = selected;
+      }
+    }
+  },
   methods: {
     fetchPermissions: function fetchPermissions() {
       var _this = this;
@@ -16658,191 +16684,246 @@ var render = function() {
       }
     },
     [
-      _c("div", { staticClass: "form__data" }, [
-        _c(
-          "div",
-          {
-            staticClass: "form__group",
-            class: {
-              "form__group--invalid":
-                _vm.errors.has("name") || _vm.errorsMessage.name
-            }
-          },
-          [
-            _c("label", { staticClass: "form__label" }, [_vm._v("Name")]),
+      _c("div", { staticClass: "form__wrapper" }, [
+        _c("div", { staticClass: "form__data" }, [
+          _c(
+            "div",
+            {
+              staticClass: "form__group",
+              class: {
+                "form__group--invalid":
+                  _vm.errors.has("name") || _vm.errorsMessage.name
+              }
+            },
+            [
+              _c("label", { staticClass: "form__label" }, [_vm._v("Name")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.role.name,
+                    expression: "role.name"
+                  },
+                  {
+                    name: "validate",
+                    rawName: "v-validate",
+                    value: "required",
+                    expression: "'required'"
+                  }
+                ],
+                staticClass: "form__control",
+                attrs: { id: "name", type: "text", name: "name" },
+                domProps: { value: _vm.role.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.role, "name", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm.errors.has("name")
+                ? _c("strong", { staticClass: "form__invalid-text" }, [
+                    _vm._v(_vm._s(_vm.errors.first("name")))
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.errorsMessage.name
+                ? _c("strong", [_vm._v(_vm._s(_vm.errorsMessage.name[0]))])
+                : _vm._e()
+            ]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "form__group" }, [
+            _vm._m(0),
             _vm._v(" "),
             _c("input", {
               directives: [
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.role.name,
-                  expression: "role.name"
-                },
-                {
-                  name: "validate",
-                  rawName: "v-validate",
-                  value: "required",
-                  expression: "'required'"
+                  value: _vm.role.display_name,
+                  expression: "role.display_name"
                 }
               ],
               staticClass: "form__control",
-              attrs: { id: "name", type: "text", name: "name" },
-              domProps: { value: _vm.role.name },
+              attrs: { type: "text" },
+              domProps: { value: _vm.role.display_name },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.$set(_vm.role, "name", $event.target.value)
+                  _vm.$set(_vm.role, "display_name", $event.target.value)
                 }
               }
-            }),
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form__group" }, [
+            _vm._m(1),
             _vm._v(" "),
-            _vm.errors.has("name")
-              ? _c("strong", { staticClass: "form__invalid-text" }, [
-                  _vm._v(_vm._s(_vm.errors.first("name")))
-                ])
-              : _vm._e(),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.role.description,
+                  expression: "role.description"
+                }
+              ],
+              staticClass: "form__control",
+              attrs: { type: "text" },
+              domProps: { value: _vm.role.description },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.role, "description", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form__group" }, [
+            _vm._m(2),
             _vm._v(" "),
-            _vm.errorsMessage.name
-              ? _c("strong", [_vm._v(_vm._s(_vm.errorsMessage.name[0]))])
-              : _vm._e()
-          ]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.role.display_name,
-                expression: "role.display_name"
-              }
-            ],
-            staticClass: "form__control",
-            attrs: { type: "text" },
-            domProps: { value: _vm.role.display_name },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.role, "display_name", $event.target.value)
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _vm._m(1),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.role.description,
-                expression: "role.description"
-              }
-            ],
-            staticClass: "form__control",
-            attrs: { type: "text" },
-            domProps: { value: _vm.role.description },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.role, "description", $event.target.value)
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _vm._m(2),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "checkbox" },
-            _vm._l(_vm.permissions, function(permission) {
-              return _c("div", { staticClass: "checkbox__group" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.permissionsSelected,
-                      expression: "permissionsSelected"
-                    }
-                  ],
-                  staticClass: "checkbox__input",
-                  attrs: { type: "checkbox", id: permission.id },
-                  domProps: {
-                    value: permission.id,
-                    checked: Array.isArray(_vm.permissionsSelected)
-                      ? _vm._i(_vm.permissionsSelected, permission.id) > -1
-                      : _vm.permissionsSelected
-                  },
-                  on: {
-                    change: function($event) {
-                      var $$a = _vm.permissionsSelected,
-                        $$el = $event.target,
-                        $$c = $$el.checked ? true : false
-                      if (Array.isArray($$a)) {
-                        var $$v = permission.id,
-                          $$i = _vm._i($$a, $$v)
-                        if ($$el.checked) {
-                          $$i < 0 &&
-                            (_vm.permissionsSelected = $$a.concat([$$v]))
-                        } else {
-                          $$i > -1 &&
-                            (_vm.permissionsSelected = $$a
-                              .slice(0, $$i)
-                              .concat($$a.slice($$i + 1)))
-                        }
+            _c("strong", { staticClass: "form__checkbox-section" }, [
+              _vm._v("All permissions:")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "checkbox__group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.selectAll,
+                    expression: "selectAll"
+                  }
+                ],
+                staticClass: "checkbox__input",
+                attrs: { type: "checkbox", id: "select-all" },
+                domProps: {
+                  checked: Array.isArray(_vm.selectAll)
+                    ? _vm._i(_vm.selectAll, null) > -1
+                    : _vm.selectAll
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.selectAll,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 && (_vm.selectAll = $$a.concat([$$v]))
                       } else {
-                        _vm.permissionsSelected = $$c
+                        $$i > -1 &&
+                          (_vm.selectAll = $$a
+                            .slice(0, $$i)
+                            .concat($$a.slice($$i + 1)))
                       }
+                    } else {
+                      _vm.selectAll = $$c
                     }
                   }
-                }),
-                _vm._v(" "),
-                _c("label", { attrs: { for: permission.id } }, [
-                  _vm._v(_vm._s(permission.display_name))
-                ])
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "select-all" } }, [
+                _vm._v("All permissions")
               ])
-            })
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form__action" }, [
-        !_vm.role.id
-          ? _c(
-              "button",
-              {
-                staticClass: "btn btn--primary",
-                attrs: { type: "submit", disabled: _vm.loading }
-              },
-              [_vm._v("Create")]
+            ]),
+            _vm._v(" "),
+            _c("strong", { staticClass: "form__checkbox-section" }, [
+              _vm._v("Only few permission:")
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "checkbox" },
+              _vm._l(_vm.permissions, function(permission) {
+                return _c("div", { staticClass: "checkbox__group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.permissionsSelected,
+                        expression: "permissionsSelected"
+                      }
+                    ],
+                    staticClass: "checkbox__input",
+                    attrs: { type: "checkbox", id: permission.id },
+                    domProps: {
+                      value: permission.id,
+                      checked: Array.isArray(_vm.permissionsSelected)
+                        ? _vm._i(_vm.permissionsSelected, permission.id) > -1
+                        : _vm.permissionsSelected
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.permissionsSelected,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = permission.id,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              (_vm.permissionsSelected = $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.permissionsSelected = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.permissionsSelected = $$c
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("label", { attrs: { for: permission.id } }, [
+                    _vm._v(_vm._s(permission.display_name))
+                  ])
+                ])
+              })
             )
-          : _vm._e(),
+          ])
+        ]),
         _vm._v(" "),
-        _vm.role.id
-          ? _c(
-              "button",
-              {
-                staticClass: "btn btn--success",
-                attrs: { type: "submit", disabled: _vm.loading }
-              },
-              [_vm._v("Update")]
-            )
-          : _vm._e()
+        _c("div", { staticClass: "form__action" }, [
+          !_vm.role.id
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn--primary",
+                  attrs: { type: "submit", disabled: _vm.loading }
+                },
+                [_vm._v("Create")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.role.id
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn--success",
+                  attrs: { type: "submit", disabled: _vm.loading }
+                },
+                [_vm._v("Update")]
+              )
+            : _vm._e()
+        ])
       ])
     ]
   )
@@ -16870,7 +16951,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("label", { staticClass: "form__label" }, [
+    return _c("label", { staticClass: "form__label form__label--checkbox" }, [
       _vm._v("Permission"),
       _c("small", { staticClass: "form__help" }, [_vm._v("(Optional)")])
     ])
@@ -58156,6 +58237,77 @@ if (false) {
 
 /***/ }),
 /* 127 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = null
+/* template */
+var __vue_template__ = __webpack_require__(128)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Form.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-13820e8a", Component.options)
+  } else {
+    hotAPI.reload("data-v-13820e8a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 128 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card card--form" }, [
+    _c("div", { staticClass: "card__header" }, [_c("breadcrumb")], 1),
+    _vm._v(" "),
+    _c("div", { staticClass: "card__body" }, [_vm._t("content")], 2)
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-13820e8a", module.exports)
+  }
+}
+
+/***/ }),
+/* 129 */
 /***/ (function(module, exports) {
 
 // Dropdown.
@@ -58230,91 +58382,10 @@ $(function () {
 });
 
 /***/ }),
-/* 128 */
+/* 130 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 129 */,
-/* 130 */,
-/* 131 */,
-/* 132 */,
-/* 133 */,
-/* 134 */,
-/* 135 */,
-/* 136 */,
-/* 137 */,
-/* 138 */,
-/* 139 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-var __vue_script__ = null
-/* template */
-var __vue_template__ = __webpack_require__(140)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\Form.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-13820e8a", Component.options)
-  } else {
-    hotAPI.reload("data-v-13820e8a", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 140 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card card--form" }, [
-    _c("div", { staticClass: "card__header" }, [_c("breadcrumb")], 1),
-    _vm._v(" "),
-    _c("div", { staticClass: "card__body" }, [_vm._t("content")], 2)
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-13820e8a", module.exports)
-  }
-}
 
 /***/ })
 /******/ ]);

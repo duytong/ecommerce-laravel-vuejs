@@ -424,17 +424,13 @@ template {
           box-shadow: 0 0 2rem 0.0625rem rgba(0, 0, 0, 0.1);
 }
 
-.card--form {
-  width: 50%;
-}
-
 .card__header {
-  padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid #e9ecef;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .card__body {
-  padding: 1.5rem;
+  padding: 1.25rem;
 }
 
 .dropdown {
@@ -763,6 +759,20 @@ th {
   content: '/';
 }
 
+.form {
+  display: grid;
+  display: -ms-grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  -ms-grid-columns: 1fr 1fr 1fr;
+}
+
+.form__wrapper {
+  grid-column: 2;
+  -ms-grid-column: 2;
+  padding: 1.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
 .form__data {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -806,6 +816,10 @@ th {
           align-items: center;
 }
 
+.form__label--checkbox {
+  margin-bottom: 1rem;
+}
+
 .form__help {
   font-weight: 400;
   margin-left: 0.25rem;
@@ -843,6 +857,10 @@ th {
 
 .form__invalid-text {
   white-space: nowrap;
+}
+
+.form__checkbox-section {
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 575px) {
@@ -890,7 +908,7 @@ th {
 .checkbox__input + label::before {
   content: '';
   position: absolute;
-  top: 1px;
+  top: 1.5px;
   left: -25px;
   width: 18px;
   height: 18px;
@@ -908,7 +926,7 @@ th {
 .checkbox__input + label::after {
   content: '';
   position: absolute;
-  top: 2px;
+  top: 2.5px;
   left: -19px;
   width: 6px;
   height: 12.5px;
@@ -1505,12 +1523,6 @@ i {
 }
 
 main {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
   padding: 1.5rem;
 }
 
