@@ -14794,29 +14794,33 @@ var routes = [
 // Roles.
 {
 	path: '/roles',
-	component: __webpack_require__(37),
-	meta: { title: 'Role' }
+	name: 'roles',
+	meta: { title: 'Roles' },
+	component: __webpack_require__(37)
 }, {
 	path: '/roles/create',
-	component: __webpack_require__(40),
+	name: 'roles-create',
 	meta: {
 		title: 'Create',
 		breadcrumb: 'Role/Create'
-	}
+	},
+	component: __webpack_require__(40)
 }, {
 	path: '/roles/:id',
-	component: __webpack_require__(45),
+	name: 'roles-show',
 	meta: {
 		title: 'Show',
 		breadcrumb: 'Role/Show'
-	}
+	},
+	component: __webpack_require__(45)
 }, {
 	path: '/roles/:id/edit',
-	component: __webpack_require__(48),
+	name: 'roles-edit',
 	meta: {
 		title: 'Edit',
 		breadcrumb: 'Role/Edit'
-	}
+	},
+	component: __webpack_require__(48)
 },
 
 // Permissions.
@@ -16572,6 +16576,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -16583,7 +16597,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {};
       }
     },
-    selected: {
+    checked: {
       type: Array,
       default: function _default() {
         return [];
@@ -16592,12 +16606,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   data: function data() {
     return {
-      apiUrl: 'api/admin/',
       permissions: [],
-      permissionsSelected: this.selected,
+      permissionsChecked: this.checked,
       role: this.initialRole,
+      inheritUrl: 'api/admin/',
       loading: false,
-      errorsMessage: {}
+      errorMessages: {}
     };
   },
   created: function created() {
@@ -16605,20 +16619,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   computed: {
-    selectAll: {
+    checkAll: {
       get: function get() {
-        return this.permissions.length ? this.permissionsSelected.length === this.permissions.length : false;
+        return this.permissions.length ? this.permissionsChecked.length === this.permissions.length : false;
       },
       set: function set(value) {
-        var selected = [];
+        var checked = [];
 
         if (value) {
           this.permissions.forEach(function (permission) {
-            selected.push(permission.id);
+            checked.push(permission.id);
           });
         }
 
-        this.permissionsSelected = selected;
+        this.permissionsChecked = checked;
       }
     }
   },
@@ -16627,40 +16641,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var _this = this;
 
       var columns = ['id', 'display_name', 'description'];
-      var url = this.apiUrl + 'permissions/index/' + columns;
+      var apiUrl = this.inheritUrl + 'permissions/index/' + columns;
 
-      axios.get(url).then(function (response) {
+      axios.get(apiUrl).then(function (response) {
         _this.permissions = response.data;
       });
     },
     onSubmit: function onSubmit() {
       var _this2 = this;
 
+      this.loading = true;
+
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          _this2.role.permissions_id = _this2.permissionsSelected;
+          _this2.role.permissions_id = _this2.permissionsChecked;
 
-          var url = _this2.apiUrl + 'roles' + (_this2.role.id ? '/' + _this2.role.id : '');
           var method = _this2.role.id ? 'patch' : 'post';
-          var request = _this2.initialRole.id ? _this2.initialRole : _this2.role;
+          var apiUrl = _this2.inheritUrl + 'roles' + (_this2.role.id ? '/' + _this2.role.id : '');
           var action = _this2.role.id ? 'Updated' : 'Created';
 
-          axios[method](url, request).then(function (response) {
+          axios[method](apiUrl, _this2.role).then(function () {
             __WEBPACK_IMPORTED_MODULE_0_toastr___default.a.success(action + ' successfully!');
 
             if (method === 'post') {
-              _this2.$router.push('/roles');
+              _this2.$router.push({ name: 'roles' });
             } else {
-              _this2.$router.push('/roles/' + _this2.$route.params.id);
+              _this2.$router.push({ name: 'roles-show', params: _this2.$route.params.id });
             }
           }, function (error) {
-            _this2.errorsMessage = error.response.data.errors;
+            _this2.loading = false;
+            _this2.errorMessages = error.response.data.errors;
           });
+        } else {
+          _this2.loading = false;
         }
       });
     },
-    removeErrorsMessage: function removeErrorsMessage() {
-      this.errorsMessage = {};
+    removeErrorMessages: function removeErrorMessages() {
+      this.errorMessages = {};
     }
   }
 });
@@ -16691,40 +16709,56 @@ var render = function() {
           {
             staticClass: "form__group",
             class: {
+              "form__group--valid": _vm.role.name && !_vm.errorMessages.name,
               "form__group--invalid":
-                _vm.errors.has("name") || _vm.errorsMessage.name
+                _vm.errors.has("name") || _vm.errorMessages.name
             }
           },
           [
             _c("label", { staticClass: "form__label" }, [_vm._v("Name")]),
             _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.initialRole.name,
-                  expression: "initialRole.name"
-                },
-                {
-                  name: "validate",
-                  rawName: "v-validate",
-                  value: "required",
-                  expression: "'required'"
-                }
-              ],
-              staticClass: "form__control",
-              attrs: { type: "text", name: "name" },
-              domProps: { value: _vm.initialRole.name },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+            _c("div", { staticClass: "form__input-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.role.name,
+                    expression: "role.name"
+                  },
+                  {
+                    name: "validate",
+                    rawName: "v-validate",
+                    value: "required",
+                    expression: "'required'"
                   }
-                  _vm.$set(_vm.initialRole, "name", $event.target.value)
+                ],
+                staticClass: "form__control form__control--validate",
+                attrs: {
+                  type: "text",
+                  placeholder: "The name of the role",
+                  name: "name"
+                },
+                domProps: { value: _vm.role.name },
+                on: {
+                  keyup: _vm.removeErrorMessages,
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.role, "name", $event.target.value)
+                  }
                 }
-              }
-            }),
+              }),
+              _vm._v(" "),
+              _vm.role.name && !_vm.errorMessages.name
+                ? _c("i", { staticClass: "fas fa-check-circle" })
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.errors.has("name") || _vm.errorMessages.name
+                ? _c("i", { staticClass: "fas fa-exclamation-triangle" })
+                : _vm._e()
+            ]),
             _vm._v(" "),
             _vm.errors.has("name")
               ? _c("span", { staticClass: "form__invalid-feedback" }, [
@@ -16732,65 +16766,97 @@ var render = function() {
                 ])
               : _vm._e(),
             _vm._v(" "),
-            _vm.errorsMessage.name
+            _vm.errorMessages.name
               ? _c("span", { staticClass: "form__invalid-feedback" }, [
-                  _vm._v(_vm._s(_vm.errorsMessage.name[0]))
+                  _vm._v(_vm._s(_vm.errorMessages.name[0]))
                 ])
               : _vm._e()
           ]
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.initialRole.display_name,
-                expression: "initialRole.display_name"
-              }
-            ],
-            staticClass: "form__control",
-            attrs: { type: "text" },
-            domProps: { value: _vm.initialRole.display_name },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+        _c(
+          "div",
+          {
+            staticClass: "form__group",
+            class: { "form__group--valid": _vm.role.display_name }
+          },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "form__input-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.role.display_name,
+                    expression: "role.display_name"
+                  }
+                ],
+                staticClass: "form__control form__control--validate",
+                attrs: {
+                  type: "text",
+                  placeholder: "The display name of the role"
+                },
+                domProps: { value: _vm.role.display_name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.role, "display_name", $event.target.value)
+                  }
                 }
-                _vm.$set(_vm.initialRole, "display_name", $event.target.value)
-              }
-            }
-          })
-        ]),
+              }),
+              _vm._v(" "),
+              _vm.role.display_name
+                ? _c("i", { staticClass: "fas fa-check-circle" })
+                : _vm._e()
+            ])
+          ]
+        ),
         _vm._v(" "),
-        _c("div", { staticClass: "form__group" }, [
-          _vm._m(1),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.initialRole.description,
-                expression: "initialRole.description"
-              }
-            ],
-            staticClass: "form__control",
-            attrs: { type: "text" },
-            domProps: { value: _vm.initialRole.description },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+        _c(
+          "div",
+          {
+            staticClass: "form__group",
+            class: { "form__group--valid": _vm.role.description }
+          },
+          [
+            _vm._m(1),
+            _vm._v(" "),
+            _c("div", { staticClass: "form__input-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.role.description,
+                    expression: "role.description"
+                  }
+                ],
+                staticClass: "form__control form__control--validate",
+                attrs: {
+                  type: "text",
+                  placeholder: "Describe what this role does"
+                },
+                domProps: { value: _vm.role.description },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.role, "description", $event.target.value)
+                  }
                 }
-                _vm.$set(_vm.initialRole, "description", $event.target.value)
-              }
-            }
-          })
-        ]),
+              }),
+              _vm._v(" "),
+              _vm.role.description
+                ? _c("i", { staticClass: "fas fa-check-circle" })
+                : _vm._e()
+            ])
+          ]
+        ),
         _vm._v(" "),
         _c("div", { staticClass: "form__group" }, [
           _c("label", { staticClass: "form__label" }, [
@@ -16803,35 +16869,35 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.selectAll,
-                  expression: "selectAll"
+                  value: _vm.checkAll,
+                  expression: "checkAll"
                 }
               ],
               staticClass: "checkbox__input",
-              attrs: { type: "checkbox", id: "select-all" },
+              attrs: { type: "checkbox", id: "check-all" },
               domProps: {
-                checked: Array.isArray(_vm.selectAll)
-                  ? _vm._i(_vm.selectAll, null) > -1
-                  : _vm.selectAll
+                checked: Array.isArray(_vm.checkAll)
+                  ? _vm._i(_vm.checkAll, null) > -1
+                  : _vm.checkAll
               },
               on: {
                 change: function($event) {
-                  var $$a = _vm.selectAll,
+                  var $$a = _vm.checkAll,
                     $$el = $event.target,
                     $$c = $$el.checked ? true : false
                   if (Array.isArray($$a)) {
                     var $$v = null,
                       $$i = _vm._i($$a, $$v)
                     if ($$el.checked) {
-                      $$i < 0 && (_vm.selectAll = $$a.concat([$$v]))
+                      $$i < 0 && (_vm.checkAll = $$a.concat([$$v]))
                     } else {
                       $$i > -1 &&
-                        (_vm.selectAll = $$a
+                        (_vm.checkAll = $$a
                           .slice(0, $$i)
                           .concat($$a.slice($$i + 1)))
                     }
                   } else {
-                    _vm.selectAll = $$c
+                    _vm.checkAll = $$c
                   }
                 }
               }
@@ -16839,7 +16905,7 @@ var render = function() {
             _vm._v(" "),
             _c(
               "label",
-              { staticClass: "checkbox__label", attrs: { for: "select-all" } },
+              { staticClass: "checkbox__label", attrs: { for: "check-all" } },
               [_vm._v("All permissions")]
             )
           ]),
@@ -16858,21 +16924,21 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.permissionsSelected,
-                      expression: "permissionsSelected"
+                      value: _vm.permissionsChecked,
+                      expression: "permissionsChecked"
                     }
                   ],
                   staticClass: "checkbox__input",
                   attrs: { type: "checkbox", id: permission.id },
                   domProps: {
                     value: permission.id,
-                    checked: Array.isArray(_vm.permissionsSelected)
-                      ? _vm._i(_vm.permissionsSelected, permission.id) > -1
-                      : _vm.permissionsSelected
+                    checked: Array.isArray(_vm.permissionsChecked)
+                      ? _vm._i(_vm.permissionsChecked, permission.id) > -1
+                      : _vm.permissionsChecked
                   },
                   on: {
                     change: function($event) {
-                      var $$a = _vm.permissionsSelected,
+                      var $$a = _vm.permissionsChecked,
                         $$el = $event.target,
                         $$c = $$el.checked ? true : false
                       if (Array.isArray($$a)) {
@@ -16880,15 +16946,15 @@ var render = function() {
                           $$i = _vm._i($$a, $$v)
                         if ($$el.checked) {
                           $$i < 0 &&
-                            (_vm.permissionsSelected = $$a.concat([$$v]))
+                            (_vm.permissionsChecked = $$a.concat([$$v]))
                         } else {
                           $$i > -1 &&
-                            (_vm.permissionsSelected = $$a
+                            (_vm.permissionsChecked = $$a
                               .slice(0, $$i)
                               .concat($$a.slice($$i + 1)))
                         }
                       } else {
-                        _vm.permissionsSelected = $$c
+                        _vm.permissionsChecked = $$c
                       }
                     }
                   }
@@ -16914,7 +16980,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "form__action" }, [
-        !_vm.initialRole.id
+        !_vm.role.id
           ? _c(
               "button",
               {
@@ -16925,7 +16991,7 @@ var render = function() {
             )
           : _vm._e(),
         _vm._v(" "),
-        _vm.initialRole.id
+        _vm.role.id
           ? _c(
               "button",
               {
@@ -17063,31 +17129,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -17122,7 +17163,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "grid" }, [
+  return _c("div", { staticClass: "grid grid--show" }, [
     _c("div", { staticClass: "card" }, [
       _c("div", { staticClass: "card__body" }, [
         _c(
@@ -17134,10 +17175,12 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "info__sub-title" }, [
-              _vm._v(_vm._s(_vm.role.name))
+              _vm._v("(" + _vm._s(_vm.role.name) + ")")
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "info__describe" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "info__description" }, [
               _vm._v(_vm._s(_vm.role.description))
             ]),
             _vm._v(" "),
@@ -17145,7 +17188,7 @@ var render = function() {
               "router-link",
               {
                 staticClass: "btn btn--success",
-                attrs: { to: "/roles/" + _vm.role.id + "/edit" }
+                attrs: { to: { name: "roles-edit", params: _vm.role.id } }
               },
               [_vm._v("Edit Role")]
             )
@@ -17156,7 +17199,16 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "info__icon" }, [
+      _c("i", { staticClass: "fas fa-shield-alt" })
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -17239,7 +17291,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       role: {},
-      selected: [],
+      checked: [],
       childDataLoaded: false
     };
   },
@@ -17253,7 +17305,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       axios.get('api/admin/roles/' + this.$route.params.id).then(function (response) {
         _this.role = response.data.role;
-        _this.selected = response.data.permissions.id;
+        _this.checked = response.data.permissions.id;
         _this.childDataLoaded = true;
       });
     }
@@ -17277,7 +17329,7 @@ var render = function() {
         [
           _vm.childDataLoaded
             ? _c("role-form", {
-                attrs: { "initial-role": _vm.role, selected: _vm.selected }
+                attrs: { "initial-role": _vm.role, checked: _vm.checked }
               })
             : _vm._e()
         ],
@@ -56975,7 +57027,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
+  return _c("div", { staticClass: "card card--table" }, [
     _c("div", { staticClass: "card__header" }, [_c("breadcrumb")], 1),
     _vm._v(" "),
     _c("div", { staticClass: "card__body" }, [_vm._t("content")], 2)
@@ -57176,7 +57228,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Pagination__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ConfirmDelete__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ConfirmDelete___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__ConfirmDelete__);
-//
 //
 //
 //
@@ -58011,7 +58062,10 @@ var render = function() {
                         }
                       }),
                       _vm._v(" "),
-                      _c("label", { attrs: { for: "select-all" } })
+                      _c("label", {
+                        staticClass: "checkbox__label",
+                        attrs: { for: "select-all" }
+                      })
                     ]),
                     _vm._v(" "),
                     _vm._l(_vm.tableFields, function(tableField) {
@@ -58071,7 +58125,10 @@ var render = function() {
                           }
                         }),
                         _vm._v(" "),
-                        _c("label", { attrs: { for: item.id } })
+                        _c("label", {
+                          staticClass: "checkbox__label",
+                          attrs: { for: item.id }
+                        })
                       ]),
                       _vm._v(" "),
                       _vm._l(_vm.tableFields, function(tableField) {
@@ -58079,55 +58136,63 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _c("td", [
-                        _c(
-                          "div",
-                          { staticClass: "datatable__action" },
-                          [
-                            _c(
-                              "router-link",
-                              {
-                                staticClass: "btn btn--primary",
-                                attrs: {
-                                  to: "/" + _vm.tableName + "/" + item.id,
-                                  title: "Show"
-                                }
-                              },
-                              [_c("i", { staticClass: "icon-info" })]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "router-link",
-                              {
-                                staticClass: "btn btn--success",
-                                attrs: {
-                                  to:
-                                    "/" +
-                                    _vm.tableName +
-                                    "/" +
-                                    item.id +
-                                    "/edit",
-                                  title: "Edit"
-                                }
-                              },
-                              [_c("i", { staticClass: "icon-pencil" })]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "a",
-                              {
-                                staticClass: "btn btn--danger js-dialog",
-                                attrs: { href: "#", title: "delete" }
-                              },
-                              [_c("i", { staticClass: "icon-trash" })]
-                            ),
-                            _vm._v(" "),
-                            _c("confirm-delete", {
-                              attrs: { id: item.id },
-                              on: { deleteData: _vm.deleteData }
-                            })
-                          ],
-                          1
-                        )
+                        _c("div", { staticClass: "dropdown" }, [
+                          _c(
+                            "a",
+                            { staticClass: "js-dropdown", attrs: { href: "" } },
+                            [
+                              _c("i", { staticClass: "far fa-ellipsis-v" }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                { staticClass: "dropdown__menu" },
+                                [
+                                  _c(
+                                    "router-link",
+                                    {
+                                      staticClass: "dropdown__item",
+                                      attrs: {
+                                        to: "/" + _vm.tableName + "/" + item.id
+                                      }
+                                    },
+                                    [_vm._v("View")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "router-link",
+                                    {
+                                      staticClass: "dropdown__item",
+                                      attrs: {
+                                        to:
+                                          "/" +
+                                          _vm.tableName +
+                                          "/" +
+                                          item.id +
+                                          "/edit"
+                                      }
+                                    },
+                                    [_vm._v("Edit")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "dropdown__item js-dialog",
+                                      attrs: { href: "" }
+                                    },
+                                    [_vm._v("Delete")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("confirm-delete", {
+                                    attrs: { id: item.id },
+                                    on: { deleteData: _vm.deleteData }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          )
+                        ])
                       ])
                     ],
                     2
@@ -58274,6 +58339,9 @@ $(function () {
 	$(document).on('click', '.js-dropdown', function (e) {
 		e.preventDefault();
 
+		$('.js-dropdown').parent('.dropdown').removeClass('dropdown--show');
+		$('.js-dropdown').parent('.dropdown').find('.dropdown__menu').removeClass('dropdown__menu--show');
+
 		$(this).parent('.dropdown').toggleClass('dropdown--show');
 		$(this).parent('.dropdown').find('.dropdown__menu').toggleClass('dropdown__menu--show');
 	});
@@ -58286,11 +58354,33 @@ $(function () {
 
 // Aside.
 $('.js-aside-toggle').click(function () {
+	var _this = $(this);
+
 	if ($(window).outerWidth() > 991) {
 		$('body').toggleClass('minimize-aside').removeClass('show-aside');
+
+		if ($('body').hasClass('minimize-aside')) {
+			_this.find('i').removeClass('fa-align-right').addClass('fa-align-left');
+		} else {
+			_this.find('i').removeClass('fa-align-left').addClass('fa-align-right');
+		}
 	} else {
 		$('body').addClass('show-aside').removeClass('minimize-aside');
 		$('body').append('<div class="overlay"></div>');
+	}
+});
+
+$(window).on('load', function () {
+	if ($(window).outerWidth() < 992) {
+		$('.js-aside-toggle').find('i').removeClass('fa-align-left').removeClass('fa-align-right').addClass('fa-align-justify');
+	}
+});
+
+$(window).resize(function () {
+	if ($(window).outerWidth() < 992) {
+		$('.js-aside-toggle').find('i').removeClass('fa-align-left').removeClass('fa-align-right').addClass('fa-align-justify');
+	} else {
+		$('.js-aside-toggle').find('i').removeClass('fa-align-justify').addClass('fa-align-right');
 	}
 });
 
