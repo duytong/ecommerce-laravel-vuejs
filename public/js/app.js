@@ -16412,11 +16412,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-		data: function data() {
-				return {
-						tableFields: [{ th: 'Id', td: 'id' }, { th: 'Name', td: 'name' }, { th: 'Display Name', td: 'display_name' }, { th: 'Description', td: 'description' }]
-				};
-		}
+	data: function data() {
+		return {
+			tableFields: [{ th: 'ID', td: 'id' }, { th: 'Name', td: 'name' }, { th: 'Display Name', td: 'display_name' }, { th: 'Description', td: 'description' }]
+		};
+	}
 });
 
 /***/ }),
@@ -57919,10 +57919,8 @@ var render = function() {
           _c("div", { staticClass: "datatable__header" }, [
             _c(
               "div",
-              { staticClass: "datatable__behavior" },
+              { staticClass: "datatable__action" },
               [
-                _vm._t("button-create"),
-                _vm._v(" "),
                 _vm.selected.length
                   ? _c(
                       "button",
@@ -57937,7 +57935,9 @@ var render = function() {
                 _c("confirm-delete", {
                   attrs: { selected: _vm.selected },
                   on: { deleteData: _vm.deleteData }
-                })
+                }),
+                _vm._v(" "),
+                _vm._t("button-create")
               ],
               2
             ),
@@ -58427,6 +58427,17 @@ $(function () {
 	$(document).click(function (e) {
 		$('.dialog').removeClass('show');
 		$('body').removeClass('dialog-open');
+	});
+});
+
+// Datatable
+$(function () {
+	$(document).on('change', 'td input', function () {
+		$(this).closest('tr').toggleClass('highlight', this.checked);
+	});
+
+	$(document).on('change', 'th input', function () {
+		$(this).closest('table').find('tbody tr').toggleClass('highlight', this.checked);
 	});
 });
 

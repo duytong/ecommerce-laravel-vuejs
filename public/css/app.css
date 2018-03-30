@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i);/*!
+/*!
  * Font Awesome Pro 5.0.6 by @fontawesome - http://fontawesome.com
  * License - http://fontawesome.com/license (Commercial License)
  */
@@ -369,6 +369,8 @@ template {
 .btn--primary {
   border-color: #0984e3;
   background-color: #0984e3;
+  -webkit-box-shadow: 0 10px 20px -8px #0984e3;
+          box-shadow: 0 10px 20px -8px #0984e3;
 }
 
 .btn--primary:hover {
@@ -379,13 +381,13 @@ template {
 .btn--primary:focus {
   border-color: #087bd4;
   background-color: #087bd4;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(9, 132, 227, 0.5);
-          box-shadow: 0 0 0 0.2rem rgba(9, 132, 227, 0.5);
 }
 
 .btn--success {
   border-color: #1abc9c;
   background-color: #1abc9c;
+  -webkit-box-shadow: 0 10px 20px -8px #1abc9c;
+          box-shadow: 0 10px 20px -8px #1abc9c;
 }
 
 .btn--success:hover {
@@ -396,13 +398,13 @@ template {
 .btn--success:focus {
   border-color: #18af91;
   background-color: #18af91;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(26, 188, 156, 0.5);
-          box-shadow: 0 0 0 0.2rem rgba(26, 188, 156, 0.5);
 }
 
 .btn--danger {
   border-color: #eb3b5a;
   background-color: #eb3b5a;
+  -webkit-box-shadow: 0 10px 20px -8px #eb3b5a;
+          box-shadow: 0 10px 20px -8px #eb3b5a;
 }
 
 .btn--danger:hover {
@@ -413,13 +415,13 @@ template {
 .btn--danger:focus {
   border-color: #ea2d4e;
   background-color: #ea2d4e;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(235, 59, 90, 0.5);
-          box-shadow: 0 0 0 0.2rem rgba(235, 59, 90, 0.5);
 }
 
 .btn--secondary {
   border-color: #6c757d;
   background-color: #6c757d;
+  -webkit-box-shadow: 0 10px 20px -8px #6c757d;
+          box-shadow: 0 10px 20px -8px #6c757d;
 }
 
 .btn--secondary:hover {
@@ -430,8 +432,6 @@ template {
 .btn--secondary:focus {
   border-color: #656d75;
   background-color: #656d75;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
-          box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
 }
 
 .card {
@@ -444,16 +444,8 @@ template {
           flex-direction: column;
   background-color: #fff;
   border-radius: 0.25rem;
-  -webkit-box-shadow: 0 0 2rem 0.0625rem rgba(0, 0, 0, 0.1);
-          box-shadow: 0 0 2rem 0.0625rem rgba(0, 0, 0, 0.1);
   grid-column: 2;
   -ms-grid-column: 2;
-}
-
-.card--table {
-  background: none;
-  -webkit-box-shadow: none;
-          box-shadow: none;
 }
 
 .card__header {
@@ -595,7 +587,7 @@ template {
   margin-bottom: 1.5rem;
 }
 
-.datatable__behavior {
+.datatable__action {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -643,36 +635,6 @@ template {
   top: -12px;
 }
 
-.datatable__action {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.datatable__action a.btn {
-  min-width: 2rem;
-  height: 2rem;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  padding: 0;
-  margin-right: 0.5rem;
-}
-
-.datatable__action a.btn:last-child {
-  margin-right: 0;
-}
-
-.datatable__action i {
-  font-size: inherit;
-}
-
 .datatable__footer {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -693,8 +655,6 @@ template {
 
 table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 0.25rem;
 }
 
 table i {
@@ -704,15 +664,16 @@ table i {
   font-size: 1rem;
 }
 
+thead tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 tbody tr {
-  background-color: #fff;
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  -webkit-animation: opacity 0.3s ease-in-out;
-          animation: opacity 0.3s ease-in-out;
+  -webkit-animation: lazy-load 0.3s ease-in-out;
+          animation: lazy-load 0.3s ease-in-out;
 }
 
-@-webkit-keyframes opacity {
+@-webkit-keyframes lazy-load {
   from {
     opacity: 0;
   }
@@ -722,7 +683,7 @@ tbody tr {
   }
 }
 
-@keyframes opacity {
+@keyframes lazy-load {
   from {
     opacity: 0;
   }
@@ -732,14 +693,8 @@ tbody tr {
   }
 }
 
-tr td:first-child {
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
-}
-
-tr td:last-child {
-  border-top-right-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
+tbody tr.highlight {
+  background-color: rgba(0, 206, 201, 0.1);
 }
 
 th,
@@ -748,26 +703,12 @@ td {
 }
 
 th {
-  text-transform: uppercase;
-  font-weight: 500;
   white-space: nowrap;
+  color: #7285a5;
+  font-weight: 400;
 }
 
 @media (max-width: 575px) {
-  .datatable__behavior {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-  }
-
-  .datatable__behavior .btn:last-of-type {
-    margin-top: 1.5rem;
-  }
-
   .datatable__filter {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -1605,7 +1546,7 @@ header .dropdown__footer a:hover {
       -ms-flex-direction: column;
           flex-direction: column;
   width: calc(100% - 17rem);
-  background-color: #f5f8fa;
+  background-color: #fff;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
 }
