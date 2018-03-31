@@ -57921,6 +57921,8 @@ var render = function() {
               "div",
               { staticClass: "datatable__action" },
               [
+                _vm._t("button-create"),
+                _vm._v(" "),
                 _vm.selected.length
                   ? _c(
                       "button",
@@ -57935,9 +57937,7 @@ var render = function() {
                 _c("confirm-delete", {
                   attrs: { selected: _vm.selected },
                   on: { deleteData: _vm.deleteData }
-                }),
-                _vm._v(" "),
-                _vm._t("button-create")
+                })
               ],
               2
             ),

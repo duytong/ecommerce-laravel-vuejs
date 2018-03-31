@@ -46,7 +46,7 @@ body {
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
-  color: #1c2951;
+  color: #7285a5;
   text-align: left;
   background-color: #fff;
 }
@@ -531,7 +531,7 @@ template {
 }
 
 .pagination__item.disabled .pagination__link {
-  opacity: 0.65;
+  color: #7285a5;
   pointer-events: none;
   cursor: auto;
 }
@@ -544,7 +544,7 @@ template {
   padding: 0 1rem;
   text-align: center;
   border-radius: 0.25rem;
-  color: #34495e;
+  color: #4d516c;
 }
 
 .pagination__link:hover {
@@ -627,14 +627,6 @@ template {
   overflow-x: auto;
 }
 
-.datatable .checkbox__input + .checkbox__label::before {
-  top: -14px;
-}
-
-.datatable .checkbox__input + .checkbox__label::after {
-  top: -12px;
-}
-
 .datatable__footer {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -653,7 +645,17 @@ template {
   margin-top: 0.75rem;
 }
 
+.datatable .checkbox__input + .checkbox__label::before {
+  top: -14px;
+}
+
+.datatable .checkbox__input + .checkbox__label::after {
+  top: -12px;
+}
+
 table {
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
 }
 
@@ -664,8 +666,39 @@ table i {
   font-size: 1rem;
 }
 
-thead tr {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+th,
+td {
+  border-right: 1px solid #ced4da;
+  border-bottom: 1px solid #ced4da;
+  padding: 0.75rem;
+}
+
+th:first-child,
+td:first-child {
+  border-left: 1px solid #ced4da;
+}
+
+th {
+  white-space: nowrap;
+  color: #4d516c;
+  font-weight: 500;
+  border-top: 1px solid #ced4da;
+}
+
+tr:first-child th:first-child {
+  border-top-left-radius: 0.25rem;
+}
+
+tr:first-child th:last-child {
+  border-top-right-radius: 0.25rem;
+}
+
+tr:last-child td:first-child {
+  border-bottom-left-radius: 0.25rem;
+}
+
+tr:last-child td:last-child {
+  border-bottom-right-radius: 0.25rem;
 }
 
 tbody tr {
@@ -695,17 +728,6 @@ tbody tr {
 
 tbody tr.highlight {
   background-color: rgba(0, 206, 201, 0.1);
-}
-
-th,
-td {
-  padding: 0.75rem;
-}
-
-th {
-  white-space: nowrap;
-  color: #7285a5;
-  font-weight: 400;
 }
 
 @media (max-width: 575px) {
