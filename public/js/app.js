@@ -58140,57 +58140,55 @@ var render = function() {
                           _c(
                             "a",
                             { staticClass: "js-dropdown", attrs: { href: "" } },
+                            [_c("i", { staticClass: "far fa-ellipsis-v" })]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "dropdown__menu" },
                             [
-                              _c("i", { staticClass: "far fa-ellipsis-v" }),
+                              _c(
+                                "router-link",
+                                {
+                                  staticClass: "dropdown__item",
+                                  attrs: {
+                                    to: "/" + _vm.tableName + "/" + item.id
+                                  }
+                                },
+                                [_vm._v("View")]
+                              ),
                               _vm._v(" "),
                               _c(
-                                "span",
-                                { staticClass: "dropdown__menu" },
-                                [
-                                  _c(
-                                    "router-link",
-                                    {
-                                      staticClass: "dropdown__item",
-                                      attrs: {
-                                        to: "/" + _vm.tableName + "/" + item.id
-                                      }
-                                    },
-                                    [_vm._v("View")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "router-link",
-                                    {
-                                      staticClass: "dropdown__item",
-                                      attrs: {
-                                        to:
-                                          "/" +
-                                          _vm.tableName +
-                                          "/" +
-                                          item.id +
-                                          "/edit"
-                                      }
-                                    },
-                                    [_vm._v("Edit")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      staticClass: "dropdown__item js-dialog",
-                                      attrs: { href: "" }
-                                    },
-                                    [_vm._v("Delete")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("confirm-delete", {
-                                    attrs: { id: item.id },
-                                    on: { deleteData: _vm.deleteData }
-                                  })
-                                ],
-                                1
-                              )
-                            ]
+                                "router-link",
+                                {
+                                  staticClass: "dropdown__item",
+                                  attrs: {
+                                    to:
+                                      "/" +
+                                      _vm.tableName +
+                                      "/" +
+                                      item.id +
+                                      "/edit"
+                                  }
+                                },
+                                [_vm._v("Edit")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "dropdown__item js-dialog",
+                                  attrs: { href: "" }
+                                },
+                                [_vm._v("Delete")]
+                              ),
+                              _vm._v(" "),
+                              _c("confirm-delete", {
+                                attrs: { id: item.id },
+                                on: { deleteData: _vm.deleteData }
+                              })
+                            ],
+                            1
                           )
                         ])
                       ])
@@ -58433,11 +58431,11 @@ $(function () {
 // Datatable
 $(function () {
 	$(document).on('change', 'td input', function () {
-		$(this).closest('tr').toggleClass('highlight', this.checked);
+		$(this).closest('tr').toggleClass('highlight');
 	});
 
 	$(document).on('change', 'th input', function () {
-		$(this).closest('table').find('tbody tr').toggleClass('highlight', this.checked);
+		$(this).closest('table').find('tbody tr').toggleClass('highlight');
 	});
 });
 

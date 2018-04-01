@@ -46,7 +46,7 @@ body {
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
-  color: #7285a5;
+  color: #212529;
   text-align: left;
   background-color: #fff;
 }
@@ -531,7 +531,7 @@ template {
 }
 
 .pagination__item.disabled .pagination__link {
-  color: #7285a5;
+  color: #6c757d;
   pointer-events: none;
   cursor: auto;
 }
@@ -544,7 +544,7 @@ template {
   padding: 0 1rem;
   text-align: center;
   border-radius: 0.25rem;
-  color: #4d516c;
+  color: #212529;
 }
 
 .pagination__link:hover {
@@ -623,10 +623,6 @@ template {
   margin: 0 0.5rem;
 }
 
-.datatable__body {
-  overflow-x: auto;
-}
-
 .datatable__footer {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -680,7 +676,6 @@ td:first-child {
 
 th {
   white-space: nowrap;
-  color: #4d516c;
   font-weight: 500;
   border-top: 1px solid #ced4da;
 }
