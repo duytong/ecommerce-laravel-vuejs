@@ -584,7 +584,6 @@ template {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  margin-bottom: 1.5rem;
 }
 
 .datatable__action {
@@ -623,6 +622,11 @@ template {
   margin: 0 0.5rem;
 }
 
+.datatable__body {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
 .datatable__footer {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -633,12 +637,10 @@ template {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  margin-top: 1.5rem;
 }
 
 .datatable__status {
   text-align: center;
-  margin-top: 0.75rem;
 }
 
 .datatable .checkbox__input + .checkbox__label::before {
@@ -649,17 +651,17 @@ template {
   top: -12px;
 }
 
-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  width: 100%;
-}
-
-table i {
+.datatable .far {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   font-size: 1rem;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
 }
 
 th,
@@ -721,8 +723,12 @@ tbody tr {
   }
 }
 
-tbody tr.highlight {
+tbody tr.hightlight {
   background-color: rgba(0, 206, 201, 0.1);
+}
+
+tbody tr.hide {
+  display: none;
 }
 
 @media (max-width: 575px) {
@@ -748,16 +754,31 @@ tbody tr.highlight {
   }
 }
 
+@media (max-width: 767px) {
+  .datatable__body .dropdown__menu {
+    position: static;
+  }
+}
+
+@media (min-width: 768px) {
+  .datatable__body {
+    overflow: visible;
+  }
+}
+
 .breadcrumb {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+}
+
+.breadcrumb__item {
   font-size: 1.5rem;
   font-weight: 700;
 }
 
 .breadcrumb__item.breadcrumb__item--active {
-  color: #1c2951;
+  color: #212529;
 }
 
 .breadcrumb__item a {
@@ -767,7 +788,7 @@ tbody tr.highlight {
 .breadcrumb__item + .breadcrumb__item::before {
   display: inline-block;
   padding: 0 0.5rem;
-  color: #1c2951;
+  color: #212529;
   content: '/';
 }
 
