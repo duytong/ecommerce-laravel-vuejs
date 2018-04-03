@@ -15084,13 +15084,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-		data: function data() {
-				return {
-						tableFields: [{ th: 'Id', column: 'id' }, { th: 'Name', column: 'name' }, { th: 'Email', column: 'email'
-								// { th: 'Role', column }
-						}]
-				};
-		}
+	data: function data() {
+		return {
+			tableColumns: [{ th: 'ID', td: 'id' }, { th: 'Name', td: 'name' }, { th: 'Email', td: 'email' }]
+		};
+	}
 });
 
 /***/ }),
@@ -15103,7 +15101,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-table",
-    { attrs: { "table-fields": _vm.tableFields, "table-name": "users" } },
+    { attrs: { "table-columns": _vm.tableColumns, "table-name": "users" } },
     [
       _c(
         "template",
@@ -15111,10 +15109,7 @@ var render = function() {
         [
           _c(
             "router-link",
-            {
-              staticClass: "btn btn--primary btn--raised",
-              attrs: { to: "/users/create" }
-            },
+            { staticClass: "btn btn--primary", attrs: { to: "/users/create" } },
             [_vm._v("New user")]
           )
         ],
@@ -16414,7 +16409,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
-			tableFields: [{ th: 'ID', td: 'id' }, { th: 'Name', td: 'name' }, { th: 'Display Name', td: 'display_name' }, { th: 'Description', td: 'description' }]
+			tableColumns: [{ th: 'ID', td: 'id' }, { th: 'Name', td: 'name' }, { th: 'Display Name', td: 'display_name' }, { th: 'Description', td: 'description' }]
 		};
 	}
 });
@@ -16429,7 +16424,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-table",
-    { attrs: { "table-fields": _vm.tableFields, "table-name": "roles" } },
+    { attrs: { "table-columns": _vm.tableColumns, "table-name": "roles" } },
     [
       _c(
         "template",
@@ -57306,7 +57301,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    tableFields: {
+    tableColumns: {
       type: Array,
       required: true
     },
@@ -57321,119 +57316,100 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   data: function data() {
     return {
-      apiUrl: 'api/admin/' + this.tableName + '/',
+      inheritUrl: 'api/admin/' + this.tableName + '/',
       perPage: 10,
       perPageOptions: [10, 25, 50, 100],
-      items: [],
       pagination: {},
-      checked: [],
-      keywords: '',
       loading: false,
-      noData: false
+      noData: false,
+      items: [],
+      selected: [],
+      keywords: ''
     };
   },
   created: function created() {
-    this.loadData(this.perPage);
+    this.fetchData(this.perPage);
   },
 
   computed: {
     selectAll: {
       get: function get() {
-        return this.items.length ? this.checked.length === this.items.length : false;
+        return this.items.length ? this.selected.length === this.items.length : false;
       },
       set: function set(value) {
-        var checked = [];
+        var selected = [];
 
         if (value) {
           this.items.forEach(function (item) {
-            checked.push(item.id);
+            selected.push(item.id);
           });
         }
 
-        this.checked = checked;
+        this.selected = selected;
       }
     }
   },
   methods: {
-    loadData: function loadData(perPage) {
+    fetchData: function fetchData(perPage) {
       var _this = this;
 
       this.loading = true;
 
-      var url = this.apiUrl + 'index/' + perPage;
+      var apiUrl = this.inheritUrl + 'index/' + perPage;
 
-      axios.get(url).then(function (response) {
+      axios.get(apiUrl).then(function (response) {
         _this.loading = false;
         _this.pagination = response.data;
         _this.items = response.data.data;
 
+        var selected = _this.items.map(function (item) {
+          return item.id;
+        });
+
+        _this.selected = selected.filter(function (currentValue) {
+          return _this.selected.indexOf(currentValue) > -1;
+        });
+
         if (!_this.items.length) {
           _this.noData = true;
         }
-
-        // Trả về 1 mảng chứa các giá trị giống nhau của 2 tham số.
-        function intersectArray(array1, array2) {
-          var intersectArray = [];
-
-          for (var i in array1) {
-            if (array2.indexOf(array1[i]) > -1) {
-              intersectArray.push(array1[i]);
-            }
-          }
-
-          return intersectArray;
-        }
-
-        var checked = [];
-
-        _this.items.forEach(function (item) {
-          checked.push(item.id);
-        });
-
-        _this.checked = intersectArray(checked, _this.checked);
       });
     },
-    pageNavigate: function pageNavigate(page) {
+    pageNavigation: function pageNavigation(page) {
       var _this2 = this;
 
       this.loading = true;
 
       if (this.keywords) {
-        var url = this.apiUrl + this.perPage + '/search?q=' + this.keywords + '&page=' + page;
-
-        axios.get(url).then(function (response) {
-          _this2.loading = false;
-          _this2.pagination = response.data;
-          _this2.items = response.data.data;
-        });
+        var apiUrl = this.inheritUrl + this.perPage + '/search?q=' + this.keywords + '&page=' + page;
       } else {
-        var _url = this.apiUrl + 'index/' + this.perPage + '?page=' + page;
-
-        axios.get(_url).then(function (response) {
-          _this2.loading = false;
-          _this2.pagination = response.data;
-          _this2.items = response.data.data;
-        });
+        var apiUrl = this.inheritUrl + 'index/' + this.perPage + '?page=' + page;
       }
+
+      axios.get(apiUrl).then(function (response) {
+        _this2.loading = false;
+        _this2.pagination = response.data;
+        _this2.items = response.data.data;
+      });
     },
     itemsPerPage: function itemsPerPage(perPage) {
-      this.keywords ? this.search(perPage) : this.loadData(perPage);
+      this.keywords ? this.search(perPage) : this.fetchData(perPage);
     },
     search: function search(perPage) {
       var _this3 = this;
 
       this.loading = true;
 
-      var url = this.apiUrl + this.perPage + '/search?q=' + this.keywords;
+      var apiUrl = this.inheritUrl + this.perPage + '/search?q=' + this.keywords;
 
-      axios.get(url).then(function (response) {
+      axios.get(apiUrl).then(function (response) {
         _this3.loading = false;
 
-        if (_this3.keywords.length > 0) {
+        if (_this3.keywords.length) {
           _this3.pagination = response.data;
           _this3.items = response.data.data;
         } else {
-          _this3.loadData(_this3.perPage);
+          _this3.fetchData(_this3.perPage);
         }
       });
     },
@@ -57442,16 +57418,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       this.loading = true;
 
-      if (this.checked.length) {
-        var url = this.apiUrl + this.checked;
+      if (this.selected.length) {
+        var apiUrl = this.inheritUrl + this.selected;
       } else {
-        var url = this.apiUrl + id;
+        var apiUrl = this.inheritUrl + id;
       }
 
-      axios.delete(url).then(function () {
+      axios.delete(apiUrl).then(function () {
         _this4.loading = false;
-        _this4.loadData(_this4.perPage);
-        _this4.checked = [];
+        _this4.fetchData(_this4.perPage);
+        _this4.selected = [];
       });
     }
   }
@@ -57538,73 +57514,76 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['pagination'],
-    computed: {
-        totalPages: function totalPages() {
-            return this.pagination.last_page;
-        },
-        currentPage: function currentPage() {
-            return this.pagination.current_page;
-        },
-        rangeStart: function rangeStart() {
-            var start = this.currentPage - 1;
-
-            if (this.totalPages > 7) {
-                if (this.currentPage < 5) {
-                    start = 1;
-                } else if (this.totalPages - this.currentPage < 4) {
-                    start = this.totalPages - 4;
-                }
-            } else {
-                start = 1;
-            }
-
-            return start;
-        },
-        rangeEnd: function rangeEnd() {
-            var end = this.currentPage + 1;
-
-            if (this.totalPages > 7) {
-                if (this.currentPage < 5) {
-                    end = 5;
-                } else if (this.totalPages - this.currentPage < 4) {
-                    end = this.currentPage + 3;
-                }
-            } else {
-                end = 7;
-            }
-
-            return end < this.totalPages ? end : this.totalPages;
-        },
-        pages: function pages() {
-            var pages = [];
-
-            for (var i = this.rangeStart; i <= this.rangeEnd; i++) {
-                pages.push(i);
-            }
-
-            return pages;
-        },
-        previousPage: function previousPage() {
-            return this.currentPage !== 1 ? this.currentPage - 1 : 1;
-        },
-        nextPage: function nextPage() {
-            return this.currentPage !== this.totalPages ? this.currentPage + 1 : this.totalPages;
-        }
-    },
-    methods: {
-        pageNavigate: function pageNavigate(page) {
-            if (page !== this.currentPage) {
-                this.$emit('pageNavigate', page);
-            }
-        },
-        hasFirst: function hasFirst() {
-            return this.totalPages > 7 && this.currentPage > 4;
-        },
-        hasLast: function hasLast() {
-            return this.totalPages > 7 && this.rangeEnd < this.totalPages;
-        }
+  props: {
+    pagination: {
+      type: Object,
+      required: true
     }
+  },
+  computed: {
+    totalPages: function totalPages() {
+      return this.pagination.last_page;
+    },
+    currentPage: function currentPage() {
+      return this.pagination.current_page;
+    },
+    rangeStart: function rangeStart() {
+      var start = this.currentPage - 1;
+
+      if (this.totalPages > 7) {
+        if (this.currentPage < 5) {
+          start = 1;
+        } else if (this.totalPages - this.currentPage < 4) {
+          start = this.totalPages - 4;
+        }
+      } else {
+        start = 1;
+      }
+
+      return start;
+    },
+    rangeEnd: function rangeEnd() {
+      var end = this.currentPage + 1;
+
+      if (this.totalPages > 7) {
+        if (this.currentPage < 5) {
+          end = 5;
+        } else if (this.totalPages - this.currentPage < 4) {
+          end = this.currentPage + 3;
+        }
+      } else {
+        end = 7;
+      }
+
+      return end < this.totalPages ? end : this.totalPages;
+    },
+    pages: function pages() {
+      var pages = [];
+
+      for (var i = this.rangeStart; i <= this.rangeEnd; i++) {
+        pages.push(i);
+      }
+
+      return pages;
+    },
+    previousPage: function previousPage() {
+      return this.currentPage !== 1 ? this.currentPage - 1 : 1;
+    },
+    nextPage: function nextPage() {
+      return this.currentPage !== this.totalPages ? this.currentPage + 1 : this.totalPages;
+    },
+    hasFirst: function hasFirst() {
+      return this.totalPages > 7 && this.currentPage > 4;
+    },
+    hasLast: function hasLast() {
+      return this.totalPages > 7 && this.rangeEnd < this.totalPages;
+    }
+  },
+  methods: {
+    pageNavigation: function pageNavigation(page) {
+      this.$emit('pageNavigation', page);
+    }
+  }
 });
 
 /***/ }),
@@ -57627,11 +57606,11 @@ var render = function() {
             "a",
             {
               staticClass: "pagination__link",
-              attrs: { href: "#" },
+              attrs: { href: "" },
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  _vm.pageNavigate(_vm.previousPage)
+                  _vm.pageNavigation(_vm.previousPage)
                 }
               }
             },
@@ -57640,17 +57619,17 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _vm.hasFirst()
+      _vm.hasFirst
         ? _c("li", { staticClass: "pagination__item" }, [
             _c(
               "a",
               {
                 staticClass: "pagination__link",
-                attrs: { href: "#" },
+                attrs: { href: "" },
                 on: {
                   click: function($event) {
                     $event.preventDefault()
-                    _vm.pageNavigate(1)
+                    _vm.pageNavigation(1)
                   }
                 }
               },
@@ -57659,7 +57638,7 @@ var render = function() {
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm.hasFirst()
+      _vm.hasFirst
         ? _c("li", { staticClass: "pagination__item disabled" }, [
             _c("a", { staticClass: "pagination__link" }, [_vm._v("...")])
           ])
@@ -57677,11 +57656,11 @@ var render = function() {
               "a",
               {
                 staticClass: "pagination__link",
-                attrs: { href: "#" },
+                attrs: { href: "" },
                 on: {
                   click: function($event) {
                     $event.preventDefault()
-                    _vm.pageNavigate(page)
+                    _vm.pageNavigation(page)
                   }
                 }
               },
@@ -57691,23 +57670,23 @@ var render = function() {
         )
       }),
       _vm._v(" "),
-      _vm.hasLast()
+      _vm.hasLast
         ? _c("li", { staticClass: "pagination__item disabled" }, [
             _c("a", { staticClass: "pagination__link" }, [_vm._v("...")])
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm.hasLast()
+      _vm.hasLast
         ? _c("li", { staticClass: "pagination__item" }, [
             _c(
               "a",
               {
                 staticClass: "pagination__link",
-                attrs: { href: "#" },
+                attrs: { href: "" },
                 on: {
                   click: function($event) {
                     $event.preventDefault()
-                    _vm.pageNavigate(_vm.totalPages)
+                    _vm.pageNavigation(_vm.totalPages)
                   }
                 }
               },
@@ -57729,11 +57708,11 @@ var render = function() {
             "a",
             {
               staticClass: "pagination__link",
-              attrs: { href: "#" },
+              attrs: { href: "" },
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  _vm.pageNavigate(_vm.nextPage)
+                  _vm.pageNavigation(_vm.nextPage)
                 }
               }
             },
@@ -57938,7 +57917,7 @@ var render = function() {
             [
               _vm._t("button-create"),
               _vm._v(" "),
-              _vm.checked.length
+              _vm.selected.length
                 ? _c(
                     "button",
                     {
@@ -57950,7 +57929,7 @@ var render = function() {
                 : _vm._e(),
               _vm._v(" "),
               _c("confirm-delete", {
-                attrs: { checked: _vm.checked },
+                attrs: { selected: _vm.selected },
                 on: { deleteData: _vm.deleteData }
               })
             ],
@@ -58081,8 +58060,8 @@ var render = function() {
                     })
                   ]),
                   _vm._v(" "),
-                  _vm._l(_vm.tableFields, function(tableField) {
-                    return [_c("th", [_vm._v(_vm._s(tableField.th))])]
+                  _vm._l(_vm.tableColumns, function(tableColumn) {
+                    return [_c("th", [_vm._v(_vm._s(tableColumn.th))])]
                   }),
                   _vm._v(" "),
                   _c("th", [_vm._v("Action")])
@@ -58103,36 +58082,36 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.checked,
-                            expression: "checked"
+                            value: _vm.selected,
+                            expression: "selected"
                           }
                         ],
                         staticClass: "checkbox__input",
                         attrs: { type: "checkbox", id: item.id },
                         domProps: {
                           value: item.id,
-                          checked: Array.isArray(_vm.checked)
-                            ? _vm._i(_vm.checked, item.id) > -1
-                            : _vm.checked
+                          checked: Array.isArray(_vm.selected)
+                            ? _vm._i(_vm.selected, item.id) > -1
+                            : _vm.selected
                         },
                         on: {
                           change: function($event) {
-                            var $$a = _vm.checked,
+                            var $$a = _vm.selected,
                               $$el = $event.target,
                               $$c = $$el.checked ? true : false
                             if (Array.isArray($$a)) {
                               var $$v = item.id,
                                 $$i = _vm._i($$a, $$v)
                               if ($$el.checked) {
-                                $$i < 0 && (_vm.checked = $$a.concat([$$v]))
+                                $$i < 0 && (_vm.selected = $$a.concat([$$v]))
                               } else {
                                 $$i > -1 &&
-                                  (_vm.checked = $$a
+                                  (_vm.selected = $$a
                                     .slice(0, $$i)
                                     .concat($$a.slice($$i + 1)))
                               }
                             } else {
-                              _vm.checked = $$c
+                              _vm.selected = $$c
                             }
                           }
                         }
@@ -58144,8 +58123,8 @@ var render = function() {
                       })
                     ]),
                     _vm._v(" "),
-                    _vm._l(_vm.tableFields, function(tableField) {
-                      return [_c("td", [_vm._v(_vm._s(item[tableField.td]))])]
+                    _vm._l(_vm.tableColumns, function(tableColumn) {
+                      return [_c("td", [_vm._v(_vm._s(item[tableColumn.td]))])]
                     }),
                     _vm._v(" "),
                     _c("td", [
@@ -58232,14 +58211,12 @@ var render = function() {
                 _vm._v(" "),
                 _c("pagination", {
                   attrs: { pagination: _vm.pagination },
-                  on: { pageNavigate: _vm.pageNavigate }
+                  on: { pageNavigation: _vm.pageNavigation }
                 })
               ],
               1
             )
           : _vm._e(),
-        _vm._v(" "),
-        _vm.loading ? _c("div", { staticClass: "loading" }) : _vm._e(),
         _vm._v(" "),
         _vm.noData
           ? _c("div", { staticClass: "datatable__status" }, [
@@ -58251,7 +58228,9 @@ var render = function() {
           ? _c("div", { staticClass: "datatable__status" }, [
               _vm._v("No matching records found")
             ])
-          : _vm._e()
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.loading ? _c("div", { staticClass: "loading" }) : _vm._e()
       ]
     )
   ])
