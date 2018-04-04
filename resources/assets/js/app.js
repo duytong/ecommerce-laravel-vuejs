@@ -1,5 +1,6 @@
 import VueRouter from 'vue-router';
 import router from './routes';
+import VueProgressBar from 'vue-progressbar'
 import VeeValidate from 'vee-validate';
 
 /**
@@ -15,6 +16,10 @@ window.Vue = require('vue');
 
 Vue.use(VueRouter);
 Vue.use(VeeValidate);
+Vue.use(VueProgressBar, {
+	color: '#81ecec',
+	failedColor: '#eb3b5a'
+})
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
