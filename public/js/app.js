@@ -15116,7 +15116,10 @@ var render = function() {
         [
           _c(
             "router-link",
-            { staticClass: "btn btn--primary", attrs: { to: "/users/create" } },
+            {
+              staticClass: "btn btn--raised btn--primary",
+              attrs: { to: "/users/create" }
+            },
             [_vm._v("New user")]
           )
         ],
@@ -57152,9 +57155,7 @@ var render = function() {
         "li",
         {
           staticClass: "breadcrumb__item",
-          class: {
-            "breadcrumb__item--active": index >= _vm.breadcrumbs.length - 1
-          }
+          class: { active: index >= _vm.breadcrumbs.length - 1 }
         },
         [
           index < _vm.breadcrumbs.length - 1
@@ -57307,6 +57308,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -57333,8 +57341,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       perPage: 10,
       perPageOptions: [10, 25, 50, 100],
       pagination: {},
-      noData: false,
       items: [],
+      noData: false,
       selected: [],
       keywords: '',
       deleting: false
@@ -57375,17 +57383,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         _this.pagination = response.data;
         _this.items = response.data.data;
 
-        var selected = _this.items.map(function (item) {
-          return item.id;
+        var selected = _this.items.map(function (currentValue) {
+          return currentValue.id;
         });
 
         _this.selected = selected.filter(function (currentValue) {
           return _this.selected.indexOf(currentValue) > -1;
         });
 
-        if (!_this.items.length) {
-          _this.noData = true;
-        }
+        !_this.items.length ? _this.noData = true : _this.noData = false;
       });
     },
     pageNavigation: function pageNavigation(page) {
@@ -57442,7 +57448,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         _this4.$Progress.finish();
         _this4.deleting = false;
         _this4.fetchData(_this4.perPage);
-        _this4.selected = [];
+
+        __WEBPACK_IMPORTED_MODULE_0_toastr___default.a.success('Deleted successfully!');
       });
     }
   }
@@ -57815,25 +57822,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['id', 'selected'],
   computed: {
-    question: function question() {
-      if (this.selected) {
-        var missingText = this.textItemSingularOrPlural + ' selected?';
-      } else {
-        var missingText = 'this item?';
-      }
+    titleContent: function titleContent() {
+      var text = this.selected ? this.singularOrPlural : 'this item?';
 
-      return 'Are you sure you want to delete ' + missingText;
+      return 'Delete ' + text;
     },
-    textItemSingularOrPlural: function textItemSingularOrPlural() {
+    singularOrPlural: function singularOrPlural() {
       if (this.selected) {
-        return this.selected.length > 1 ? this.selected.length + ' items' : this.selected.length + ' item';
-      } else {
-        return 'item';
+        return this.selected.length > 1 ? this.selected.length + ' items selected?' : this.selected.length + ' item selected?';
       }
+    },
+    bodyContent: function bodyContent() {
+      var text = this.selected ? this.singularOrPlural : 'this item?';
+
+      return 'Are you sure you want to delete ' + text;
     }
   },
   methods: {
@@ -57851,33 +57862,37 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "dialog" }, [
-    _c("div", { staticClass: "dialog__wrapper" }, [
-      _c("div", { staticClass: "dialog__content" }, [
-        _c("div", { staticClass: "dialog__header" }, [
-          _c("strong", [_vm._v(_vm._s(_vm.question))])
+  return _c("div", { staticClass: "modal" }, [
+    _c("div", { staticClass: "modal__wrapper" }, [
+      _c("div", { staticClass: "modal__content" }, [
+        _c("div", { staticClass: "modal__header" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("h3", { staticClass: "modal__title" }, [
+            _vm._v(_vm._s(_vm.titleContent))
+          ]),
+          _vm._v(" "),
+          _vm._m(1)
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "dialog__body" }, [
-          _vm._v(
-            "Delete an item will permanently remove it and all its relations."
-          )
+        _c("div", { staticClass: "modal__body" }, [
+          _vm._v(_vm._s(_vm.bodyContent))
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "dialog__footer" }, [
+        _c("div", { staticClass: "modal__footer" }, [
           _c(
             "button",
             {
-              staticClass: "btn btn--secondary js-dismiss-dialog",
+              staticClass: "btn btn--secondary js-dismiss-modal",
               attrs: { type: "button" }
             },
-            [_vm._v("No, Keep " + _vm._s(_vm.textItemSingularOrPlural))]
+            [_vm._v("Cancel")]
           ),
           _vm._v(" "),
           _c(
             "button",
             {
-              staticClass: "btn btn--danger js-dismiss-dialog",
+              staticClass: "btn btn--danger js-dismiss-modal",
               attrs: { type: "button" },
               on: {
                 click: function($event) {
@@ -57885,19 +57900,33 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("Yes, Delete " + _vm._s(_vm.textItemSingularOrPlural))]
+            [_vm._v("Delete")]
           )
-        ]),
-        _vm._v(" "),
-        _c("a", {
-          staticClass: "close js-dismiss-dialog",
-          attrs: { href: "#" }
-        })
+        ])
       ])
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "modal__icon" }, [
+      _c("i", { staticClass: "fas fa-trash" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      { staticClass: "modal__close js-dismiss-modal", attrs: { href: "#" } },
+      [_c("i", { staticClass: "fal fa-times" })]
+    )
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -57925,23 +57954,48 @@ var render = function() {
             "div",
             { staticClass: "datatable__action" },
             [
-              _vm._t("button-create"),
-              _vm._v(" "),
-              _vm.selected.length
-                ? _c(
+              _c(
+                "div",
+                { staticClass: "datatable__tool" },
+                [
+                  _c(
                     "button",
                     {
-                      staticClass: "btn btn--danger js-dialog",
-                      attrs: { disabled: _vm.deleting }
+                      staticClass: "btn btn--raised btn--cyan",
+                      attrs: { type: "button", title: "Refresh" },
+                      on: {
+                        click: function($event) {
+                          _vm.fetchData(_vm.perPage)
+                        }
+                      }
                     },
-                    [_vm._v("Delete")]
-                  )
-                : _vm._e(),
+                    [_c("i", { staticClass: "fal fa-sync-alt" })]
+                  ),
+                  _vm._v(" "),
+                  _vm.selected.length
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn--raised btn--danger js-modal",
+                          attrs: {
+                            type: "button",
+                            title: "Delete",
+                            disabled: _vm.deleting
+                          }
+                        },
+                        [_c("i", { staticClass: "fal fa-trash-alt" })]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("confirm-delete", {
+                    attrs: { selected: _vm.selected },
+                    on: { deleteData: _vm.deleteData }
+                  })
+                ],
+                1
+              ),
               _vm._v(" "),
-              _c("confirm-delete", {
-                attrs: { selected: _vm.selected },
-                on: { deleteData: _vm.deleteData }
-              })
+              _vm._t("button-create")
             ],
             2
           ),
@@ -58179,7 +58233,7 @@ var render = function() {
                             _c(
                               "a",
                               {
-                                staticClass: "dropdown__item js-dialog",
+                                staticClass: "dropdown__item js-modal",
                                 attrs: { href: "" }
                               },
                               [_vm._v("Delete")]
@@ -58400,48 +58454,34 @@ $(function () {
 	});
 });
 
-// Dialog.
+// Modal.
 $(function () {
-	$(document).on('click', '.js-dialog', function (e) {
+	$(document).on('click', '.js-modal', function (e) {
 		e.stopPropagation();
 		e.preventDefault();
 
-		$(e.target).next('.dialog').addClass('show');
-		$('body').addClass('dialog-open');
+		$(this).next('.modal').addClass('show');
+		$('body').addClass('modal-open');
 	});
 
-	$(document).on('click', '.js-dismiss-dialog', function (e) {
+	$(document).on('click', '.js-dismiss-modal', function (e) {
 		e.preventDefault();
 
-		$('.dialog').removeClass('show');
-		$('body').removeClass('dialog-open');
+		$('.modal').removeClass('show');
+		$('body').removeClass('modal-open');
 
 		$('.dropdown').removeClass('dropdown--show');
 		$('.dropdown__menu').removeClass('dropdown__menu--show');
+		$('tr').removeClass('hightlight');
 	});
 
-	$(document).on('click', '.dialog__content', function (e) {
+	$(document).on('click', '.modal__content', function (e) {
 		e.stopPropagation();
 	});
 
 	$(document).click(function (e) {
-		$('.dialog').removeClass('show');
-		$('body').removeClass('dialog-open');
-	});
-});
-
-// Datatable checkbox.
-$(function () {
-	$(document).on('change', 'td input', function () {
-		$(this).closest('tr').toggleClass('hightlight');
-	});
-
-	$(document).on('change', 'th input', function () {
-		if ($(this).prop('checked')) {
-			$('tbody tr').addClass('hightlight');
-		} else {
-			$('tbody tr').removeClass('hightlight');
-		}
+		$('.modal').removeClass('show');
+		$('body').removeClass('modal-open');
 	});
 });
 

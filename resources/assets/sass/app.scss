@@ -16,7 +16,7 @@
 	'components/breadcrumb',
 	'components/form',
 	'components/checkbox',
-	'components/dialog',
+	'components/modal',
 	'components/radio',
 	'components/loading';
 
@@ -30,6 +30,5 @@
 
 // Vendors.
 @import
-	'vendors/icon',
 	'vendors/toastr',
 	'vendors/fontawesome/css/fontawesome-all.min.css';
