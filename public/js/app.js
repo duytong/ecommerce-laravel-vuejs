@@ -57826,7 +57826,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['id', 'selected'],
@@ -57863,20 +57862,18 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "modal" }, [
-    _c("div", { staticClass: "modal__wrapper" }, [
+    _c("div", { staticClass: "modal__dialog" }, [
       _c("div", { staticClass: "modal__content" }, [
         _c("div", { staticClass: "modal__header" }, [
-          _vm._m(0),
-          _vm._v(" "),
           _c("h3", { staticClass: "modal__title" }, [
             _vm._v(_vm._s(_vm.titleContent))
           ]),
           _vm._v(" "),
-          _vm._m(1)
+          _vm._m(0)
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "modal__body" }, [
-          _vm._v(_vm._s(_vm.bodyContent))
+          _c("p", [_vm._v(_vm._s(_vm.bodyContent))])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "modal__footer" }, [
@@ -57908,14 +57905,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "modal__icon" }, [
-      _c("i", { staticClass: "fas fa-trash" })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -58390,16 +58379,18 @@ $(function () {
 		e.preventDefault();
 		e.stopPropagation();
 
-		$('.js-dropdown').parent('.dropdown').removeClass('dropdown--show');
-		$('.js-dropdown').parent('.dropdown').find('.dropdown__menu').removeClass('dropdown__menu--show');
+		$('.js-dropdown').not($('.js-dropdown').has($(e.target))).parent('.dropdown').removeClass('show');
+		$('.js-dropdown').not($('.js-dropdown').has($(e.target))).parent('.dropdown').find('.dropdown__menu').removeClass('show');
 
-		$(this).parent('.dropdown').toggleClass('dropdown--show');
-		$(this).parent('.dropdown').find('.dropdown__menu').toggleClass('dropdown__menu--show');
+		$(this).parent('.dropdown').toggleClass('show');
+		$(this).parent('.dropdown').find('.dropdown__menu').toggleClass('show');
 	});
 
-	$(document).on('click', function () {
-		$('.dropdown').removeClass('dropdown--show');
-		$('.dropdown__menu').removeClass('dropdown__menu--show');
+	$(document).on('click', function (e) {
+		if ($(e.target).closest('.dropdown__menu').length === 0) {
+			$('.dropdown').removeClass('show');
+			$('.dropdown__menu').removeClass('show');
+		}
 	});
 });
 
@@ -58460,28 +58451,25 @@ $(function () {
 		e.stopPropagation();
 		e.preventDefault();
 
-		$(this).next('.modal').addClass('show');
 		$('body').addClass('modal-open');
+		$(this).next('.modal').addClass('show');
 	});
 
 	$(document).on('click', '.js-dismiss-modal', function (e) {
 		e.preventDefault();
 
-		$('.modal').removeClass('show');
 		$('body').removeClass('modal-open');
+		$('.modal').removeClass('show');
 
-		$('.dropdown').removeClass('dropdown--show');
-		$('.dropdown__menu').removeClass('dropdown__menu--show');
-		$('tr').removeClass('hightlight');
-	});
-
-	$(document).on('click', '.modal__content', function (e) {
-		e.stopPropagation();
+		$('.dropdown').removeClass('show');
+		$('.dropdown__menu').removeClass('show');
 	});
 
 	$(document).click(function (e) {
-		$('.modal').removeClass('show');
-		$('body').removeClass('modal-open');
+		if ($(e.target).closest('.modal__content').length === 0) {
+			$('body').removeClass('modal-open');
+			$('.modal').removeClass('show');
+		}
 	});
 });
 
