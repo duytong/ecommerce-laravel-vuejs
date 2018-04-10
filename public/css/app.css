@@ -390,11 +390,6 @@ template {
   background: #087bd4;
 }
 
-.btn--primary.btn--raised {
-  -webkit-box-shadow: 0 10px 20px -8px #0984e3;
-          box-shadow: 0 10px 20px -8px #0984e3;
-}
-
 .btn--success {
   border-color: #1abc9c;
   background: #1abc9c;
@@ -408,11 +403,6 @@ template {
 .btn--success:focus {
   border-color: #18af91;
   background: #18af91;
-}
-
-.btn--success.btn--raised {
-  -webkit-box-shadow: 0 10px 20px -8px #1abc9c;
-          box-shadow: 0 10px 20px -8px #1abc9c;
 }
 
 .btn--danger {
@@ -430,11 +420,6 @@ template {
   background: #ea2d4e;
 }
 
-.btn--danger.btn--raised {
-  -webkit-box-shadow: 0 10px 20px -8px #eb3b5a;
-          box-shadow: 0 10px 20px -8px #eb3b5a;
-}
-
 .btn--secondary {
   border-color: #6c757d;
   background: #6c757d;
@@ -448,11 +433,6 @@ template {
 .btn--secondary:focus {
   border-color: #656d75;
   background: #656d75;
-}
-
-.btn--secondary.btn--raised {
-  -webkit-box-shadow: 0 10px 20px -8px #6c757d;
-          box-shadow: 0 10px 20px -8px #6c757d;
 }
 
 .btn--cyan {
@@ -470,11 +450,6 @@ template {
   background: #00bfba;
 }
 
-.btn--cyan.btn--raised {
-  -webkit-box-shadow: 0 10px 20px -8px #00cec9;
-          box-shadow: 0 10px 20px -8px #00cec9;
-}
-
 .btn--pink {
   border-color: #e84393;
   background: #e84393;
@@ -490,11 +465,6 @@ template {
   background: #e6358b;
 }
 
-.btn--pink.btn--raised {
-  -webkit-box-shadow: 0 10px 20px -8px #e84393;
-          box-shadow: 0 10px 20px -8px #e84393;
-}
-
 .btn--purple {
   border-color: #6c5ce7;
   background: #6c5ce7;
@@ -508,11 +478,6 @@ template {
 .btn--purple:focus {
   border-color: #604fe5;
   background: #604fe5;
-}
-
-.btn--purple.btn--raised {
-  -webkit-box-shadow: 0 10px 20px -8px #6c5ce7;
-          box-shadow: 0 10px 20px -8px #6c5ce7;
 }
 
 .card {
@@ -826,7 +791,7 @@ tbody tr {
 }
 
 .breadcrumb__item {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
 }
 
@@ -839,10 +804,10 @@ tbody tr {
 }
 
 .breadcrumb__item + .breadcrumb__item::before {
+  content: '/';
   display: inline-block;
   padding: 0 0.5rem;
   color: #1c2951;
-  content: '/';
 }
 
 .form {
@@ -908,7 +873,7 @@ tbody tr {
   width: 100%;
   padding: 0.375rem 0.75rem;
   color: #1c2951;
-  background-color: #fff;
+  background-color: transparent;
   background-clip: padding-box;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
@@ -1460,8 +1425,6 @@ header {
           justify-content: space-between;
   padding: 0.5rem 1rem;
   background-color: #fff;
-  -webkit-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
-          box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
 }
 
 .aside-toggle {
@@ -1674,6 +1637,10 @@ header {
   }
 }
 
+* {
+  outline: none !important;
+}
+
 body {
   font-size: 0.875rem;
   color: #1c2951;
@@ -1739,7 +1706,8 @@ a:hover {
 }
 
 main {
-  padding: 1.5rem;
+  padding: 2rem;
+  background-color: #f5f8fa;
 }
 
 .grid {
@@ -1833,10 +1801,6 @@ main {
 @media (min-width: 992px) {
   #app {
     padding: 3.5rem;
-  }
-
-  .content {
-    border-bottom-right-radius: 0.25rem;
   }
 }
 
