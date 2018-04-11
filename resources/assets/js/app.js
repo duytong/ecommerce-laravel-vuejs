@@ -27,9 +27,9 @@ Vue.use(VueProgressBar, {
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('card', require('./components/Card.vue'));
-Vue.component('breadcrumb', require('./components/Breadcrumb.vue'));
-Vue.component('v-table', require('./components/Table.vue'));
+Vue.component('v-card', require('./components/VCard.vue'));
+Vue.component('v-breadcrumb', require('./components/VBreadcrumb.vue'));
+Vue.component('v-table', require('./components/VTable.vue'));
 Vue.component('v-form', require('./components/Form.vue'));
 
 const app = new Vue({
