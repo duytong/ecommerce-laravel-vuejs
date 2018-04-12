@@ -569,14 +569,15 @@ template {
   display: block;
   padding: 0.5rem 0.75rem;
   line-height: 1.25;
-  color: #00cec9;
+  color: #42b983;
   background-color: #fff;
   border: 1px solid #d3e0e9;
   border-left-width: 0;
 }
 
 .pagination__link:hover {
-  background-color: rgba(0, 206, 201, 0.1);
+  color: #42b983;
+  background-color: #e9ecef;
 }
 
 .pagination__item:first-child .pagination__link {
@@ -594,8 +595,8 @@ template {
   color: #fff;
   pointer-events: none;
   cursor: auto;
-  background-color: #00cec9;
-  border-color: #00cec9;
+  background-color: #42b983;
+  border-color: #42b983;
 }
 
 .pagination__item.disabled .pagination__link {
@@ -799,7 +800,7 @@ template {
   position: relative;
   cursor: pointer;
   margin-bottom: 0;
-  padding-left: 1.75rem;
+  margin-left: 1.75rem;
   color: #4d516c;
 }
 
@@ -808,8 +809,8 @@ template {
   position: absolute;
   top: 2px;
   left: 0;
-  width: 18px;
-  height: 18px;
+  width: 1.125rem;
+  height: 1.125rem;
   border: 1px solid #ced4da;
   border-radius: 2px;
   -webkit-transition: all 0.15s ease-in-out;
@@ -1138,7 +1139,7 @@ template {
   width: auto;
 }
 
-.datatable__select {
+.datatable__per-page {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1147,7 +1148,7 @@ template {
           align-items: center;
 }
 
-.datatable__select .form__input {
+.datatable__per-page .form__input {
   margin: 0 0.5rem;
 }
 
@@ -1174,9 +1175,9 @@ template {
 
 .datatable .checkbox__label {
   top: 3px;
-  width: 18px;
-  height: 18px;
-  padding-left: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-left: 0;
 }
 
 .datatable .checkbox__label::before {
@@ -1217,7 +1218,7 @@ th {
             flex-direction: column;
   }
 
-  .datatable__select {
+  .datatable__per-page {
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center;
@@ -1631,7 +1632,7 @@ header {
 
 body {
   font-size: 0.875rem;
-  color: #1c2951;
+  color: #34495e;
 }
 
 ol,
