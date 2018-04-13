@@ -15,7 +15,9 @@ require('es6-promise').polyfill();
 window.Vue = require('vue');
 
 Vue.use(VueRouter);
-Vue.use(VeeValidate);
+Vue.use(VeeValidate, {
+	fieldsBagName: 'formFields'
+});
 Vue.use(VueProgressBar, {
 	color: '#81ecec',
 	failedColor: '#eb3b5a'
