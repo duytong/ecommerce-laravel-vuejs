@@ -14731,7 +14731,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_3_vee_validate__["a" /* default */], {
   fieldsBagName: 'formFields'
 });
 Vue.use(__WEBPACK_IMPORTED_MODULE_2_vue_progressbar___default.a, {
-  color: '#81ecec',
+  color: '#2ecc71',
   failedColor: '#eb3b5a'
 });
 
@@ -15091,18 +15091,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
 			fields: [{
 				key: 1,
+				title: 'Id',
 				name: 'id'
 			}, {
 				key: 2,
+				title: 'Name',
 				name: 'name'
 			}, {
 				key: 3,
+				title: 'Email',
 				name: 'email'
 			}]
 		};
@@ -15122,19 +15129,16 @@ var render = function() {
     { attrs: { "api-name": "users", fields: _vm.fields } },
     [
       _c(
-        "template",
-        { slot: "button-create" },
-        [
-          _c(
-            "router-link",
-            { staticClass: "btn btn--primary", attrs: { to: "/users/create" } },
-            [_vm._v("New user")]
-          )
-        ],
-        1
+        "router-link",
+        {
+          staticClass: "btn btn--primary",
+          attrs: { slot: "button-create", to: "/users/create" },
+          slot: "button-create"
+        },
+        [_vm._v("\n\t\tAdd user\n\t")]
       )
     ],
-    2
+    1
   )
 }
 var staticRenderFns = []
@@ -16425,23 +16429,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-		data: function data() {
-				return {
-						fields: [{
-								key: 1,
-								name: 'id'
-						}, {
-								key: 2,
-								name: 'name'
-						}, {
-								key: 3,
-								name: 'display_name'
-						}, {
-								key: 4,
-								name: 'description'
-						}]
-				};
-		}
+	data: function data() {
+		return {
+			fields: [{
+				key: 1,
+				title: 'Id',
+				name: 'id'
+			}, {
+				key: 2,
+				title: 'Name',
+				name: 'name'
+			}, {
+				key: 3,
+				title: 'Display Name',
+				name: 'display_name'
+			}, {
+				key: 4,
+				title: 'Description',
+				name: 'description'
+			}]
+		};
+	}
 });
 
 /***/ }),
@@ -16454,7 +16462,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-table",
-    { attrs: { "api-name": "roles", "table-fields": _vm.fields } },
+    { attrs: { "api-name": "roles", fields: _vm.fields } },
     [
       _c(
         "template",
@@ -16543,14 +16551,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
-		roleForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a
+		RoleForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a
 	}
 });
 
@@ -17068,9 +17074,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "v-form",
-    [_c("template", { slot: "content" }, [_c("role-form")], 1)],
-    2
+    "v-card",
+    [_c("role-form", { attrs: { slot: "content" }, slot: "content" })],
+    1
   )
 }
 var staticRenderFns = []
@@ -17437,23 +17443,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-		data: function data() {
-				return {
-						fields: [{
-								key: 1,
-								name: 'id'
-						}, {
-								key: 2,
-								name: 'name'
-						}, {
-								key: 3,
-								name: 'display_name'
-						}, {
-								key: 4,
-								name: 'description'
-						}]
-				};
-		}
+	data: function data() {
+		return {
+			fields: [{
+				key: 1,
+				title: 'Id',
+				name: 'id'
+			}, {
+				key: 2,
+				title: 'Name',
+				name: 'name'
+			}, {
+				key: 3,
+				title: 'Display Name',
+				name: 'display_name'
+			}, {
+				key: 4,
+				title: 'Description',
+				name: 'description'
+			}]
+		};
+	}
 });
 
 /***/ }),
@@ -17466,7 +17476,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-table",
-    { attrs: { "api-name": "permissions", "table-fields": _vm.fields } },
+    { attrs: { "api-name": "permissions", fields: _vm.fields } },
     [
       _c(
         "template",
@@ -17478,7 +17488,7 @@ var render = function() {
               staticClass: "btn btn--primary",
               attrs: { to: "/permissions/create" }
             },
-            [_vm._v("New permission")]
+            [_vm._v("Create permission")]
           )
         ],
         1
@@ -17558,14 +17568,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
-		permissionForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a
+		PermissionForm: __WEBPACK_IMPORTED_MODULE_0__Form___default.a
 	}
 });
 
@@ -17577,6 +17585,109 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toastr__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_toastr__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -17694,7 +17805,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       permissionType: 'basic',
       permission: this.initialPermission,
       resource: '',
-      crudOptions: ['Create', 'Read', 'Update', 'Delete'],
+      crudOptions: [{
+        key: 1,
+        action: 'Create',
+        description: 'Allows a user to CREATE a permission'
+      }, {
+        key: 2,
+        action: 'Read',
+        description: 'Allows a user to READ a permission'
+      }, {
+        key: 3,
+        action: 'Update',
+        description: 'Allows a user to UPDATE a permission'
+      }, {
+        key: 4,
+        action: 'Delete',
+        description: 'Allows a user to DELETE a permission'
+      }],
       crudSelected: ['Create', 'Read', 'Update', 'Delete'],
       loading: false,
       errorsMessage: {}
@@ -17762,6 +17889,62 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    !_vm.initialPermission.id
+      ? _c("div", { staticClass: "form__group" }, [
+          _c("label", { staticClass: "form__label" }, [
+            _vm._v("Permission Type")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "radio" }, [
+            _c("div", { staticClass: "radio__group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.permissionType,
+                    expression: "permissionType"
+                  }
+                ],
+                staticClass: "radio__input",
+                attrs: { type: "radio", id: "basic", value: "basic" },
+                domProps: { checked: _vm._q(_vm.permissionType, "basic") },
+                on: {
+                  change: function($event) {
+                    _vm.permissionType = "basic"
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm._m(0)
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "radio__group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.permissionType,
+                    expression: "permissionType"
+                  }
+                ],
+                staticClass: "radio__input",
+                attrs: { type: "radio", id: "crud", value: "crud" },
+                domProps: { checked: _vm._q(_vm.permissionType, "crud") },
+                on: {
+                  change: function($event) {
+                    _vm.permissionType = "crud"
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm._m(1)
+            ])
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
     _c(
       "form",
       {
@@ -17785,70 +17968,6 @@ var render = function() {
       [
         _c("div", { staticClass: "form__wrapper" }, [
           _c("div", { staticClass: "form__data" }, [
-            !_vm.initialPermission.id
-              ? _c("div", { staticClass: "form__group" }, [
-                  _c("label", { staticClass: "form__label" }, [
-                    _vm._v("Permission Type")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "radio" }, [
-                    _c("div", { staticClass: "radio__group" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.permissionType,
-                            expression: "permissionType"
-                          }
-                        ],
-                        staticClass: "radio__input",
-                        attrs: { type: "radio", id: "basic", value: "basic" },
-                        domProps: {
-                          checked: _vm._q(_vm.permissionType, "basic")
-                        },
-                        on: {
-                          change: function($event) {
-                            _vm.permissionType = "basic"
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("label", { attrs: { for: "basic" } }, [
-                        _vm._v("Basic Permission")
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "radio__group" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.permissionType,
-                            expression: "permissionType"
-                          }
-                        ],
-                        staticClass: "radio__input",
-                        attrs: { type: "radio", id: "crud", value: "crud" },
-                        domProps: {
-                          checked: _vm._q(_vm.permissionType, "crud")
-                        },
-                        on: {
-                          change: function($event) {
-                            _vm.permissionType = "crud"
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("label", { attrs: { for: "crud" } }, [
-                        _vm._v("CRUD Permission")
-                      ])
-                    ])
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
             _c(
               "div",
               {
@@ -17864,20 +17983,20 @@ var render = function() {
                 _c("input", {
                   directives: [
                     {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.initialPermission.name,
-                      expression: "initialPermission.name"
-                    },
-                    {
                       name: "validate",
                       rawName: "v-validate",
                       value: "required",
                       expression: "'required'"
+                    },
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.initialPermission.name,
+                      expression: "initialPermission.name"
                     }
                   ],
-                  staticClass: "form__control",
-                  attrs: { type: "text", id: "name", name: "name" },
+                  staticClass: "form__input",
+                  attrs: { id: "name", name: "name" },
                   domProps: { value: _vm.initialPermission.name },
                   on: {
                     input: function($event) {
@@ -17895,20 +18014,28 @@ var render = function() {
                 _vm._v(" "),
                 _vm.errors.has("basic.name")
                   ? _c("strong", { staticClass: "form__invalid-text" }, [
-                      _vm._v(_vm._s(_vm.errors.first("basic.name")))
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(_vm.errors.first("basic.name")) +
+                          "\n          "
+                      )
                     ])
                   : _vm._e(),
                 _vm._v(" "),
                 _vm.errorsMessage.name
                   ? _c("strong", { staticClass: "form__invalid-text" }, [
-                      _vm._v(_vm._s(_vm.errorsMessage.name[0]))
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(_vm.errorsMessage.name[0]) +
+                          "\n          "
+                      )
                     ])
                   : _vm._e()
               ]
             ),
             _vm._v(" "),
             _c("div", { staticClass: "form__group" }, [
-              _vm._m(0),
+              _vm._m(2),
               _vm._v(" "),
               _c("input", {
                 directives: [
@@ -17919,8 +18046,8 @@ var render = function() {
                     expression: "initialPermission.display_name"
                   }
                 ],
-                staticClass: "form__control",
-                attrs: { type: "text", name: "display name" },
+                staticClass: "form__input",
+                attrs: { name: "display name" },
                 domProps: { value: _vm.initialPermission.display_name },
                 on: {
                   input: function($event) {
@@ -17938,7 +18065,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form__group" }, [
-              _vm._m(1),
+              _vm._m(3),
               _vm._v(" "),
               _c("input", {
                 directives: [
@@ -17949,9 +18076,8 @@ var render = function() {
                     expression: "initialPermission.description"
                   }
                 ],
-                staticClass: "form__control",
+                staticClass: "form__input",
                 attrs: {
-                  type: "text",
                   name: "description",
                   placeholder: "Describe what this permission does"
                 },
@@ -18001,7 +18127,7 @@ var render = function() {
                     staticClass: "btn btn--primary",
                     attrs: { type: "submit", disabled: _vm.loading }
                   },
-                  [_vm._v("Create")]
+                  [_vm._v("\n          Create\n        ")]
                 )
               : _vm._e(),
             _vm._v(" "),
@@ -18012,7 +18138,7 @@ var render = function() {
                     staticClass: "btn btn--success",
                     attrs: { type: "submit", disabled: _vm.loading }
                   },
-                  [_vm._v("Update")]
+                  [_vm._v("\n          Update\n        ")]
                 )
               : _vm._e()
           ])
@@ -18043,64 +18169,6 @@ var render = function() {
       [
         _c("div", { staticClass: "form__wrapper" }, [
           _c("div", { staticClass: "form__data" }, [
-            _c("div", { staticClass: "form__group" }, [
-              _c("label", { staticClass: "form__label" }, [
-                _vm._v("Permission Type")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "radio" }, [
-                _c("div", { staticClass: "radio__group" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.permissionType,
-                        expression: "permissionType"
-                      }
-                    ],
-                    staticClass: "radio__input",
-                    attrs: { type: "radio", id: "basic", value: "basic" },
-                    domProps: { checked: _vm._q(_vm.permissionType, "basic") },
-                    on: {
-                      change: function($event) {
-                        _vm.permissionType = "basic"
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("label", { attrs: { for: "basic" } }, [
-                    _vm._v("Basic Permission")
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "radio__group" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.permissionType,
-                        expression: "permissionType"
-                      }
-                    ],
-                    staticClass: "radio__input",
-                    attrs: { type: "radio", id: "crud", value: "crud" },
-                    domProps: { checked: _vm._q(_vm.permissionType, "crud") },
-                    on: {
-                      change: function($event) {
-                        _vm.permissionType = "crud"
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("label", { attrs: { for: "crud" } }, [
-                    _vm._v("CRUD Permission")
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
             _c(
               "div",
               {
@@ -18117,21 +18185,20 @@ var render = function() {
                 _c("input", {
                   directives: [
                     {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.resource,
-                      expression: "resource"
-                    },
-                    {
                       name: "validate",
                       rawName: "v-validate",
                       value: "required",
                       expression: "'required'"
+                    },
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.resource,
+                      expression: "resource"
                     }
                   ],
-                  staticClass: "form__control",
+                  staticClass: "form__input",
                   attrs: {
-                    type: "text",
                     id: "resource",
                     name: "resource",
                     placeholder: "The name of the resource",
@@ -18150,7 +18217,11 @@ var render = function() {
                 _vm._v(" "),
                 _vm.errors.has("crud.resource")
                   ? _c("strong", { staticClass: "form__invalid-text" }, [
-                      _vm._v(_vm._s(_vm.errors.first("crud.resource")))
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(_vm.errors.first("crud.resource")) +
+                          "\n          "
+                      )
                     ])
                   : _vm._e()
               ]
@@ -18161,89 +18232,72 @@ var render = function() {
                 "div",
                 { staticClass: "checkbox" },
                 _vm._l(_vm.crudOptions, function(crudOption) {
-                  return _c("div", { staticClass: "checkbox__group" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.crudSelected,
-                          expression: "crudSelected"
-                        }
-                      ],
-                      staticClass: "checkbox__input",
-                      attrs: { type: "checkbox", id: crudOption },
-                      domProps: {
-                        value: crudOption,
-                        checked: Array.isArray(_vm.crudSelected)
-                          ? _vm._i(_vm.crudSelected, crudOption) > -1
-                          : _vm.crudSelected
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.crudSelected,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = crudOption,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 && (_vm.crudSelected = $$a.concat([$$v]))
+                  return _c(
+                    "div",
+                    { key: crudOption.key, staticClass: "checkbox__group" },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.crudSelected,
+                            expression: "crudSelected"
+                          }
+                        ],
+                        staticClass: "checkbox__input",
+                        attrs: { type: "checkbox", id: crudOption },
+                        domProps: {
+                          value: crudOption.action,
+                          checked: Array.isArray(_vm.crudSelected)
+                            ? _vm._i(_vm.crudSelected, crudOption.action) > -1
+                            : _vm.crudSelected
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.crudSelected,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = crudOption.action,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  (_vm.crudSelected = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.crudSelected = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
                             } else {
-                              $$i > -1 &&
-                                (_vm.crudSelected = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
+                              _vm.crudSelected = $$c
                             }
-                          } else {
-                            _vm.crudSelected = $$c
                           }
                         }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("label", { attrs: { for: crudOption } }, [
-                      _vm._v(_vm._s(crudOption))
-                    ])
-                  ])
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "label",
+                        {
+                          staticClass: "checkbox__label",
+                          attrs: { for: crudOption }
+                        },
+                        [
+                          _c("span", { staticClass: "checkbox__text" }, [
+                            _vm._v(_vm._s(crudOption.action))
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "checkbox__description" }, [
+                        _vm._v("(" + _vm._s(crudOption.description) + ")")
+                      ])
+                    ]
+                  )
                 })
               )
             ]),
-            _vm._v(" "),
-            _vm.resource.length && _vm.crudSelected.length
-              ? _c("div", { staticClass: "form__group" }, [
-                  _c("div", { staticClass: "datatable__body" }, [
-                    _c("table", [
-                      _vm._m(2),
-                      _vm._v(" "),
-                      _c(
-                        "tbody",
-                        _vm._l(_vm.crudSelected, function(item) {
-                          return _c("tr", [
-                            _c("td", {
-                              domProps: {
-                                textContent: _vm._s(_vm.crudName(item))
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c("td", {
-                              domProps: {
-                                textContent: _vm._s(_vm.crudDisplayName(item))
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c("td", {
-                              domProps: {
-                                textContent: _vm._s(_vm.crudDescription(item))
-                              }
-                            })
-                          ])
-                        })
-                      )
-                    ])
-                  ])
-                ])
-              : _vm._e(),
             _vm._v(" "),
             _c("input", {
               directives: [
@@ -18274,7 +18328,7 @@ var render = function() {
                 staticClass: "btn btn--primary",
                 attrs: { type: "submit", disabled: _vm.loading }
               },
-              [_vm._v("Create")]
+              [_vm._v("\n          Create\n        ")]
             )
           ])
         ])
@@ -18283,6 +18337,26 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "radio__label", attrs: { for: "basic" } },
+      [_c("span", { staticClass: "radio__text" }, [_vm._v("Basic Permission")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "radio__label", attrs: { for: "crud" } },
+      [_c("span", { staticClass: "radio__text" }, [_vm._v("CRUD Permission")])]
+    )
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -18299,20 +18373,6 @@ var staticRenderFns = [
     return _c("label", { staticClass: "form__label" }, [
       _vm._v("Description"),
       _c("small", { staticClass: "form__help" }, [_vm._v("(Optional)")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Name")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Display Name")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Description")])
-      ])
     ])
   }
 ]
@@ -18334,9 +18394,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "card",
-    [_c("template", { slot: "content" }, [_c("permission-form")], 1)],
-    2
+    "v-form",
+    [_c("permission-form", { attrs: { slot: "content" }, slot: "content" })],
+    1
   )
 }
 var staticRenderFns = []
@@ -57072,8 +57132,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "card__header" }, [_c("v-breadcrumb")], 1),
-    _vm._v(" "),
     _c("div", { staticClass: "card__body" }, [_vm._t("content")], 2)
   ])
 }
@@ -57440,6 +57498,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -57452,8 +57546,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   props: {
     fields: {
-      type: Array,
-      required: true
+      type: Array
     },
     apiName: {
       type: String,
@@ -57479,14 +57572,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }],
       pagination: {},
       items: [],
-      selected: [],
       noData: false,
+      selected: [],
       keywords: '',
       deleting: false
     };
-  },
-  created: function created() {
-    this.fetchData(this.perPage);
   },
 
   computed: {
@@ -57504,6 +57594,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
 
         this.selected = selected;
+      }
+    },
+    unselectAll: {
+      get: function get() {
+        return true;
+      },
+      set: function set() {
+        this.selected = [];
       }
     }
   },
@@ -57589,6 +57687,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         __WEBPACK_IMPORTED_MODULE_0_toastr___default.a.success('Deleted successfully!');
       });
     }
+  },
+  created: function created() {
+    this.fetchData(this.perPage);
   }
 });
 
@@ -57963,24 +58064,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['id', 'selected'],
+  props: {
+    id: {
+      type: Number
+    },
+    selected: {
+      type: Array
+    }
+  },
   computed: {
     titleContent: function titleContent() {
-      var text = this.selected ? this.singularOrPlural : 'this item?';
-
-      return 'Delete ' + text;
-    },
-    singularOrPlural: function singularOrPlural() {
-      if (this.selected) {
-        return this.selected.length > 1 ? this.selected.length + ' items selected?' : this.selected.length + ' item selected?';
-      }
+      return 'Delete ' + (this.selected ? this.singularOrPlural : 'this item?');
     },
     bodyContent: function bodyContent() {
-      var text = this.selected ? this.singularOrPlural : 'this item?';
-
-      return 'Are you sure you want to delete ' + text;
+      return 'Are you sure you want to delete ' + (this.selected ? this.singularOrPlural : 'this item?');
+    },
+    singularOrPlural: function singularOrPlural() {
+      return this.selected.length > 1 ? this.selected.length + ' items selected?' : ' item selected?';
     }
   },
   methods: {
@@ -58010,24 +58113,18 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "modal__body" }, [
-          _c("p", [_vm._v(_vm._s(_vm.bodyContent))])
+          _vm._v(_vm._s(_vm.bodyContent))
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "modal__footer" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn--secondary js-dismiss-modal",
-              attrs: { type: "button" }
-            },
-            [_vm._v("Cancel")]
-          ),
+          _c("button", { staticClass: "btn btn--secondary js-dismiss-modal" }, [
+            _vm._v("Cancel")
+          ]),
           _vm._v(" "),
           _c(
             "button",
             {
               staticClass: "btn btn--danger js-dismiss-modal",
-              attrs: { type: "button" },
               on: {
                 click: function($event) {
                   _vm.deleteData(_vm.id)
@@ -58048,7 +58145,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "a",
-      { staticClass: "modal__close js-dismiss-modal", attrs: { href: "#" } },
+      { staticClass: "modal__close js-dismiss-modal", attrs: { href: "" } },
       [_c("i", { staticClass: "fal fa-times" })]
     )
   }
@@ -58080,46 +58177,85 @@ var render = function() {
             "div",
             { staticClass: "datatable__action" },
             [
+              !_vm.selected.length ? _c("v-breadcrumb") : _vm._e(),
+              _vm._v(" "),
+              _vm.selected.length
+                ? _c("span", [
+                    _vm._v(_vm._s(_vm.selected.length) + " item selected")
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
               _c(
                 "div",
                 { staticClass: "datatable__handle" },
                 [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn--cyan",
-                      attrs: { title: "Refresh" },
-                      on: {
-                        click: function($event) {
-                          _vm.fetchData(_vm.perPage)
-                        }
-                      }
-                    },
-                    [_c("i", { staticClass: "fal fa-sync-alt" })]
-                  ),
-                  _vm._v(" "),
                   _vm.selected.length
                     ? _c(
                         "button",
                         {
-                          staticClass: "btn btn--danger js-modal",
+                          staticClass: "btn js-modal",
                           attrs: { title: "Delete", disabled: _vm.deleting }
                         },
-                        [_c("i", { staticClass: "fal fa-trash-alt" })]
+                        [_c("i", { staticClass: "far fa-trash-alt" })]
                       )
                     : _vm._e(),
                   _vm._v(" "),
                   _c("confirm-delete", {
                     attrs: { selected: _vm.selected },
                     on: { deleteData: _vm.deleteData }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn",
+                      on: {
+                        click: function($event) {
+                          _vm.fetchData(_vm.perPage)
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "far fa-sync-alt" })]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "dropdown" }, [
+                    _c("button", { staticClass: "btn js-dropdown" }, [
+                      _c("span", { staticClass: "btn__text" }, [
+                        _vm._v("Filter")
+                      ]),
+                      _vm._v(" "),
+                      _c("i", { staticClass: "far fa-outdent" })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "dropdown__menu" }, [
+                      _c(
+                        "a",
+                        { staticClass: "dropdown__item", attrs: { href: "" } },
+                        [
+                          _c("i", { staticClass: "far fa-sort-amount-up" }),
+                          _vm._v(" "),
+                          _c("span", [_vm._v("Sort by asc")])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        { staticClass: "dropdown__item", attrs: { href: "" } },
+                        [
+                          _c("i", { staticClass: "far fa-sort-amount-down" }),
+                          _vm._v(" "),
+                          _c("span", [_vm._v("Sort by desc")])
+                        ]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._t("button-create")
                 ],
-                1
-              ),
-              _vm._v(" "),
-              _vm._t("button-create")
+                2
+              )
             ],
-            2
+            1
           ),
           _vm._v(" "),
           _c("div", { staticClass: "datatable__filter" }, [
@@ -58211,57 +58347,129 @@ var render = function() {
               _c(
                 "tr",
                 [
-                  _c("th", [
-                    _c("input", {
+                  _c(
+                    "th",
+                    {
                       directives: [
                         {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.selectAll,
-                          expression: "selectAll"
+                          name: "show",
+                          rawName: "v-show",
+                          value: !_vm.unselectAll,
+                          expression: "!unselectAll"
                         }
-                      ],
-                      staticClass: "checkbox__input",
-                      attrs: { type: "checkbox", id: "select-all" },
-                      domProps: {
-                        checked: Array.isArray(_vm.selectAll)
-                          ? _vm._i(_vm.selectAll, null) > -1
-                          : _vm.selectAll
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.selectAll,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = null,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 && (_vm.selectAll = $$a.concat([$$v]))
+                      ]
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.selectAll,
+                            expression: "selectAll"
+                          }
+                        ],
+                        staticClass: "checkbox__input",
+                        attrs: { type: "checkbox", id: "select-all" },
+                        domProps: {
+                          checked: Array.isArray(_vm.selectAll)
+                            ? _vm._i(_vm.selectAll, null) > -1
+                            : _vm.selectAll
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.selectAll,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 && (_vm.selectAll = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.selectAll = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
                             } else {
-                              $$i > -1 &&
-                                (_vm.selectAll = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
+                              _vm.selectAll = $$c
                             }
-                          } else {
-                            _vm.selectAll = $$c
                           }
                         }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("label", {
-                      staticClass: "checkbox__label",
-                      attrs: { for: "select-all" }
-                    })
-                  ]),
+                      }),
+                      _vm._v(" "),
+                      _c("label", {
+                        staticClass: "checkbox__label",
+                        attrs: { for: "select-all" }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.selected.length,
+                          expression: "selected.length"
+                        }
+                      ]
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.unselectAll,
+                            expression: "unselectAll"
+                          }
+                        ],
+                        staticClass: "checkbox__input",
+                        attrs: { type: "checkbox", id: "unselect-all" },
+                        domProps: {
+                          checked: Array.isArray(_vm.unselectAll)
+                            ? _vm._i(_vm.unselectAll, null) > -1
+                            : _vm.unselectAll
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.unselectAll,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 && (_vm.unselectAll = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.unselectAll = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
+                            } else {
+                              _vm.unselectAll = $$c
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("label", {
+                        staticClass: "checkbox__label checkbox__label--minus",
+                        attrs: { for: "unselect-all" }
+                      })
+                    ]
+                  ),
                   _vm._v(" "),
                   _vm._l(_vm.fields, function(field) {
                     return _c("th", { key: field.key }, [
                       _vm._v(
                         "\n              " +
-                          _vm._s(field.name) +
+                          _vm._s(field.title) +
                           "\n            "
                       )
                     ])
@@ -58506,12 +58714,10 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "grid" }, [
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card__header" }, [_c("breadcrumb")], 1),
-      _vm._v(" "),
-      _c("div", { staticClass: "card__body" }, [_vm._t("content")], 2)
-    ])
+  return _c("div", { staticClass: "card card--form" }, [
+    _c("div", { staticClass: "card__header" }, [_c("v-breadcrumb")], 1),
+    _vm._v(" "),
+    _c("div", { staticClass: "card__body" }, [_vm._t("content")], 2)
   ])
 }
 var staticRenderFns = []

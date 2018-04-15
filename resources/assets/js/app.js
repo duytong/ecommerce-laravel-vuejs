@@ -19,7 +19,7 @@ Vue.use(VeeValidate, {
 	fieldsBagName: 'formFields'
 });
 Vue.use(VueProgressBar, {
-	color: '#81ecec',
+	color: '#2ecc71',
 	failedColor: '#eb3b5a'
 })
 
