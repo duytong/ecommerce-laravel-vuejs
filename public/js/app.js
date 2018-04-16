@@ -57598,7 +57598,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     unselectAll: {
       get: function get() {
-        return true;
+        return this.selected.length && this.selected.length !== this.items.length ? true : false;
       },
       set: function set() {
         this.selected = [];
@@ -58347,123 +58347,103 @@ var render = function() {
               _c(
                 "tr",
                 [
-                  _c(
-                    "th",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: !_vm.unselectAll,
-                          expression: "!unselectAll"
-                        }
-                      ]
-                    },
-                    [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.selectAll,
-                            expression: "selectAll"
-                          }
-                        ],
-                        staticClass: "checkbox__input",
-                        attrs: { type: "checkbox", id: "select-all" },
-                        domProps: {
-                          checked: Array.isArray(_vm.selectAll)
-                            ? _vm._i(_vm.selectAll, null) > -1
-                            : _vm.selectAll
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.selectAll,
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = null,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 && (_vm.selectAll = $$a.concat([$$v]))
+                  !_vm.unselectAll
+                    ? _c("th", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.selectAll,
+                              expression: "selectAll"
+                            }
+                          ],
+                          staticClass: "checkbox__input",
+                          attrs: { type: "checkbox", id: "select-all" },
+                          domProps: {
+                            checked: Array.isArray(_vm.selectAll)
+                              ? _vm._i(_vm.selectAll, null) > -1
+                              : _vm.selectAll
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.selectAll,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 && (_vm.selectAll = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.selectAll = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
                               } else {
-                                $$i > -1 &&
-                                  (_vm.selectAll = $$a
-                                    .slice(0, $$i)
-                                    .concat($$a.slice($$i + 1)))
+                                _vm.selectAll = $$c
                               }
-                            } else {
-                              _vm.selectAll = $$c
                             }
                           }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("label", {
-                        staticClass: "checkbox__label",
-                        attrs: { for: "select-all" }
-                      })
-                    ]
-                  ),
+                        }),
+                        _vm._v(" "),
+                        _c("label", {
+                          staticClass: "checkbox__label",
+                          attrs: { for: "select-all" }
+                        })
+                      ])
+                    : _vm._e(),
                   _vm._v(" "),
-                  _c(
-                    "th",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.selected.length,
-                          expression: "selected.length"
-                        }
-                      ]
-                    },
-                    [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.unselectAll,
-                            expression: "unselectAll"
-                          }
-                        ],
-                        staticClass: "checkbox__input",
-                        attrs: { type: "checkbox", id: "unselect-all" },
-                        domProps: {
-                          checked: Array.isArray(_vm.unselectAll)
-                            ? _vm._i(_vm.unselectAll, null) > -1
-                            : _vm.unselectAll
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.unselectAll,
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = null,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 && (_vm.unselectAll = $$a.concat([$$v]))
+                  _vm.selected.length &&
+                  _vm.selected.length !== _vm.items.length
+                    ? _c("th", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.unselectAll,
+                              expression: "unselectAll"
+                            }
+                          ],
+                          staticClass: "checkbox__input",
+                          attrs: { type: "checkbox", id: "unselect-all" },
+                          domProps: {
+                            checked: Array.isArray(_vm.unselectAll)
+                              ? _vm._i(_vm.unselectAll, null) > -1
+                              : _vm.unselectAll
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.unselectAll,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.unselectAll = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.unselectAll = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
                               } else {
-                                $$i > -1 &&
-                                  (_vm.unselectAll = $$a
-                                    .slice(0, $$i)
-                                    .concat($$a.slice($$i + 1)))
+                                _vm.unselectAll = $$c
                               }
-                            } else {
-                              _vm.unselectAll = $$c
                             }
                           }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("label", {
-                        staticClass: "checkbox__label checkbox__label--minus",
-                        attrs: { for: "unselect-all" }
-                      })
-                    ]
-                  ),
+                        }),
+                        _vm._v(" "),
+                        _c("label", {
+                          staticClass: "checkbox__label checkbox__label--minus",
+                          attrs: { for: "unselect-all" }
+                        })
+                      ])
+                    : _vm._e(),
                   _vm._v(" "),
                   _vm._l(_vm.fields, function(field) {
                     return _c("th", { key: field.key }, [
@@ -58756,53 +58736,53 @@ $(function () {
 });
 
 // Aside.
-$('.js-aside-toggle').click(function () {
-	var _this = $(this);
-
-	if ($(window).outerWidth() > 991) {
-		$('body').toggleClass('minimize-aside').removeClass('show-aside');
-
-		if ($('body').hasClass('minimize-aside')) {
-			_this.find('i').removeClass('fa-align-right').addClass('fa-align-left');
-		} else {
-			_this.find('i').removeClass('fa-align-left').addClass('fa-align-right');
-		}
-	} else {
-		$('body').addClass('show-aside').removeClass('minimize-aside');
-		$('body').append('<div class="overlay"></div>');
-	}
-});
-
-$(window).on('load', function () {
-	if ($(window).outerWidth() < 992) {
-		$('.js-aside-toggle').find('i').removeClass('fa-align-left').removeClass('fa-align-right').addClass('fa-align-justify');
-	}
-});
-
-$(window).resize(function () {
-	if ($(window).outerWidth() < 992) {
-		$('.js-aside-toggle').find('i').removeClass('fa-align-left').removeClass('fa-align-right').addClass('fa-align-justify');
-	} else {
-		$('.js-aside-toggle').find('i').removeClass('fa-align-justify').addClass('fa-align-right');
-	}
-});
-
 $(function () {
+	$('.js-aside-toggle').click(function (e) {
+		e.stopPropagation();
+
+		var _this = $(this);
+
+		if ($(window).outerWidth() > 991) {
+			$('body').toggleClass('mini-aside');
+			$('aside').removeClass('aside--mobile');
+
+			if ($('body').hasClass('mini-aside')) {
+				_this.find('i').removeClass('fa-align-right').addClass('fa-align-left');
+			} else {
+				_this.find('i').removeClass('fa-align-left').addClass('fa-align-right');
+			}
+		} else {
+			$('body').removeClass('mini-aside').append('<div class="overlay"></div>');
+
+			$('aside').addClass('aside--mobile');
+		}
+	});
+
+	$(window).on('load', function () {
+		if ($(window).outerWidth() < 992) {
+			$('.js-aside-toggle').find('i').removeClass('fa-align-right').addClass('fa-align-justify');
+		}
+	});
+
+	$(window).resize(function () {
+		if ($(window).outerWidth() > 991) {
+			$('asidd').removeClass('aside--mobile');
+			$('.overlay').remove();
+
+			$('.js-aside-toggle').find('i').removeClass('fa-align-justify').addClass('fa-align-right');
+		} else {
+			$('body').removeClass('mini-aside');
+
+			$('.js-aside-toggle').find('i').removeClass('fa-align-right').addClass('fa-align-justify');
+		}
+	});
+
 	$(document).click(function (e) {
-		$('.js-aside-toggle').not($('.js-aside-toggle').has($(e.target))).parents('body').removeClass('show-aside').find('.overlay').remove();
+		$('body').find('aside').removeClass('aside--mobile').find('.overlay').remove();
 	});
 
 	$('aside').click(function (e) {
 		e.stopPropagation();
-	});
-
-	$(window).resize(function () {
-		if ($(this).outerWidth() > 991) {
-			$('body').removeClass('show-aside');
-			$('.overlay').remove();
-		} else {
-			$('body').removeClass('minimize-aside');
-		}
 	});
 });
 
