@@ -1,0 +1,132 @@
+.aside {
+	width: 15rem;
+	background-color: #130f40;
+	@include transition(0.3s);
+}
+
+.navbar {
+	display: flex;
+	flex-direction: column;
+	padding: 3.5rem 0;
+
+	&__section:not(:last-child) {
+		padding-bottom: 2.75rem;
+	}
+
+	&__title {
+		display: block;
+		padding: 0 2rem 0.75rem;
+		font-weight: 500;
+		color: #474787;
+	}
+
+	&__link {
+		display: flex;
+		align-items: center;
+		padding: 0.75rem 2.5rem;
+		color: #474787;
+		transition: padding 0.3s ease-in-out, background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+
+		&:hover {
+			color: #706fd3;
+			background-color: rgba(#706fd3, 0.1);
+		}
+
+		&.router-link-active {
+			position: relative;
+			color: #706fd3;
+			background-color: rgba(#706fd3, 0.1);
+
+			&::before {
+				@include pseudo-element;
+				top: 0;
+				left: 0;
+				width: 0.25rem;
+				height: 100%;
+				background-color: #706fd3;
+			}
+		}
+
+		.fal {
+			font-size: 1.5rem;
+		}
+	}
+
+	&__text {
+		margin-left: 1.25rem;
+	}
+}
+
+@media (min-width: 992px) {
+	aside {
+		border-top-left-radius: $radius;
+		border-bottom-left-radius: $radius;
+
+		.mini-aside & {
+			width: auto;
+		}
+	}
+
+	.mini-aside .navbar {
+		&__section {
+			padding-bottom: 0;
+		}
+
+		&__title {
+			display: none;
+		}
+
+		&__link {
+			justify-content: center;
+			padding: 1rem;
+
+			&.router-link-active::before {
+				content: none;
+			}
+		}
+
+		&__text {
+			display: none;
+		}
+	}
+}
+
+@media (max-width: 991px) {
+	aside {
+		position: fixed;
+		z-index: 2;
+		height: 100vh;
+		background-color: #fff;
+		transform: translateX(-100%);
+
+		&:hover {
+			overflow-y: auto;
+		}
+
+		&.aside--mobile {
+			transform: translateX(0);
+		}
+
+		.navbar__title {
+			color: $medium-color;
+		}
+
+		.navbar__link {
+			color: $lighten;
+
+			&:hover {
+				color: $medium-color;
+				background-color: rgba($medium-color, 0.1);
+			}
+
+			&.router-link-active {
+				color: $medium-color;
+				background-color: rgba($medium-color, 0.1);
+
+				&::before {
+					background-color: $medium-color;
+				}
+			}
+		}
+	}
+}

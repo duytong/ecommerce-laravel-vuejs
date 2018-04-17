@@ -1,0 +1,135 @@
+.datatable {
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__action {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  &__handle {
+    display: flex;
+    align-items: center;
+
+    .btn:not(:last-child) {
+      margin-right: 0.5rem;
+    }
+  }
+
+  &__filter {
+    display: flex;
+    justify-content: space-between;
+
+    .form__input {
+      width: auto;
+    }
+  }
+
+  &__per-page {
+    display: flex;
+    align-items: center;
+
+    .form__input {
+      margin: 0 0.5rem;
+    }
+  }
+
+  &__body {
+    margin: 1.25rem 0;
+    overflow-x: auto;
+  }
+
+  &__behavior {
+    display: flex;
+
+    .btn {
+      display: flex;
+      align-items: center;
+
+      &:not(:last-of-type) {
+        margin-right: 0.5rem;
+      }
+
+      .fal {
+        margin-right: 0.25rem;
+      }
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__status {
+    text-align: center;
+  }
+
+  .checkbox__label {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+}
+
+tbody tr {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(#000, 0.04);
+}
+
+th,
+td {
+  padding: 0.75rem;
+}
+
+th {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+td {
+  &:first-child {
+    border-top-left-radius: $radius;
+    border-bottom-left-radius: $radius;
+  }
+
+  &:last-child {
+    border-top-right-radius: $radius;
+    border-bottom-right-radius: $radius;
+  }
+}
+
+@media (max-width: 575px) {
+  .datatable {
+    &__filter {
+      flex-direction: column;
+    }
+
+    &__per-page {
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .datatable__footer {
+    flex-direction: column;
+
+    .pagination {
+      margin-top: 1.25rem;
+    }
+  }
+}

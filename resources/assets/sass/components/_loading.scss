@@ -1,0 +1,13 @@
+.loading {
+  @include circle(1.5rem, 1.5rem);
+  border: 4px solid rgba($cyan, 0.3);
+  border-top-color: $cyan;
+  margin: 0.75rem auto 0;
+  animation: rotate 1s infinite;
+
+  @keyframes rotate {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

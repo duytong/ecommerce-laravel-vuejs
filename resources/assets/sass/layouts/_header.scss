@@ -1,0 +1,179 @@
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.5rem 1rem;
+	background-color: #fff;
+	box-shadow: 0 2px 4px rgba(#000, 0.04);
+}
+
+.aside-toggle {
+	display: flex;
+	font-size: 1.5rem;
+	color: $lighten;
+
+	&:hover {
+		color: $medium-color;
+	}
+}
+
+.action-bar {
+	display: flex;
+
+	.dropdown__toggle {
+		color: $lighten;
+
+		&:hover {
+			color: $medium-color;
+		}
+	}
+}
+
+.dropdown--notification,
+.dropdown--mailbox {
+	.dropdown {
+		&__toggle {
+			padding: 0.5rem 1rem;
+			font-size: 1.5rem;
+		}
+
+		&__menu {
+			width: 17rem;
+		}
+
+		&__header {
+			display: flex;
+			justify-content: space-between;
+			padding: 0.25rem 1.25rem;
+		}
+
+		&__title {
+			font-weight: 500;
+			color: $medium-color;
+		}
+
+		&__item {
+			color: $lighten;
+			border-bottom: 1px solid $divider;
+
+			&:last-of-type {
+				border: 0;
+			}
+
+			&:hover {
+				background-color: #F6F6F6;
+			}
+
+			&.new {
+				background-color: #edf2fa;
+
+				&:hover {
+					background-color: #E5EAF2;
+				}
+			}
+		}
+
+		&__footer {
+			padding: 0.25rem 1.25rem;
+			text-align: center;
+
+			a {
+				font-weight: 500;
+				color: $cyan;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+
+	.notification__info,
+	.mailbox__info {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.notification__content,
+	.mailbox__content {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: 0.75rem;
+	}
+}
+
+.dropdown--notification .notification {
+	display: flex;
+	flex-direction: column;
+}
+
+.dropdown--mailbox {
+	.mailbox {
+		display: flex;
+		align-items: center;
+
+		&__text {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			width: calc(100% - 3rem);
+		}
+
+		&__owner {
+			font-weight: 500;
+			color: $medium-color;
+		}
+	}
+
+	.avatar {
+		width: 2.5rem;
+		height: 2.5rem;
+		margin-right: 0.5rem;
+	}
+}
+
+.dropdown--user {
+	.dropdown__toggle {
+		align-items: center;
+		padding: 0.25rem 0 0.25rem 1rem;
+	}
+
+	.avatar {
+		width: 2rem;
+		height: 2rem;
+		margin-right: 0.5rem;
+	}
+
+	i {
+		margin: 3px 0 0 4px;
+	}
+}
+
+@media (min-width: 992px) {
+	header {
+		border-top-right-radius: $radius;
+	}
+}
+
+@media (max-width: 991px) {
+	header {
+		position: fixed;
+		left: 0;
+		right: 0;
+		z-index: 1;
+	}
+}
+
+@media (max-width: 575px) {
+	.dropdown--notification,
+	.dropdown--mailbox {
+		position: static;
+
+		.dropdown__menu {
+			right: 5%;
+			top: calc(100% - 0.5rem);
+		}
+	}
+}
