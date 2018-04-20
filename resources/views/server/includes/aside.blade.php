@@ -1,7 +1,7 @@
 <aside class="aside">
     <ul class="navbar">
-        <div class="navbar__section">
-            <span class="navbar__title">General</span>
+        <section class="navbar__section">
+            <div class="navbar__heading">General</div>
             <li>
                 <router-link to="/dashboard" class="navbar__link" data-toggle="tooltip" data-title="Dashboard">
                     <i class="fal fa-chart-pie"></i>
@@ -14,12 +14,12 @@
                     <span class="navbar__text">Chart</span>
                 </router-link>
             </li>
-        </div>
-        <div class="navbar__section">
-            <span class="navbar__title">Components</span>
+        </section>
+        <section class="navbar__section">
+            <div class="navbar__heading">Components</div>
             <li>
                 <router-link to="/users" class="navbar__link" data-toggle="tooltip" data-title="User">
-                    <i class="fal fa-user-alt"></i>
+                    <i class="fal fa-user"></i>
                     <span class="navbar__text">User</span>
                 </router-link>
             </li>
@@ -71,6 +71,6 @@
                     <span class="navbar__text">Contact</span>
                 </a>
             </li>
-        </div>
+        </section>
     </ul>
 </aside>

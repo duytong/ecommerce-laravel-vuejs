@@ -5,17 +5,14 @@
 }
 
 .navbar {
-	display: flex;
-	flex-direction: column;
-	padding: 3.5rem 0;
+	margin: 3.5rem 0;
 
 	&__section:not(:last-child) {
-		padding-bottom: 2.75rem;
+		margin-bottom: 1.5rem;
 	}
 
-	&__title {
-		display: block;
-		padding: 0 2rem 0.75rem;
+	&__heading {
+		margin: 0.75rem 2rem;
 		font-weight: 500;
 		color: #474787;
 	}
@@ -28,14 +25,14 @@
 		transition: padding 0.3s ease-in-out, background-color 0.15s ease-in-out, color 0.15s ease-in-out;
 
 		&:hover {
-			color: #706fd3;
-			background-color: rgba(#706fd3, 0.1);
+			color: lighten(#474787, 15%);
+			background-color: rgba(#474787, 0.1);
 		}
 
 		&.router-link-active {
 			position: relative;
-			color: #706fd3;
-			background-color: rgba(#706fd3, 0.1);
+			color: lighten(#474787, 15%);
+			background-color: rgba(#474787, 0.1);
 
 			&::before {
 				@include pseudo-element;
@@ -43,7 +40,7 @@
 				left: 0;
 				width: 0.25rem;
 				height: 100%;
-				background-color: #706fd3;
+				background-color: lighten(#474787, 15%);
 			}
 		}
 
@@ -53,12 +50,12 @@
 	}
 
 	&__text {
-		margin-left: 1.25rem;
+		margin-left: 1rem;
 	}
 }
 
 @media (min-width: 992px) {
-	aside {
+	.aside {
 		border-top-left-radius: $radius;
 		border-bottom-left-radius: $radius;
 
@@ -69,15 +66,14 @@
 
 	.mini-aside .navbar {
 		&__section {
-			padding-bottom: 0;
+			margin-bottom: 0;
 		}
 
-		&__title {
+		&__heading {
 			display: none;
 		}
 
 		&__link {
-			justify-content: center;
 			padding: 1rem;
 
 			&.router-link-active::before {
@@ -92,7 +88,7 @@
 }
 
 @media (max-width: 991px) {
-	aside {
+	.aside {
 		position: fixed;
 		z-index: 2;
 		height: 100vh;
@@ -106,25 +102,22 @@
 		&.aside--mobile {
 			transform: translateX(0);
 		}
+	}
 
-		.navbar__title {
-			color: $medium-color;
+	.navbar {
+		&__heading,
+		&__link {
+			color: $lighten;
 		}
 
-		.navbar__link {
-			color: $lighten;
-
-			&:hover {
-				color: $medium-color;
-				background-color: rgba($medium-color, 0.1);
-			}
-
+		&__link {
+			&:hover,
 			&.router-link-active {
-				color: $medium-color;
-				background-color: rgba($medium-color, 0.1);
+				color: darken($lighten, 15%);
+				background-color: rgba($lighten, 0.15);
 
 				&::before {
-					background-color: $medium-color;
+					background-color: $lighten;
 				}
 			}
 		}

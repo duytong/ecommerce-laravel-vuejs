@@ -78,15 +78,12 @@ $(function () {
 		}
 	});
 
-	$(document).click(function (e) {
-		 $('body')
-		 	.find('aside')
-			.removeClass('aside--mobile')
-			.find('.overlay')
-			.remove();
+	$(document).click(function () {
+		$('.aside').removeClass('aside--mobile')
+		$('.overlay').remove();
 	});
 
-	$('aside').click(function (e) {
+	$('.aside').click(function (e) {
 		e.stopPropagation();
 	});
 });
