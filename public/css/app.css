@@ -1252,8 +1252,8 @@ table {
 
 tbody tr {
   background-color: #fff;
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 th,
@@ -1348,23 +1348,40 @@ td:last-child {
 
 .aside {
   width: 15rem;
-  background-color: #130f40;
+  background-color: #fff;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
 }
 
-.navbar {
-  margin: 3.5rem 0;
+.logo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 3.5rem;
+  padding: 0 2rem;
 }
 
-.navbar__section:not(:last-child) {
-  margin-bottom: 1.5rem;
+.logo__image {
+  width: 1.5rem;
+}
+
+.logo__text {
+  margin-left: 0.5rem;
+  font-weight: 500;
+  color: #27A9F8;
+}
+
+.navbar {
+  padding-bottom: 3.5rem;
 }
 
 .navbar__heading {
-  margin: 0.75rem 2rem;
+  padding: 1.5rem 2rem;
   font-weight: 500;
-  color: #474787;
+  color: #434F74;
 }
 
 .navbar__link {
@@ -1374,21 +1391,19 @@ td:last-child {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding: 0.75rem 2.5rem;
-  color: #474787;
-  -webkit-transition: padding 0.3s ease-in-out, background-color 0.15s ease-in-out, color 0.15s ease-in-out;
-  transition: padding 0.3s ease-in-out, background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+  padding: 0.75rem 2.25rem;
+  color: #959FBB;
+  -webkit-transition: padding 0.3s ease-in-out, color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+  transition: padding 0.3s ease-in-out, color 0.15s ease-in-out, background-color 0.15s ease-in-out;
 }
 
 .navbar__link:hover {
-  color: #6a6ab1;
-  background-color: rgba(71, 71, 135, 0.1);
+  color: #EF5F91;
 }
 
 .navbar__link.router-link-active {
   position: relative;
-  color: #6a6ab1;
-  background-color: rgba(71, 71, 135, 0.1);
+  color: #EF5F91;
 }
 
 .navbar__link.router-link-active::before {
@@ -1398,11 +1413,6 @@ td:last-child {
   left: 0;
   width: 0.25rem;
   height: 100%;
-  background-color: #6a6ab1;
-}
-
-.navbar__link .fal {
-  font-size: 1.5rem;
 }
 
 .navbar__text {
@@ -1419,8 +1429,19 @@ td:last-child {
     width: auto;
   }
 
+  .mini-aside .logo {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    padding: 0;
+  }
+
+  .mini-aside .logo__text {
+    display: none;
+  }
+
   .mini-aside .navbar__section {
-    margin-bottom: 0;
+    margin-top: 0;
   }
 
   .mini-aside .navbar__heading {
@@ -1488,8 +1509,6 @@ header {
           justify-content: space-between;
   padding: 0.5rem 1rem;
   background-color: #fff;
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .aside-toggle {
@@ -1762,7 +1781,7 @@ a:hover {
       -ms-flex-direction: column;
           flex-direction: column;
   width: calc(100% - 15rem);
-  background-color: #eef5f9;
+  background-color: #fff;
   border-radius: 0.25rem;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;

@@ -1,7 +1,11 @@
 <aside class="aside">
+    <div class="logo">
+        <img src="{{ asset('server/images/logoa.jpg') }}" alt="" class="logo__image">
+        <span class="logo__text">Ecommerce</span>
+    </div>
     <ul class="navbar">
         <section class="navbar__section">
-            <div class="navbar__heading">General</div>
+            <div class="navbar__heading">Main</div>
             <li>
                 <router-link to="/dashboard" class="navbar__link" data-toggle="tooltip" data-title="Dashboard">
                     <i class="fal fa-chart-pie"></i>
@@ -16,7 +20,7 @@
             </li>
         </section>
         <section class="navbar__section">
-            <div class="navbar__heading">Components</div>
+            <div class="navbar__heading">Library</div>
             <li>
                 <router-link to="/users" class="navbar__link" data-toggle="tooltip" data-title="User">
                     <i class="fal fa-user"></i>

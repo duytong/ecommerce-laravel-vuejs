@@ -46,7 +46,7 @@ a {
   display: flex;
   flex-direction: column;
   width: calc(100% - 15rem);
-  background-color: #eef5f9;
+  background-color: #fff;
   border-radius: $radius;
   @include transition(0.3s);
 
