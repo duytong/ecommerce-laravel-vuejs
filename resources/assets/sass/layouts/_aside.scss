@@ -1,6 +1,6 @@
 .aside {
 	width: 15rem;
-	background-color: #fff;
+	background-color: #130f40;
 	@include transition(0.3s);
 }
 
@@ -17,33 +17,37 @@
 	&__text {
 		margin-left: 0.5rem;
 		font-weight: 500;
-		color: $primary;
+		color: $success;
 	}
 }
 
 .navbar {
-	padding-bottom: 3.5rem;
+	padding: 2rem 0 3.5rem;
 
 	&__heading {
 		padding: 1.5rem 2rem;
 		font-weight: 500;
-		color: #434F74;
+		// color: #434F74;
+		color: #474787;
 	}
 
 	&__link {
 		display: flex;
 		align-items: center;
 		padding: 0.75rem 2.25rem;
-		color: #959FBB;
+		// color: #959FBB;
+		color: #474787;
 		transition: padding 0.3s ease-in-out, color 0.15s ease-in-out, background-color 0.15s ease-in-out;
 
 		&:hover {
-			color: #EF5F91;
+			color: #706fd3;
+		  background-color: rgba(#706fd3, 0.1);
 		}
 
 		&.router-link-active {
 			position: relative;
-			color: #EF5F91;
+			color: #706fd3;
+		  background-color: rgba(#706fd3, 0.1);
 
 			&::before {
 				@include pseudo-element;
@@ -51,7 +55,7 @@
 				left: 0;
 				width: 0.25rem;
 				height: 100%;
-				// background-color: #EF5F91;
+				background-color: #706fd3;
 			}
 		}
 	}
@@ -82,6 +86,8 @@
 		}
 
 		.navbar {
+			padding: 3.5rem 0;
+
 			&__section {
 				margin-top: 0;
 			}

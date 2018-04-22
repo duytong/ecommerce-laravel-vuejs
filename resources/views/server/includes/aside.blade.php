@@ -1,6 +1,6 @@
 <aside class="aside">
     <div class="logo">
-        <img src="{{ asset('server/images/logoa.jpg') }}" alt="" class="logo__image">
+        <img src="{{ asset('server/images/logo.png') }}" alt="" class="logo__image">
         <span class="logo__text">Ecommerce</span>
     </div>
     <ul class="navbar">
