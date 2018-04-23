@@ -1,9 +1,13 @@
 .breadcrumb {
   display: flex;
+  margin-bottom: 2.5rem;
 
   &__item {
+    font-size: 2rem;
+    font-weight: 500;
+
     &.active {
-      color: $darken;
+      color: #fff;
     }
 
     a {
@@ -14,7 +18,7 @@
       content: '/';
       display: inline-block;
       padding: 0 0.5rem;
-      color: $darken;
+      color: #fff;
     }
   }
 }

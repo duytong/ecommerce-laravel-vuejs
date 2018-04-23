@@ -1,67 +1,49 @@
 .aside {
-	width: 15rem;
-	background-color: #130f40;
-	@include transition(0.3s);
+	position: relative;
+	min-height: 100vh;
+	background-color: lighten($background, 5%);
+	box-shadow: 0.125rem 0.25rem rgba(#000, 0.1);
+	@include transition(0.15s);
+
+	&.hide {
+		display: none;
+	}
 }
 
 .logo {
 	display: flex;
 	align-items: center;
+	justify-content: center;
+	width: 3.5rem;
 	height: 3.5rem;
-	padding: 0 2rem;
-
-	&__image {
-		width: 1.5rem;
-	}
-
-	&__text {
-		margin-left: 0.5rem;
-		font-weight: 500;
-		color: $success;
-	}
+	font-size: 2rem;
+	color: $cyan !important;
 }
 
 .navbar {
-	padding: 2rem 0 3.5rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 
-	&__heading {
-		padding: 1.5rem 2rem;
-		font-weight: 500;
-		// color: #434F74;
-		color: #474787;
+	&__item:not(:last-child) {
+		margin-bottom: 0.5rem;
 	}
 
 	&__link {
 		display: flex;
 		align-items: center;
-		padding: 0.75rem 2.25rem;
-		// color: #959FBB;
-		color: #474787;
-		transition: padding 0.3s ease-in-out, color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+		justify-content: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		color: #959FBB;
+		border-radius: 50%;
+		@include transition(0.15s);
 
-		&:hover {
-			color: #706fd3;
-		  background-color: rgba(#706fd3, 0.1);
-		}
-
+		&:hover,
 		&.router-link-active {
-			position: relative;
-			color: #706fd3;
-		  background-color: rgba(#706fd3, 0.1);
-
-			&::before {
-				@include pseudo-element;
-				top: 0;
-				left: 0;
-				width: 0.25rem;
-				height: 100%;
-				background-color: #706fd3;
-			}
+			color: $cyan;
+			background-color: rgba($cyan, 0.05);
 		}
-	}
-
-	&__text {
-		margin-left: 1rem;
 	}
 }
 
@@ -69,45 +51,6 @@
 	.aside {
 		border-top-left-radius: $radius;
 		border-bottom-left-radius: $radius;
-
-		.mini-aside & {
-			width: auto;
-		}
-	}
-
-	.mini-aside {
-		.logo {
-			justify-content: center;
-			padding: 0;
-
-			&__text {
-				display: none;
-			}
-		}
-
-		.navbar {
-			padding: 3.5rem 0;
-
-			&__section {
-				margin-top: 0;
-			}
-
-			&__heading {
-				display: none;
-			}
-
-			&__link {
-				padding: 1rem;
-
-				&.router-link-active::before {
-					content: none;
-				}
-			}
-
-			&__text {
-				display: none;
-			}
-		}
 	}
 }
 
@@ -116,34 +59,15 @@
 		position: fixed;
 		z-index: 2;
 		height: 100vh;
-		background-color: #fff;
 		transform: translateX(-100%);
 
 		&:hover {
+			overflow-x: hidden;
 			overflow-y: auto;
 		}
 
 		&.aside--mobile {
 			transform: translateX(0);
-		}
-	}
-
-	.navbar {
-		&__heading,
-		&__link {
-			color: $lighten;
-		}
-
-		&__link {
-			&:hover,
-			&.router-link-active {
-				color: darken($lighten, 15%);
-				background-color: rgba($lighten, 0.15);
-
-				&::before {
-					background-color: $lighten;
-				}
-			}
 		}
 	}
 }

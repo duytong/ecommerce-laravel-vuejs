@@ -1,10 +1,8 @@
-header {
+.header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	padding: 0.5rem 1rem;
-	background-color: #fff;
-	box-shadow: 0 2px 4px rgba(#000, 0.1);
 }
 
 .aside-toggle {
@@ -151,14 +149,8 @@ header {
 	}
 }
 
-@media (min-width: 992px) {
-	header {
-		border-top-right-radius: $radius;
-	}
-}
-
 @media (max-width: 991px) {
-	header {
+	.header {
 		position: fixed;
 		left: 0;
 		right: 0;

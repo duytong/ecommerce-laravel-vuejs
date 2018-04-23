@@ -24,19 +24,16 @@ $(function () {
 	$('.js-aside-toggle').click(function (e) {
 		e.stopPropagation();
 
-		let _this = $(this);
+		$('.aside').toggleClass('hide');
 
 		if ($(window).outerWidth() > 991) {
-			$('body').toggleClass('mini-aside');
-			$('aside').removeClass('aside--mobile');
-
-			if ($('body').hasClass('mini-aside')) {
-				_this
+			if ($('.aside').hasClass('hide')) {
+				$(this)
 					.find('i')
 					.removeClass('fa-align-right')
 					.addClass('fa-align-left');
 			} else {
-				_this
+				$(this)
 					.find('i')
 					.removeClass('fa-align-left')
 					.addClass('fa-align-right');

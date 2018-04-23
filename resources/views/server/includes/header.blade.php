@@ -1,4 +1,4 @@
-<header>
+<header class="header">
 	<a href="#" class="aside-toggle js-aside-toggle">
 		<i class="fal fa-align-right"></i>
 	</a>
