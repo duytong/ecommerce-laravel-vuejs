@@ -1,10 +1,10 @@
 <template>
-	<ol class="breadcrumb">
+	<ul class="breadcrumb">
 		<li class="breadcrumb__item" :class="{ 'active': index >= breadcrumbs.length - 1 }" v-for="(breadcrumb, index) in breadcrumbs">
 			<router-link v-if="index < breadcrumbs.length - 1" :to="breadcrumb.path">{{ breadcrumb.name }}</router-link>
 			<span v-else>{{ breadcrumb.name }}</span>
 		</li>
-	</ol>
+	</ul>
 </template>
 
 <script>

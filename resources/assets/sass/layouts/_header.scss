@@ -3,12 +3,14 @@
 	align-items: center;
 	justify-content: space-between;
 	padding: 0.5rem 1rem;
+	background-color: #fff;
+	box-shadow: 0 1rem 5rem -1rem rgba(#000, 0.1);
 }
 
 .aside-toggle {
 	display: flex;
 	font-size: 1.5rem;
-	color: $lighten;
+	color: $text-color;
 
 	&:hover {
 		color: $medium-color;
@@ -19,7 +21,7 @@
 	display: flex;
 
 	.dropdown__toggle {
-		color: $lighten;
+		color: $text-color;
 
 		&:hover {
 			color: $medium-color;
@@ -51,8 +53,8 @@
 		}
 
 		&__item {
-			color: $lighten;
-			border-bottom: 1px solid $divider;
+			color: $text-color;
+			border-bottom: 1px solid $divider-border;
 
 			&:last-of-type {
 				border: 0;
@@ -146,6 +148,16 @@
 
 	i {
 		margin: 3px 0 0 4px;
+	}
+}
+
+@media (min-width: 992px) {
+	.header {
+		border-top-right-radius: $radius;
+
+		.hide-aside & {
+			border-top-left-radius: $radius;
+		}
 	}
 }
 

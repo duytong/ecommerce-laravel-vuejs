@@ -24,10 +24,10 @@ $(function () {
 	$('.js-aside-toggle').click(function (e) {
 		e.stopPropagation();
 
-		$('.aside').toggleClass('hide');
-
 		if ($(window).outerWidth() > 991) {
-			if ($('.aside').hasClass('hide')) {
+			$('body').toggleClass('hide-aside');
+
+			if ($('body').hasClass('hide-aside')) {
 				$(this)
 					.find('i')
 					.removeClass('fa-align-right')
@@ -40,7 +40,7 @@ $(function () {
 			}
 		} else {
 			$('body')
-				.removeClass('mini-aside')
+				.removeClass('hide-aside')
 				.append('<div class="overlay"></div>');
 
 			$('aside').addClass('aside--mobile');
@@ -48,7 +48,7 @@ $(function () {
 	});
 
 	$(window).on('load', function () {
-		if ($(window).outerWidth() < 992) {
+		if ($(this).outerWidth() < 992) {
 			$('.js-aside-toggle')
 				.find('i')
 				.removeClass('fa-align-right')
@@ -57,8 +57,8 @@ $(function () {
 	});
 
 	$(window).resize(function () {
-		if ($(window).outerWidth() > 991) {
-			$('asidd').removeClass('aside--mobile');
+		if ($(this).outerWidth() > 991) {
+			$('aside').removeClass('aside--mobile');
 			$('.overlay').remove();
 
 			$('.js-aside-toggle')
@@ -66,10 +66,11 @@ $(function () {
 				.removeClass('fa-align-justify')
 				.addClass('fa-align-right');
 		} else {
-			$('body').removeClass('mini-aside');
+			$('body').removeClass('hide-aside');
 
 			$('.js-aside-toggle')
 				.find('i')
+				.removeClass('fa-align-left')
 				.removeClass('fa-align-right')
 				.addClass('fa-align-justify');
 		}

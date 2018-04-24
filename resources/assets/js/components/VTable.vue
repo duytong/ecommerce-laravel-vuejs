@@ -2,6 +2,7 @@
   <div class="datatable">
     <v-breadcrumb></v-breadcrumb>
     <div class="datatable__action">
+      <slot name="button-create"></slot>
       <div class="datatable__handle">
         <button
           class="btn btn--danger tooltip js-modal"
@@ -48,7 +49,6 @@
           </div>
         </div>
       </div>
-      <slot name="button-create"></slot>
     </div>
     <div class="datatable__filter">
       <div class="datatable__per-page">

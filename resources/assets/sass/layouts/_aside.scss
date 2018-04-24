@@ -1,23 +1,17 @@
 .aside {
-	position: relative;
-	min-height: 100vh;
-	background-color: lighten($background, 5%);
-	box-shadow: 0.125rem 0.25rem rgba(#000, 0.1);
-	@include transition(0.15s);
+	background-color: $dark-bg;
 
-	&.hide {
+	.hide-aside & {
 		display: none;
 	}
 }
 
 .logo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	@include flex-center;
 	width: 3.5rem;
 	height: 3.5rem;
 	font-size: 2rem;
-	color: $cyan !important;
+	color: #81ecec !important;
 }
 
 .navbar {
@@ -30,19 +24,14 @@
 	}
 
 	&__link {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 2.5rem;
-		height: 2.5rem;
-		color: #959FBB;
-		border-radius: 50%;
-		@include transition(0.15s);
-
+		@include flex-center;
+		@include circle(2.5rem, 2.5rem);
+		color: $link-color;
+		
 		&:hover,
 		&.router-link-active {
-			color: $cyan;
-			background-color: rgba($cyan, 0.05);
+			color: #fff;
+			background-color: rgba(#fff, 0.05);
 		}
 	}
 }
@@ -59,12 +48,10 @@
 		position: fixed;
 		z-index: 2;
 		height: 100vh;
+		overflow-x: hidden;
+		overflow-y: auto;
 		transform: translateX(-100%);
-
-		&:hover {
-			overflow-x: hidden;
-			overflow-y: auto;
-		}
+		@include transition(0.15s);
 
 		&.aside--mobile {
 			transform: translateX(0);
