@@ -1,0 +1,97 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  
+  &__data {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__action {
+    margin-top: 0.25rem;
+  }
+  
+  &__group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  &__label {
+    font-weight: 500;
+  }
+
+  &__help {
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 0.25rem;
+    color: $lighten;
+  }
+
+  &__input-group {
+    position: relative;
+
+    i {
+      position: absolute;
+      top: 10.5px;
+      right: 10.5px;
+      @include transition(0.15s);
+    }
+  }
+
+  &__input {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    color: #fff;
+    background-clip: padding-box;
+    background-color: lighten(#211F39, 3%);
+    border: 1px solid darken($main, 30%);
+    border-radius: $radius;
+    @include transition(0.15s);
+    @include input-placeholder(#fff);
+
+    &--validate {
+      padding-right: 35px;
+    }
+
+    &:focus {
+      border-color: darken($main, 15%);
+    }
+  }
+
+  &__group--valid {
+    color: $success;
+
+    .form__input {
+      border-color: $success;
+
+      &:focus {
+        border-color: $success;
+      }
+    }
+  }
+
+  &__group--invalid {
+    color: $danger;
+
+    .form__input {
+      border-color: $danger;
+
+      &:focus {
+        border-color: $danger;
+      }
+    }
+  }
+
+  &__invalid-feedback {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  td {
+    white-space: nowrap;
+  }
+}

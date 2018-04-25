@@ -1,0 +1,36 @@
+* {
+	outline: none !important;
+}
+
+body {
+	font-size: 14px;
+	background-color: $body-bg;
+}
+
+a {
+	@include transition(0.15s);
+
+	&:hover {
+		text-decoration: none;
+	}
+}
+
+ul {
+	list-style: none;
+	margin-bottom: 0;
+	padding-left: 0;
+}
+
+.category {
+	display: flex;
+	justify-content: center;
+
+	&__item {
+		padding: 1rem;
+	}
+
+	&__link {
+		color: $link-color;
+		text-transform: uppercase;
+	}
+}

@@ -1,0 +1,46 @@
+.pagination {
+  display: flex;
+
+  &__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0.5rem 0.75rem;
+    color: $main;
+    border-radius: $radius;
+
+    &:hover {
+      color: $cyan;
+    }
+  }
+
+  &__item {
+    &.active .pagination__link {
+      color: #fff;
+      pointer-events: none;
+      cursor: auto;
+      background-color: $cyan;
+    }
+
+    &.disabled .pagination__link {
+      color: rgba($main, 0.65);
+      pointer-events: none;
+      cursor: auto;
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .pagination__item {
+    &:not(.active) {
+      display: none;
+    }
+
+    &:first-child,
+    &:last-child {
+      display: block;
+    }
+  }
+}

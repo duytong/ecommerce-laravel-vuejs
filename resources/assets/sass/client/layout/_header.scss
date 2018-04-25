@@ -1,0 +1,75 @@
+.header {
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: 1fr 10fr 1fr;
+	-ms-grid-columns: 1fr 10fr 1fr;
+	padding: 0.5rem 1rem;
+	background-color: #fff;
+	@include box-shadow(0.1);
+
+	.container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		grid-column: 2;
+		-ms-grid-column: 2;
+	}
+
+	.logo {
+		font-size: 18px;
+		color: $link-color;
+	}
+
+	&__tools {
+		display: flex;
+		align-items: center;
+
+		.btn--login {
+			color: $link-color;
+		}
+
+		.cart {
+			position: relative;
+			display: flex;
+			font-size: 1.5rem;
+			color: #34495e;
+
+			&__count {
+				position: absolute;
+				top: -0.25rem;
+				right: -0.5rem;
+				@include flex-center;
+				min-width: 1rem;
+				height: 1rem;
+				border-radius: 50%;
+				background-color: #17c0eb;
+				font-size: 10px;
+				font-weight: 500;
+				color: #fff;
+			}
+		}
+	}
+}
+
+.form-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+	color: #6c757d;
+
+	.form-control {
+		border: 0;
+	}
+}
+
+@media (max-width: 575px) {
+	.header {
+		grid-template-columns: 1fr 1fr;
+		-ms-grid-columns: 1fr 1fr;
+		padding: 0.5rem 1rem;
+
+		&__center {
+			display: none;
+		}
+	}
+}
