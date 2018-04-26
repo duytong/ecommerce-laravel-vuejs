@@ -1,9 +1,7 @@
 .header {
-	display: grid;
-	display: -ms-grid;
-	grid-template-columns: 1fr 10fr 1fr;
-	-ms-grid-columns: 1fr 10fr 1fr;
-	padding: 0.5rem 1rem;
+	position: fixed;
+	width: 100%;
+	padding: 0.5rem 0;
 	background-color: #fff;
 	@include box-shadow(0.1);
 
@@ -11,13 +9,11 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		grid-column: 2;
-		-ms-grid-column: 2;
 	}
 
 	.logo {
 		font-size: 18px;
-		color: $link-color;
+		color: $light-blue-color;
 	}
 
 	&__tools {
@@ -25,14 +21,14 @@
 		align-items: center;
 
 		.btn--login {
-			color: $link-color;
+			color: $light-blue-color;
 		}
 
 		.cart {
 			position: relative;
 			display: flex;
 			font-size: 1.5rem;
-			color: #34495e;
+			color: $light-blue-color;
 
 			&__count {
 				position: absolute;
@@ -52,13 +48,29 @@
 }
 
 .form-search {
-	position: relative;
-	display: flex;
-	align-items: center;
-	color: #6c757d;
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	-ms-grid-columns: 1fr 1fr 1fr;
+	width: 100%;
+
+	form {
+		position: relative;
+		display: flex;
+		align-items: center;
+		grid-column: 2;
+		-ms-grid-column: 2;
+	}
 
 	.form-control {
-		border: 0;
+		border-radius: 35px;
+	}
+
+	.btn {
+		position: absolute;
+		right: 0;
+		background-color: transparent;
+		color: #6c757d;
 	}
 }
 

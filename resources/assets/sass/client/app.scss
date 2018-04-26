@@ -11,12 +11,15 @@
 
 // Components
 @import
-	'components/button',
-	'components/dropdown';
+	'components/button';
 
 // Layout
 @import
 	'layout/header';
+
+// Pages
+@import
+	'pages/home';
 
 // Vendors.
 @import

@@ -21,16 +21,21 @@ ul {
 	padding-left: 0;
 }
 
+main {
+	margin-top: calc(51px + 2rem);
+}
+
 .category {
 	display: flex;
 	justify-content: center;
+	flex-wrap: wrap;
 
 	&__item {
 		padding: 1rem;
 	}
 
 	&__link {
-		color: $link-color;
+		color: $light-blue-color;
 		text-transform: uppercase;
 	}
 }
