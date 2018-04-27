@@ -19,9 +19,9 @@
             <div class="grid">
                 <div class="container">
                     <a href="" class="logo">Laravel</a>
-                    <div class="form-search">
-                        <form action="">
-                            <input type="text" class="form-control" placeholder="Search for shoes">
+                    <div class="header__search">
+                        <form action="" class="form form--search">
+                            <input type="text" class="form__control" placeholder="Search for shoes">
                             <button type="submit" class="btn">
                                 <i class="fal fa-search"></i>
                             </button>
