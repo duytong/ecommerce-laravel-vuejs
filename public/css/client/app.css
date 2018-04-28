@@ -3224,11 +3224,57 @@ readers do not read off random characters that represent icons */
   border-radius: 50%;
 }
 
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
 .divider-vertical {
   width: 1px;
   height: 1rem;
   margin: 0 1rem;
   background-color: #d3e0e9;
+}
+
+.grid {
+  display: grid;
+  display: -ms-grid;
+  grid-template-columns: 2fr 10fr;
+  -ms-grid-columns: 2fr 10fr;
+}
+
+@media (max-width: 991px) {
+  .grid {
+    grid-template-columns: 1fr;
+    -ms-grid-columns: 1fr;
+  }
 }
 
 .overlay {
@@ -3239,18 +3285,6 @@ readers do not read off random characters that represent icons */
   right: 0;
   z-index: 1040;
   background-color: rgba(0, 0, 0, 0.5);
-}
-
-.grid {
-  display: grid;
-  display: -ms-grid;
-  grid-template-columns: 1fr 10fr 1fr;
-  -ms-grid-columns: 1fr 10fr 1fr;
-}
-
-.container {
-  grid-column: 2;
-  -ms-grid-column: 2;
 }
 
 *,
@@ -3602,6 +3636,7 @@ template {
 body {
   font-size: 14px;
   background-color: #f5f8fa;
+  color: #7285a5;
 }
 
 a {
@@ -3781,6 +3816,74 @@ main {
   margin-right: 0.25rem;
 }
 
+.card {
+  background-color: #fff;
+  border-radius: 0.25rem;
+  -webkit-box-shadow: 0 1rem 5rem -1rem rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1rem 5rem -1rem rgba(0, 0, 0, 0.1);
+}
+
+.checkbox__group:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.checkbox__input {
+  display: none;
+}
+
+.checkbox__input + .checkbox__label {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 0;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.checkbox__input + .checkbox__label::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 1px solid #7285a5;
+  border-radius: 0.125rem;
+  -webkit-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
+}
+
+.checkbox__input:checked + .checkbox__label::before {
+  background-color: #27A9F8;
+  border-color: #27A9F8;
+}
+
+.checkbox__input + .checkbox__label::after {
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  font-family: Font Awesome\ 5 Pro;
+  content: '\F00C';
+  line-height: 1;
+  color: #fff;
+  -webkit-transform: scale(0.1);
+          transform: scale(0.1);
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.checkbox__input:checked + .checkbox__label::after {
+  -webkit-transform: scale(1);
+          transform: scale(1);
+}
+
+.checkbox__text {
+  margin-left: 2rem;
+}
+
 .form {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3818,8 +3921,62 @@ main {
   color: #6c757d;
 }
 
+aside {
+  padding: 1rem;
+}
+
+.filter-categories {
+  margin-bottom: 3rem;
+}
+
+.filter-categories__heading {
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #4d516d;
+}
+
+.filter-ratings {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.filter-ratings__heading {
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #4d516d;
+}
+
+.filter-ratings__item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  line-height: 1;
+}
+
+.filter-ratings__item:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.filter-ratings__icon {
+  color: #f39c12;
+}
+
+.filter-ratings__count {
+  margin-left: 0.5rem;
+  color: #7285a5;
+}
+
 .header {
   position: fixed;
+  top: 0;
+  z-index: 1030;
   width: 100%;
   padding: 0.5rem 0;
   background-color: #fff;
@@ -3827,7 +3984,7 @@ main {
           box-shadow: 0 1rem 5rem -1rem rgba(0, 0, 0, 0.1);
 }
 
-.header .container {
+.header__wrap {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

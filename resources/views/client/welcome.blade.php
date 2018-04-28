@@ -16,8 +16,8 @@
 <body>
     <div id="app">
         <header class="header">
-            <div class="grid">
-                <div class="container">
+            <div class="container">
+                <div class="header__wrap">
                     <a href="" class="logo">Laravel</a>
                     <div class="header__search">
                         <form action="" class="form form--search">
@@ -39,41 +39,132 @@
                 </div>
             </div>
         </header>
-        {{-- <ul class="category">
-            <li class="category__item">
-                <a href="" class="category__link">Nike</a>
-            </li>
-            <li class="category__item">
-                <a href="" class="category__link">Jordan</a>
-            </li>
-            <li class="category__item">
-                <a href="" class="category__link">Adidas</a>
-            </li>
-            <li class="category__item">
-                <a href="" class="category__link">Footwear</a>
-            </li>
-            <li class="category__item">
-                <a href="" class="category__link">Supreme</a>
-            </li>
-            <li class="category__item">
-                <a href="" class="category__link">Palace</a>
-            </li>
-            <li class="category__item">
-                <a href="" class="category__link">Apparel</a>
-            </li>
-            <li class="category__item">
-                <a href="" class="category__link">Collectibles</a>
-            </li>
-            <li class="category__item">
-                <a href="" class="category__link">Trophy case</a>
-            </li>
-            <li class="category__item">
-                <a href="" class="category__link">Journal</a>
-            </li>
-        </ul> --}}
-        <div class="grid">
+        <main>
             <div class="container">
-                <main>
+                <div class="grid">
+                    <aside>
+                        <div class="filter-categories">
+                            <div class="filter-categories__heading">Categories</div>
+                            <div class="checkbox">
+                                <div class="checkbox__group">
+                                    <input type="checkbox" id="nike" class="checkbox__input">
+                                    <label for="nike" class="checkbox__label">
+                                        <span class="checkbox__text">Nike</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox__group">
+                                    <input type="checkbox" id="jordan" class="checkbox__input">
+                                    <label for="jordan" class="checkbox__label">
+                                        <span class="checkbox__text">Jordan</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox__group">
+                                    <input type="checkbox" id="adidas" class="checkbox__input">
+                                    <label for="adidas" class="checkbox__label">
+                                        <span class="checkbox__text">Adidas</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox__group">
+                                    <input type="checkbox" id="footwear" class="checkbox__input">
+                                    <label for="footwear" class="checkbox__label">
+                                        <span class="checkbox__text">Footwear</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox__group">
+                                    <input type="checkbox" id="supreme" class="checkbox__input">
+                                    <label for="supreme" class="checkbox__label">
+                                        <span class="checkbox__text">Supreme</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox__group">
+                                    <input type="checkbox" id="palace" class="checkbox__input">
+                                    <label for="palace" class="checkbox__label">
+                                        <span class="checkbox__text">Palace</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox__group">
+                                    <input type="checkbox" id="apparel" class="checkbox__input">
+                                    <label for="apparel" class="checkbox__label">
+                                        <span class="checkbox__text">Apparel</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox__group">
+                                    <input type="checkbox" id="collectibles" class="checkbox__input">
+                                    <label for="collectibles" class="checkbox__label">
+                                        <span class="checkbox__text">Collectibles</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox__group">
+                                    <input type="checkbox" id="trophy-case" class="checkbox__input">
+                                    <label for="trophy-case" class="checkbox__label">
+                                        <span class="checkbox__text">Trophy case</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox__group">
+                                    <input type="checkbox" id="journal" class="checkbox__input">
+                                    <label for="journal" class="checkbox__label">
+                                        <span class="checkbox__text">Journal</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-ratings">
+                            <div class="filter-ratings__heading">Ratings</div>
+                            <a href="" class="filter-ratings__item">
+                                <span class="filter-ratings__icon">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </span>
+                                <span class="filter-ratings__count">(215)</span>
+                            </a>
+                             <a href="" class="filter-ratings__item">
+                                <span class="filter-ratings__icon">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </span>
+                                <span class="filter-ratings__count">(192)</span>
+                            </a>
+                             <a href="" class="filter-ratings__item">
+                                <span class="filter-ratings__icon">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </span>
+                                <span class="filter-ratings__count">(137)</span>
+                            </a>
+                             <a href="" class="filter-ratings__item">
+                                <span class="filter-ratings__icon">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </span>
+                                <span class="filter-ratings__count">(68)</span>
+                            </a>
+                             <a href="" class="filter-ratings__item">
+                                <span class="filter-ratings__icon">
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </span>
+                                <span class="filter-ratings__count">(4)</span>
+                            </a>
+                        </div>
+                        <div class="filter-prices"></div>
+                        <div class="filter-sizes"></div>
+                        <div class="filter-colors"></div>
+                    </aside>
                     <section class="product">
                         <ul class="product__list">
                             <li class="product__item">
@@ -366,9 +457,12 @@
                             </li>
                         </ul>
                     </section>
-                </main>
+                </div>
             </div>
-        </div>
+        </main>
+        {{-- <footer class="footer-page">
+            
+        </footer> --}}
     </div>
 
     <!-- Scripts -->

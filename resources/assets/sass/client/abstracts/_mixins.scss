@@ -2,13 +2,10 @@
 	box-shadow: 0 1rem 5rem -1rem rgba(#000, $alpha);
 }
 
-@mixin transition($duration) {
-	transition: all $duration ease-in-out;
-}
-
-@mixin pseudo-element {
-	content: "";
-	position: absolute;
+@mixin card {
+	background-color: #fff;
+	border-radius: $radius;
+	@include box-shadow(0.1);
 }
 
 @mixin circle($width, $height) {
@@ -49,4 +46,13 @@
 	&::placeholder {
 		color: $color;
 	}
+}
+
+@mixin pseudo-element {
+	content: "";
+	position: absolute;
+}
+
+@mixin transition($duration) {
+	transition: all $duration ease-in-out;
 }

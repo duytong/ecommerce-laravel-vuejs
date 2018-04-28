@@ -1,20 +1,5 @@
 .card {
-	display: flex;
-	flex-direction: column;
+	background-color: #fff;
 	border-radius: $radius;
-
-	&--form {
-		max-width: 500px;
-		margin: 0 auto;
-		background-color: #fff;
-		box-shadow: 0 0.125rem 1rem rgba(#000, 0.04);
-	}
-
-	&__header {
-		padding: 0.75rem 1.25rem;
-	}
-	
-	&__body {
-		padding: 1.25rem;
-	}
+	@include box-shadow(0.1);
 }

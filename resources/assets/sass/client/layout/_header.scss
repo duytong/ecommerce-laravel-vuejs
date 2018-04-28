@@ -1,11 +1,13 @@
 .header {
 	position: fixed;
+	top: 0;
+  z-index: 1030;
 	width: 100%;
 	padding: 0.5rem 0;
 	background-color: #fff;
 	@include box-shadow(0.1);
 
-	.container {
+	&__wrap {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
