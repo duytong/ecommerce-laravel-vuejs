@@ -26,6 +26,7 @@ aside {
 
 	&__item {
 		display: flex;
+		align-items: center;
 		line-height: 1;
 
 		&:not(:last-child) {
@@ -39,6 +40,7 @@ aside {
 
 	&__count {
 		margin-left: 0.5rem;
+		font-size: 12px;
 		color: $light-blue-color;
 	}
 }
