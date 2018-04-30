@@ -18,6 +18,10 @@
   &:not(:disabled) {
     cursor: pointer;
   }
+  
+  &--default {
+    color: $light-blue-color;
+  }
 
   &--primary {
     color: #fff;

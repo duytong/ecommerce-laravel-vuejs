@@ -1,38 +1,28 @@
 .header {
 	position: fixed;
-	top: 0;
+  top: 0;
+  right: 0;
+  left: 0;
   z-index: 1030;
-	width: 100%;
 	padding: 0.5rem 0;
 	background-color: #fff;
 	@include box-shadow(0.1);
 
-	&__wrap {
+	&__inner {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 	}
 
-	.logo {
-		font-size: 18px;
+	&__brand {
+		font-size: 1.125rem;
 		color: $light-blue-color;
 	}
 
 	&__search {
-		display: grid;
-		display: -ms-grid;
-		grid-template-columns: 1fr 1fr 1fr;
-		-ms-grid-columns: 1fr 1fr 1fr;
-		width: 100%;
-
-		.form--search {
-			position: relative;
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			grid-column: 2;
-			-ms-grid-column: 2;
-		}
+		position: relative;
+		display: flex;
+		align-items: center;
 
 		.form__control {
 			border-radius: 35px;
@@ -42,17 +32,13 @@
 			position: absolute;
 			right: 0;
 			background-color: transparent;
-			color: $placeholder-color;
+			color: $light-blue-color;
 		}
 	}
 
-	&__tools {
+	&__navbar {
 		display: flex;
 		align-items: center;
-
-		.btn--login {
-			color: $light-blue-color;
-		}
 
 		.cart {
 			position: relative;
@@ -66,10 +52,10 @@
 				right: -0.5rem;
 				min-width: 1rem;
 				height: 1rem;
-				padding: 0 0.2rem;
+				padding: 0 0.25rem;
 				background-color: $danger;
 				border-radius: $radius;
-				font-size: 10px;
+				font-size: 0.625rem;
 				font-weight: 500;
 				color: #fff;
 				text-align: center;
@@ -78,14 +64,67 @@
 	}
 }
 
+.js-open-search-mobile,
+.js-hide-search-mobile {
+	display: none;
+	color: $light-blue-color;
+}
+
 @media (max-width: 575px) {
 	.header {
-		grid-template-columns: 1fr 1fr;
-		-ms-grid-columns: 1fr 1fr;
-		padding: 0.5rem 1rem;
+		transform: translateY(0);
+		@include transition(0.6s);
 
-		&__center {
+		&__brand,
+		&__navbar {
+			opacity: 1;
+			@include transition(0.6s);
+		}
+	}
+
+	.header.hide {
+		transform: translateY(-100%);
+		@include transition(0.15s);
+
+		.header__logo,
+		.header__navbar {
+			opacity: 0;
+			@include transition(0.15s);
+		}
+	}
+
+	.js-open-search-mobile,
+	.js-hide-search-mobile {
+		display: block;
+	}
+
+	.header__search {
+		position: fixed;
+		top: 0;
+		right: 0;
+		left: 0;
+		visibility: hidden;
+		padding: 0.5rem 1rem;
+		background-color: #fff;
+		opacity: 0;
+		@include box-shadow(0.1);
+		@include transition(0.15s);
+
+		&.show {
+			top: 49px;
+			visibility: visible;
+			opacity: 1;
+			@include transition(0.6s);
+		}
+	}
+
+	.header__navbar {
+		.divider-vertical {
 			display: none;
+		}
+
+		.cart {
+			margin-left: 0.75rem;
 		}
 	}
 }

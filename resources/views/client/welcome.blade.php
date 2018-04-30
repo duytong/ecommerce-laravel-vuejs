@@ -15,20 +15,26 @@
 </head>
 <body>
     <div id="app">
-        <header class="header">
+        <div class="header">
             <div class="container">
-                <div class="header__wrap">
-                    <a href="" class="logo">Laravel</a>
+                <div class="header__inner">
+                    <a href="" class="header__brand">Laravel</a>
                     <div class="header__search">
                         <form action="" class="form form--search">
-                            <input type="text" class="form__control" placeholder="Search for shoes">
+                            <input class="form__control" placeholder="Search for shoes">
                             <button type="submit" class="btn">
                                 <i class="fal fa-search"></i>
                             </button>
+                            <a href="" class="js-hide-search-mobile">
+                                <i class="fal fa-times"></i>
+                            </a>
                         </form>
                     </div>
-                    <div class="header__tools">
-                        <a href="" class="btn btn--default btn--login">Log In</a>
+                    <div class="header__navbar">
+                        <a href="" class="js-open-search-mobile">
+                            <i class="fal fa-search"></i>
+                        </a>
+                        <a href="" class="btn btn--default">Log In</a>
                         <a href="" class="btn btn--primary">Sign Up</a>
                         <div class="divider-vertical"></div>
                         <a href="" class="cart">
@@ -38,11 +44,11 @@
                     </div>
                 </div>
             </div>
-        </header>
+        </div>
         <main>
             <div class="container">
                 <div class="grid">
-                    <aside>
+                    <aside class="aside">
                         <div class="filter-categories">
                             <div class="filter-categories__heading">Categories</div>
                             <div class="checkbox">
@@ -466,6 +472,6 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/client.js') }}"></script>
+    <script src="{{ asset('js/client/app.js') }}"></script>
 </body>
 </html>

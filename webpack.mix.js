@@ -17,5 +17,8 @@ mix.js([
 	'resources/assets/js/app.js',
 	'resources/assets/js/custom.js'
 ], 'public/js/app.js');
-mix.js('resources/assets/js/client.js', 'public/js');
+mix.js([
+	'resources/assets/js/client/app.js',
+	'resources/assets/js/client/jquery.js'
+], 'public/js/client/app.js');
 mix.disableSuccessNotifications();
