@@ -8,6 +8,7 @@
   border: none;
   padding: 0.375rem 0.75rem;
   line-height: 1.5;
+  border: none;
   border-radius: $radius;
   @include transition(0.15s);
 
@@ -19,109 +20,100 @@
     cursor: pointer;
   }
   
-  &--default {
-    color: $light-blue-color;
-  }
-
   &--primary {
     color: #fff;
     background-color: $primary;
-    border-color: $primary;
 
     &:hover {
       color: #fff;
       background-color: lighten($primary, 3%);
-      border-color: lighten($primary, 3%);
     }
 
     &:focus {
       background-color: darken($primary, 3%);
-      border-color: darken($primary, 3%);
     }
   }
 
   &--secondary {
     color: #fff;
     background-color: $secondary;
-    border-color: $secondary;
 
     &:hover {
       color: #fff;
       background-color: lighten($secondary, 3%);
-      border-color: lighten($secondary, 3%);
     }
 
     &:focus {
       background-color: darken($secondary, 3%);
-      border-color: darken($secondary, 3%);
     }
   }
 
   &--success {
     color: #fff;
     background-color: $success;
-    border-color: $success;
 
     &:hover {
       color: #fff;
       background-color: lighten($success, 3%);
-      border-color: lighten($success, 3%);
     }
 
     &:focus {
       background-color: darken($success, 3%);
-      border-color: darken($success, 3%);
     }
   }
 
   &--info {
     color: #fff;
     background-color: $info;
-    border-color: $info;
 
     &:hover {
       color: #fff;
       background-color: lighten($info, 3%);
-      border-color: lighten($info, 3%);
     }
 
     &:focus {
       background-color: darken($info, 3%);
-      border-color: darken($info, 3%);
     }
   }
 
   &--warning {
     color: #fff;
     background-color: $warning;
-    border-color: $warning;
 
     &:hover {
       color: #fff;
       background-color: lighten($warning, 3%);
-      border-color: lighten($warning, 3%);
     }
 
     &:focus {
       background-color: darken($warning, 3%);
-      border-color: darken($warning, 3%);
     }
   }
 
   &--danger {
     color: #fff;
     background-color: $danger;
-    border-color: $danger;
 
     &:hover {
       color: #fff;
       background-color: lighten($danger, 3%);
-      border-color: lighten($danger, 3%);
     }
 
     &:focus {
       background-color: darken($danger, 3%);
-      border-color: darken($danger, 3%);
+    }
+  }
+
+  &--light {
+    color: $light-blue-color;
+
+    &:hover {
+      color: $light-blue-color;
+      background-color: $light;
+    }
+
+    &:focus {
+      background-color: darken($light, 3%);
     }
   }
 

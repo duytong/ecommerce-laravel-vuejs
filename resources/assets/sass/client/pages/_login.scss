@@ -1,92 +1,26 @@
-.landing-page {
-	margin: 2rem 0;
-	.grid {
-		-ms-grid-columns: 3fr 2fr 3fr;
-  	grid-template-columns: 3fr 2fr 3fr;
+.login-heading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	.title {
+		font-size: 1.5rem;
+		font-weight: 500;
+		text-transform: uppercase;
 	}
 }
-.signup {
-	-ms-grid-column: 2;
-  grid-column: 2
+
+.forgot-password,
+.suggested {
+	display: block;
+	color: $light-blue-color;
+	text-align: center;
 }
-.logo img {
-	width: 3rem;
-	height: 3rem;
-}
-.login,
-.signup {
-	padding: 2rem;
-	border: $border;
-	border-radius: $radius;
-	background-color: white;
-	box-shadow: 0 2px 4px rgba(black, 0.1);
-	&__header {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
+
+.forgot-password {
+	margin-top: 0.5rem;
+
+	&:hover {
+		text-decoration: underline;
 	}
-	&__title {
-		font-weight: bold;
-	}
-	&__description {
-		color: #9facbd;
-	}
-	&__body {
-		display: flex;
-		form {
-			width: 100%;
-		}
-		.form-group:last-child {
-			text-align: center;
-		}
-		.forgot-password {
-			color: $base;
-			&:hover {
-				text-decoration: underline;
-			}
-		}
-	}
-	.btn {
-		width: 100%;
-		color: white;
-	}
-	&__footer {
-		display: flex;
-		justify-content: center;
-	}
-}
-.login .form-control:focus {
-	border-color: blue;
-}
-.signup .form-control:focus {
-	border-color: green;
-}
-.btn--signup {
-	background-color: green;
-	&:not(:disabled) {
-		&:hover {
-			background-color: darken(green, 5%);
-		}
-		&:focus {
-			background-color: darken(green, 10%);
-		}
-	}
-}
-.btn--login {
-	margin-bottom: 0.5rem;
-	background-color: blue;
-	&:not(:disabled) {
-		&:hover {
-			background-color: darken(blue, 5%);
-		}
-		&:focus {
-			background-color: darken(blue, 10%);
-		}
-	}
-}
-.signup-link {
-	color: blue!important;
-}
-.login-link {
-	color: green!important;
 }

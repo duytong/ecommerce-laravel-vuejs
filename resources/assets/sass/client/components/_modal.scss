@@ -1,8 +1,3 @@
-.modal-open {
-  padding-right: 17px;
-  overflow: hidden;
-}
-
 .modal {
   position: fixed;
   top: 0;
@@ -10,79 +5,49 @@
   bottom: 0;
   left: 0;
   z-index: 1050;
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: rgba(#000, 0.5);
+  @include transition(0.3s);
+}
 
-  &.show {
-    display: block;
-  }
+.modal__content {
+  position: relative;
+  width: 300px;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: $radius;
+  box-shadow: 0 0.125rem 0.25rem rgba(#000, 0.1);
+  @include transition(0.3s);
+}
 
-  .modal-open & {
-    overflow-y: auto;
-  }
+.modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  color: $light-blue-color;
 
-  &__dialog {
-    width: auto;
-    margin: 1.75rem;
-  }
-
-  &__content {
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: $radius;
-    transform: translateY(-25%);
-    animation: fade-to-bottom 0.3s ease-in-out forwards;
-
-    @keyframes fade-to-bottom {
-      from {
-        opacity: 0;
-      },
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  }
-
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
-  }
-
-  &__title {
-    margin-bottom: 0;
-    font-weight: 500;
-  }
-
-  &__close {
-    display: flex;
-    align-items: center;
-    color: $darken !important;
-  }
-
-  &__body {
-    padding: 1rem;
-    border-width: 1px 0;
-    border-style: solid;
-    border-color: $divider-border;
-  }
-
-  &__footer {
-    display: flex;
-    justify-content: flex-end;
-    padding: 1rem;
-
-    .btn:first-child {
-      margin-right: 0.5rem;
-    }
+  &:hover {
+    color: $dark-blue-color !important;
+    cursor: pointer;
   }
 }
 
-@media (min-width: 576px) {
-  .modal__dialog {
-    max-width: 500px;
-    margin: 1.75rem auto;
-  }
+.modal__body {
+  margin: 1rem 0;
+}
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal__content,
+.modal-leave-active .modal__content {
+  transform: scale(1.1);
 }

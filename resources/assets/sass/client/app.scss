@@ -14,7 +14,9 @@
 	'components/button',
 	'components/card',
 	'components/checkbox',
-	'components/form';
+	'components/dropdown',
+	'components/form',
+	'components/modal';
 
 // Layout
 @import
@@ -23,7 +25,8 @@
 
 // Pages
 @import
-	'pages/home';
+	'pages/home',
+	'pages/login';
 
 // Vendors.
 @import

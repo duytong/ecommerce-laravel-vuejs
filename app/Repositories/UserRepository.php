@@ -41,6 +41,8 @@ class UserRepository extends BaseRepository
         if (array_key_exists('roles_id', $attributes)) {
             $user->syncRoles($attributes['roles_id']);
         }
+
+        return $user;
     }
 
     /**

@@ -2,9 +2,15 @@
   display: flex;
   flex-direction: column;
 
-  &--search {
-    flex-direction: row;
-    align-items: center;
+  &__group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  &__label {
+    font-weight: 500;
+    color: $dark-blue-color;
   }
 
   &__control {
@@ -13,8 +19,8 @@
     background-color: #fff;
     border: 1px solid $border-color;
     border-radius: $radius;
-    color: #495057;
+    color: $dark-blue-color;
     @include transition(0.15s);
-    @include input-placeholder($placeholder-color);
+    @include input-placeholder($light-blue-color);
   }
 }
