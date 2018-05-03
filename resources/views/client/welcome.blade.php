@@ -546,22 +546,35 @@
                 <span>Welcome back</span>
             </div>
             <div slot="body">
-                <form action="{{ route('login') }}" method="POST" class="form">
-                    {{ csrf_field() }}
-                    <div class="form__group">
+                <form class="form" @submit.prevent="login">
+                    <p class="alert alert--danger" v-if="loginError">@{{ loginError }}</p>
+                    <div class="form__group" :class="{ 'form__group--invalid': errors.has('email') }">
                         <label class="form__label">Email</label>
-                        <input type="text" class="form__control" name="email" placeholder="Please enter your email">
+                        <input class="form__control" name="email" v-model="user.email" v-validate="'required|email'" placeholder="Please enter your email">
+                        <span class="form__invalid-feedback" v-if="errors.has('email')">@{{ errors.first('email') }}</span>
                     </div>
-                    <div class="form__group">
+                    <div class="form__group" :class="{ 'form__group--invalid': errors.has('password') }">
                         <label class="form__label">Password</label>
-                        <input type="password" class="form__control" name="password" placeholder="Please enter your password">
+                        <input type="password" class="form__control" name="password" v-model="user.password" v-validate="'required|min:6'" placeholder="Please enter your password">
+                        <span class="form__invalid-feedback" v-if="errors.has('password')">@{{ errors.first('password') }}</span>
                     </div>
+                    <a href="" class="forgot-password">Forgot password?</a>
                     <button type="submit" class="btn btn--primary">Log in</button>
                 </form>
-                <a href="" class="forgot-password">Forgot password?</a>
+                <div>or log in with</div>
+                <div>
+                    <a href="" class="btn btn--primary">
+                        <i class="fab fa-facebook-square"></i>
+                        <span>Facebook</span>
+                    </a>
+                    <a href="" class="btn btn--danger">
+                        <i class="fab fa-google-plus-square"></i>
+                        <span>Google</span>
+                    </a>
+                </div>
             </div>
             <div slot="footer">
-                <a href="" class="suggested" @click.prevent="showModal('signup')">Don't have an account, <span class="text-success">Sign up</span></a>
+                <a href="" class="suggested" @click.prevent="showModal('signup')">Don't have an account? <span class="text-success">Sign up</span></a>
             </div>
         </v-modal>
 
@@ -569,7 +582,7 @@
         <v-modal v-if="modalName === 'signup'" @close="modalName = null">
             <div class="login-heading" slot="header">
                 <span class="title text-success">Sign up</span>
-                <span>Join us</span>
+                <span>Give us some valuable information</span>
             </div>
             <div slot="body">
                 <form action="{{ route('signup') }}" method="POST" class="form">
@@ -586,11 +599,11 @@
                         <label class="form__label">Password</label>
                         <input type="password" class="form__control" name="password" placeholder="Please enter password">
                     </div>
-                    <button type="submit" class="btn btn--primary">Sign up</button>
+                    <button type="submit" class="btn btn--success">Sign up</button>
                 </form>
             </div>
             <div slot="footer">
-                <a href="" class="suggested" @click.prevent="showModal('login')">Already have an account, <span class="text-primary">Log in</span></a>
+                <a href="" class="suggested" @click.prevent="showModal('login')">Already have an account? <span class="text-primary">Log in</span></a>
             </div>
         </v-modal>
     </div>

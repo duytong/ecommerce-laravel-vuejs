@@ -17,10 +17,8 @@ Route::get('/', function () {
     return view('client.welcome');
 })->name('welcome');
 
-
 // Authentication
 Route::post('signup', 'SignupController@signup')->name('signup');
-Route::post('login', 'LoginController@login')->name('login');
 Route::get('logout', 'LogoutController@logout')->name('logout');
 
 Route::group(['prefix' => 'admin'], function () {
