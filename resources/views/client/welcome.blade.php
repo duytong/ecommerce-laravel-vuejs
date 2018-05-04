@@ -19,7 +19,7 @@
             <div class="header__grid">
                 <div class="header__column">
                     <a href="" class="header__brand">
-                        <img src="{{ asset('client/images/logo.jpg') }}" alt="">
+                        <img src="{{ asset('client/images/logo.png') }}" alt="">
                     </a>
                     <div class="header__search">
                         <form action="" class="form form--search">
@@ -50,7 +50,7 @@
                             </div>
                         @else
                             <button class="btn btn--light btn--modal" @click="showModal('login')">Log in</button>
-                            <button class="btn btn--primary btn--modal" @click="showModal('signup')">Sign up</button>
+                            <button class="btn btn--blue btn--modal" @click="showModal('signup')">Sign up</button>
                         @endif
                         <div class="divider-vertical"></div>
                         <a href="" class="cart">
@@ -542,7 +542,7 @@
         <!-- Modal login -->
         <v-modal v-if="modalName === 'login'" @close="modalName = null">
             <div class="login-heading" slot="header">
-                <span class="title text-primary">Log in</span>
+                <span class="auth-title">Log in</span>
                 <span>Welcome back</span>
             </div>
             <div slot="body">
@@ -555,21 +555,21 @@
                     </div>
                     <div class="form__group" :class="{ 'form__group--invalid': errors.has('password') }">
                         <label class="form__label">Password</label>
-                        <input type="password" class="form__control" name="password" v-model="user.password" v-validate="'required|min:6'" placeholder="Please enter your password">
+                        <input type="password" class="form__control" name="password" v-model="user.password" v-validate="'required|between:6,32'" placeholder="Please enter your password">
                         <span class="form__invalid-feedback" v-if="errors.has('password')">@{{ errors.first('password') }}</span>
                     </div>
                     <a href="" class="forgot-password">Forgot password?</a>
-                    <button type="submit" class="btn btn--primary">Log in</button>
+                    <button type="submit" class="btn btn--teal">Log in</button>
                 </form>
-                <div>or log in with</div>
-                <div>
-                    <a href="" class="btn btn--primary">
-                        <i class="fab fa-facebook-square"></i>
-                        <span>Facebook</span>
+                <div class="my-1 text-center">Or log in with</div>
+                <div class="d-flex justify-content-between">
+                    <a href="" class="btn btn--social btn--facebook">
+                        <i class="fab fa-facebook-f"></i>
+                        <span class="btn__text">Facebook</span>
                     </a>
-                    <a href="" class="btn btn--danger">
-                        <i class="fab fa-google-plus-square"></i>
-                        <span>Google</span>
+                    <a href="" class="btn btn--social btn--google">
+                        <i class="fab fa-google"></i>
+                        <span class="btn__text">Google</span>
                     </a>
                 </div>
             </div>
@@ -581,7 +581,7 @@
          <!-- Modal signup -->
         <v-modal v-if="modalName === 'signup'" @close="modalName = null">
             <div class="login-heading" slot="header">
-                <span class="title text-success">Sign up</span>
+                <span class="auth-title">Sign up</span>
                 <span>Give us some valuable information</span>
             </div>
             <div slot="body">
@@ -589,7 +589,7 @@
                     {{ csrf_field() }}
                     <div class="form__group">
                         <label class="form__label">Name</label>
-                        <input type="text" class="form__control" name="name" placeholder="Please enter name">
+                        <input type="text" class="form__control" name="name" placeholder="First and last name">
                     </div>
                     <div class="form__group">
                         <label class="form__label">Email</label>
@@ -597,10 +597,21 @@
                     </div>
                     <div class="form__group">
                         <label class="form__label">Password</label>
-                        <input type="password" class="form__control" name="password" placeholder="Please enter password">
+                        <input type="password" class="form__control" name="password" placeholder="Must be at least 6 characters">
                     </div>
-                    <button type="submit" class="btn btn--success">Sign up</button>
+                    <button type="submit" class="btn btn--teal">Sign up</button>
                 </form>
+                <div class="my-1 text-center">Or sign up with</div>
+                <div class="d-flex justify-content-between">
+                    <a href="" class="btn btn--social btn--facebook">
+                        <i class="fab fa-facebook-f"></i>
+                        <span class="btn__text">Facebook</span>
+                    </a>
+                    <a href="" class="btn btn--social btn--google">
+                        <i class="fab fa-google"></i>
+                        <span class="btn__text">Google</span>
+                    </a>
+                </div>
             </div>
             <div slot="footer">
                 <a href="" class="suggested" @click.prevent="showModal('login')">Already have an account? <span class="text-primary">Log in</span></a>

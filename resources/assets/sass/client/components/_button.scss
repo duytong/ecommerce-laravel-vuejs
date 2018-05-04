@@ -117,13 +117,65 @@
     }
   }
 
-  &--small {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    border-radius: 0.2rem;
+  &--blue {
+    color: #fff;
+    background-color: $blue;
+
+    &:hover {
+      background-color: lighten($blue, 3%);
+    }
+
+    &:focus {
+      background-color: darken($blue, 3%);
+    }
+  }
+
+  &--teal {
+    color: #fff;
+    background-color: $teal;
+
+    &:hover {
+      background-color: lighten($teal, 3%);
+    }
+
+    &:focus {
+      background-color: darken($teal, 3%);
+    }
+  }
+
+  &--social {
+    width: 48%;
+  }
+
+  &--facebook {
+    color: #fff;
+    background-color: #3b5999;
+
+    &:hover {
+      color: #fff;
+      background-color: lighten(#3b5999, 3%);
+    }
+
+    &:focus {
+      background-color: darken(#3b5999, 3%);
+    }
+  }
+
+  &--google {
+    color: #fff;
+    background-color: #dd4b39;
+
+    &:hover {
+      color: #fff;
+      background-color: lighten(#dd4b39, 3%);
+    }
+
+    &:focus {
+      background-color: darken(#dd4b39, 3%);
+    }
   }
 
   .btn__text {
-    margin-right: 0.25rem;
+    margin-left: 0.25rem;
   }
 }

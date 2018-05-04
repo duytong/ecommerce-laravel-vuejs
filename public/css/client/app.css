@@ -3287,16 +3287,36 @@ readers do not read off random characters that represent icons */
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.text-center {
+  text-align: center;
+}
+
 .text-primary {
-  color: #27A9F8;
+  color: #2962FF;
 }
 
 .text-success {
-  color: #1abc9c;
+  color: #00BFA5;
 }
 
 .text-danger {
   color: #eb3b5a;
+}
+
+.my-1 {
+  margin: 1rem 0;
+}
+
+.d-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.justify-content-between {
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 *,
@@ -3734,16 +3754,16 @@ main {
 
 .btn--primary {
   color: #fff;
-  background-color: #27A9F8;
+  background-color: #2962FF;
 }
 
 .btn--primary:hover {
   color: #fff;
-  background-color: #36aff8;
+  background-color: #386dff;
 }
 
 .btn--primary:focus {
-  background-color: #18a3f8;
+  background-color: #1a57ff;
 }
 
 .btn--secondary {
@@ -3762,16 +3782,16 @@ main {
 
 .btn--success {
   color: #fff;
-  background-color: #1abc9c;
+  background-color: #00BFA5;
 }
 
 .btn--success:hover {
   color: #fff;
-  background-color: #1cc9a7;
+  background-color: #00ceb2;
 }
 
 .btn--success:focus {
-  background-color: #18af91;
+  background-color: #00b098;
 }
 
 .btn--info {
@@ -3829,14 +3849,66 @@ main {
   background-color: #d9dee4;
 }
 
-.btn--small {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  border-radius: 0.2rem;
+.btn--blue {
+  color: #fff;
+  background-color: #2196F3;
+}
+
+.btn--blue:hover {
+  background-color: #309df4;
+}
+
+.btn--blue:focus {
+  background-color: #128ff2;
+}
+
+.btn--teal {
+  color: #fff;
+  background-color: #00BFA5;
+}
+
+.btn--teal:hover {
+  background-color: #00ceb2;
+}
+
+.btn--teal:focus {
+  background-color: #00b098;
+}
+
+.btn--social {
+  width: 48%;
+}
+
+.btn--facebook {
+  color: #fff;
+  background-color: #3b5999;
+}
+
+.btn--facebook:hover {
+  color: #fff;
+  background-color: #3f5fa4;
+}
+
+.btn--facebook:focus {
+  background-color: #37538e;
+}
+
+.btn--google {
+  color: #fff;
+  background-color: #dd4b39;
+}
+
+.btn--google:hover {
+  color: #fff;
+  background-color: #df5746;
+}
+
+.btn--google:focus {
+  background-color: #db3f2c;
 }
 
 .btn .btn__text {
-  margin-right: 0.25rem;
+  margin-left: 0.25rem;
 }
 
 .card {
@@ -3880,8 +3952,8 @@ main {
 }
 
 .checkbox__input:checked + .checkbox__label::before {
-  background-color: #27A9F8;
-  border-color: #27A9F8;
+  background-color: #2962FF;
+  border-color: #2962FF;
 }
 
 .checkbox__input + .checkbox__label::after {
@@ -4073,8 +4145,7 @@ main {
 
 .modal__content {
   position: relative;
-  min-width: 300px;
-  width: auto;
+  width: 300px;
   padding: 2rem;
   background-color: #fff;
   border-radius: 0.125rem;
@@ -4403,7 +4474,7 @@ main {
 
 .product__name {
   margin: 0.25rem 0;
-  color: #27A9F8;
+  color: #2962FF;
 }
 
 .product__review-wrap {
@@ -4474,9 +4545,10 @@ main {
           align-items: center;
 }
 
-.login-heading .title {
-  font-size: 1.5rem;
+.auth-title {
+  font-size: 21px;
   font-weight: 500;
+  color: #4d516d;
   text-transform: uppercase;
 }
 
@@ -4488,7 +4560,7 @@ main {
 }
 
 .forgot-password {
-  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .forgot-password:hover {
