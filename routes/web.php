@@ -14,7 +14,7 @@ use Goutte\Client;
 */
 
 Route::get('/', function () {
-    return view('client.welcome');
+    return view('welcome');
 })->name('welcome');
 
 // Authentication
