@@ -1,0 +1,45 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	outline: none;
+}
+
+body {
+  	font-family: $font-family;
+	font-size: $font-size;
+	line-height: 1.5;
+	color: $dark;
+	overflow-x: hidden;
+	background-color: $bg-body;
+}
+
+a {
+	cursor: pointer;
+	text-decoration: none;
+	color: $main;
+	@include transition(.15s);
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+img {
+	display: block;
+}
+
+label {
+	font-weight: normal;
+}
+
+p {
+	margin-top: 0;
+	margin-bottom: 1rem;
+}
+
+ul {
+	margin: 0;
+	padding-left: 0;
+	list-style: none;
+}

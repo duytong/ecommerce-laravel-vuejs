@@ -1,0 +1,114 @@
+.datatable {
+	&__header {
+		@include flex-column;
+	}
+
+	&__action {
+		margin-bottom: 1rem;
+		@include flex-between;
+
+		& > .btn:last-child {
+			margin-left: auto;
+		}
+	}
+
+	&__filter {
+		@include flex-between;
+	}
+
+	&__per-page {
+		@include flex-y-center;
+	}
+
+	&__content {
+		overflow-x: auto;
+		margin: 1rem 0;
+	}
+
+	&__status {
+		text-align: center;
+	}
+
+	&__footer {
+		@include flex-between;
+	}
+
+}
+
+@media (max-width:991px) {
+	.datatable__footer {
+		flex-direction: column;
+
+		.pagination {
+			margin-top: 1rem;
+		}
+	}
+}
+
+@media (max-width:575px) {
+	.datatable__filter {
+		flex-direction: column;
+	}
+
+	.datatable__per-page {
+		margin-bottom: 1rem;
+	}
+}
+
+.placeholder {
+				color: transparent !important;
+				background-color: transparent !important;
+				pointer-events: none;
+				border-color: transparent !important;
+				overflow: hidden;
+				border-radius: 2px;
+				animation: pulse 1s infinite ease-in-out;
+				box-shadow: none !important;
+
+			*,
+			*::before,
+			*::after {
+				overflow: hidden;
+				color: transparent !important;
+				background-color: transparent !important;
+				border-color: transparent !important;
+				box-shadow: none !important;
+			}
+
+		}
+
+
+@keyframes pulse {
+    0% {
+        background-color: rgba(#f5f5f5, .5);
+    }
+    50% {
+        background-color: rgba(#f5f5f5, 1);
+    }
+    100% {
+        background-color: rgba(#f5f5f5, .5);
+    }
+}
+
+.empty-state {
+	@include flex-column;
+
+	img {
+		width: 100%;
+	}
+
+	&__content {
+		@include flex-column-x-center;
+	}
+
+	&__title {
+			font-size: $font-size-lg;
+			font-weight: 700;
+			margin-top: .5rem;
+		}
+
+		&__describe {
+			color: $light;
+			margin: .5rem 0 2rem;
+		}
+}

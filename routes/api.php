@@ -17,21 +17,36 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Authentication.
-Route::post('login', 'Api\LoginController@login')->name('login');
+Route::group(['prefix' => 'admin'], function() {
+    Route::get('{table}/{perPage}/search', 'API\SearchController@search');
 
-Route::group(['prefix' => 'admin'], function () {
-	// User.
-	Route::resource('users', 'Api\UserController', ['except' => ['index']]);
-	Route::get('users/index/{perPage}', 'Api\UserController@index')->name('users.index');
+    Route::get('users/paginate/{perPage}', 'API\UserController@paginate');
+    Route::resource('users', 'API\UserController')->except([
+    	'index', 'create', 'edit'
+    ]);
 
-	// Role.
-	Route::resource('roles', 'Api\RoleController', ['except' => ['index']]);
-	Route::get('roles/index/{perPage}', 'Api\RoleController@index')->name('roles.index');
+    Route::get('roles/paginate/{perPage}', 'API\RoleController@paginate');
+    Route::resource('roles', 'API\RoleController')->except([
+    	'index', 'create', 'edit'
+    ]);
 
-	// Permission.
-	Route::resource('permissions', 'Api\PermissionController', ['except' => ['index']]);
-	Route::get('permissions/index/{perPage}', 'Api\PermissionController@index')->name('permissions.index');
+    Route::get('permissions/paginate/{perPage}', 'API\PermissionController@paginate');
+    Route::resource('permissions', 'API\PermissionController')->except([
+    	'create', 'edit'
+    ]);
 
-	Route::get('{table}/{perPage}/search', 'Api\SearchController@search');
+    Route::get('categories/paginate/{perPage}', 'API\CategoryController@paginate');
+    Route::resource('categories', 'API\CategoryController')->except([
+        'index', 'create', 'edit'
+    ]);
+
+    Route::get('brands/paginate/{perPage}', 'API\BrandController@paginate');
+    Route::resource('brands', 'API\BrandController')->except([
+        'index', 'create', 'edit'
+    ]);
+
+    Route::get('products/paginate/{perPage}', 'API\ProductController@paginate');
+    Route::resource('products', 'API\ProductController')->except([
+        'index', 'create', 'edit'
+    ]);
 });

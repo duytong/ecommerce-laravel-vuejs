@@ -8,96 +8,51 @@ abstract class BaseRepository implements RepositoryInterface
 {
     public $model;
 
-    /**
-     * Instantiate a new model instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->model = app()->make($this->model());
-    }
-
-    /**
-     * Specify model class name.
-     */
     abstract public function model();
 
-    /**
-     * Get all of the records.
-     *
-     * @param  string  $columns
-     * @return array
-     */
-    public function all($columns)
+    public function __construct()
     {
-        return $this->model->all(explode(',', $columns));
+        $this->model = app($this->model());
     }
 
-    /**
-     * Paginate records.
-     * 
-     * @param  int  $perPage
-     * @return object
-     */
+    public function all()
+    {
+        return $this->model->all();
+    }
+
     public function paginate($perPage)
     {
-        return $this->model->orderBy('id', 'desc')->paginate($perPage);
+        return $this->model->paginate($perPage);
     }
 
-    /**
-     * Create a record.
-     * 
-     * @param  array  $attributes
-     * @return void
-     */
-    public function create($attributes)
+    public function store($attributes)
     {
-        $this->model->create($attributes);
+        return $this->model->create($attributes);
     }
 
-    /**
-     * Get a record.
-     * 
-     * @param  int  $id
-     * @return object
-     */
-    public function get($id)
+    public function show($id)
     {
         return $this->model->findOrFail($id);
     }
+
+    public function showJson($id)
+    {
+        $data = $this->model->findOrFail($id);
+
+        return response()->json([
+            'data' => $data,
+            'created_at' => $data->created_at->diffForHumans(),
+            'updated_at' => $data->updated_at->diffForHumans()
+        ]);
+    }
     
-    /**
-     * Update a record.
-     * 
-     * @param  array  $attributes
-     * @param  int    $id
-     * @return object
-     */
     public function update($attributes, $id)
     {
         return $this->model->where('id', $id)->update($attributes);
     }
 
-    /**
-     * Delete a record.
-     * 
-     * @param  int  $id
-     * @return void
-     */
-    public function delete($id)
+    public function destroy($ids)
     {
-        $this->get($id)->delete();
-    }
-
-    /**
-     * Delete multiple records.
-     * 
-     * @param  string  $id
-     * @return void
-     */
-    public function deleteMultiple($id)
-    {
-        $this->model->destroy(explode(',', $id));
+        return $this->model->destroy(explode(',', $ids));
     }
 }

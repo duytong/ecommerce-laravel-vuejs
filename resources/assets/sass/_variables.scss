@@ -1,0 +1,36 @@
+$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+$font-size: 14px;
+$font-size-lg: $font-size * 1.5;
+$font-weight-medium: 500;
+
+$bg-body: #fafafa;
+
+$main: #42b983;
+$dark: #34495e;
+$light: rgba($dark, .5);
+
+$primary: #5D8FFC;
+$secondary: #607D8B;
+$success: #00BFA5;
+$info: #00B8D4;
+$warning: #FF6D00;
+$danger: #ff1744;
+
+$facebook: #3b5999;
+$google: #dd4b39;
+
+$theme-colors: () !default;
+$theme-colors: map-merge(
+  (
+    'primary': $primary,
+    'secondary': $secondary,
+    'success': $success,
+    'info': $info,
+    'warning': $warning,
+    'danger': $danger,
+    'main': $main,
+    'facebook': $facebook,
+    'google': $google
+  ),
+  $theme-colors
+);

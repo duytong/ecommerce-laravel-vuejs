@@ -1,0 +1,9 @@
+@mixin visibility($value) {
+	@if $value == 'visible' {
+		visibility: visible;
+		opacity: 1;
+	} @else {
+		visibility: hidden;
+		opacity: 0;
+	}
+}

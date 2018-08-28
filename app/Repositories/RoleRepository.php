@@ -3,50 +3,36 @@
 namespace App\Repositories;
 
 use App\Role;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Repositories\BaseRepository;
 
 class RoleRepository extends BaseRepository
 {
-	/**
-	 * Specify model class name.
-	 * 
-	 * @return string
-	 */
     public function model()
     {
-    	return Role::class;
+    	return 'App\Role';
     }
 
-    /**
-     * Create a new role.
-     * 
-     * @param  object  $attributes
-     * @return void
-     */
-    public function create($attributes)
+    public function store($attributes)
     {
         $role = new Role;
 
         $role->name = str_slug($attributes->name);
-        $role->display_name = ucwords(strtolower($attributes->display_name));
-        $role->description = $attributes->description;
+        $role->display_name = ucfirst($attributes->display_name);
+        $role->description = ucfirst($attributes->description);
 
         $role->save();
 
-        if ($attributes->permissions_id) {
-            $role->syncPermissions($attributes->permissions_id);
+        if ($attributes->permissions) {
+            $role->syncPermissions($attributes->permissions);
         }
     }
 
-    /**
-     * Get a role.
-     * 
-     * @param  int  $id
-     * @return json
-     */
-    public function get($id)
+    public function showJson($id)
     {
     	$role = Role::where('id', $id)->with('permissions')->first();
+
         $permissions = [
             'id' => $role->permissions->pluck('id'),
             'display_name' => $role->permissions->pluck('display_name'),
@@ -61,25 +47,18 @@ class RoleRepository extends BaseRepository
     	]);
     }
 
-    /**
-     * Update a role.
-     * 
-     * @param  object  $attributes
-     * @param  int  $id
-     * @return void
-     */
     public function update($attributes, $id)
     {
-        $role = Role::find($id);
+        $role = Role::findOrFail($id);
 
         $role->name = str_slug($attributes->name);
-        $role->display_name = ucwords(strtolower($attributes->display_name));
-        $role->description = $attributes->description;
+        $role->display_name = ucfirst($attributes->display_name);
+        $role->description = ucfirst($attributes->description);
 
         $role->save();
 
-        if ($attributes->permissions_id) {
-            $role->syncPermissions($attributes->permissions_id);
+        if ($attributes->permissions) {
+            $role->syncPermissions($attributes->permissions);
         } else {
             $role->detachPermissions();
         }

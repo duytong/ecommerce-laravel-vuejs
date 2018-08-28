@@ -1,0 +1,138 @@
+.form {
+	&__group {
+		display: flex;
+		margin-bottom: 1rem;
+
+		&--column {
+			flex-direction: column;
+		}
+
+		&--x-center {
+			justify-content: center;
+		}
+
+		&--between {
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		&--flex-end {
+			justify-content: flex-end;
+		}
+
+		&--item-full {
+			& > * {
+				width: 100%;
+			}
+		}
+	}
+
+	&__input {
+		position: relative;
+
+		input {
+			width: 100%;
+			height: 2.25rem;
+			padding: 0 .875rem;
+			color: $dark;
+			@include border;
+			@include border-radius;
+			@include transition(.15s);
+
+			&:hover {
+				border-color: rgba(#000, .2);
+			}
+
+			&:focus {
+				border-color: $main;
+			}
+
+			&:focus + label,
+			&:valid + label,
+			.form__group--invalid & + label {
+				line-height: 1;
+				font-size: $font-size - 2;
+				top: -($font-size - 2) / 2;
+				left: 11px;
+				padding: 0 4px;
+				transform: none;
+				background-color: #fff;
+			}
+
+			&:valid + label {
+				color: rgba($dark, .5);
+			}
+
+			&:focus + label {
+				color: $main;
+			}
+
+			.form__group--invalid & + label {
+				color: $danger;
+			}
+
+			.form__group--invalid & {
+				border-color: $danger;
+			}
+
+		}
+
+		label {
+			left: 17px;
+			pointer-events: none;
+			color: rgba($dark, .5);
+			@include position-absolute-y-center;
+			@include transition(.15s);
+
+			.form__group--invalid & {
+				color: $danger;
+			}
+
+		}
+
+	}
+
+	&__icon {
+		right: .5rem;
+		@include position-absolute-y-center;
+
+		&--invalid {
+			color: $danger;
+		}
+
+		&:not(.form__icon--invalid) {
+			cursor: pointer;
+			@include transition(.15s);
+			@include visibility(hidden);
+
+			input:focus ~ & {
+				@include visibility(visible);
+			}
+		}
+
+		.tooltip {
+			@include flex-center;
+			@include square(1.5rem)
+		}
+	}
+
+	&__helper-text {
+		font-size: $font-size - 2;
+		padding: 0 .875rem;
+		display: flex;
+
+		&--right {
+			justify-content: flex-end;
+		}
+	}
+
+	&__invalid-text {
+		@extend .form__helper-text;
+		color: $danger;
+	}
+
+	&__button {
+		@include flex-end;
+	}
+
+}

@@ -1,97 +1,134 @@
 .form {
-  display: flex;
-  flex-direction: column;
-  
-  &__data {
-    display: flex;
-    flex-direction: column;
-  }
+	&__group {
+		display: flex;
+		margin-bottom: 1rem;
 
-  &__action {
-    margin-top: 0.25rem;
-  }
-  
-  &__group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
-  }
+		&--column {
+			flex-direction: column;
+		}
 
-  &__label {
-    font-weight: 500;
-  }
+		&--x-center {
+			justify-content: center;
+		}
 
-  &__help {
-    font-size: 12px;
-    font-weight: 400;
-    margin-left: 0.25rem;
-    color: $lighten;
-  }
+		&--between {
+			justify-content: space-between;
+			align-items: center;
+		}
 
-  &__input-group {
-    position: relative;
+		&--item-full {
+			& > * {
+				width: 100%;
+			}
+		}
+	}
 
-    i {
-      position: absolute;
-      top: 10.5px;
-      right: 10.5px;
-      @include transition(0.15s);
-    }
-  }
+	&__input {
+		position: relative;
 
-  &__input {
-    display: block;
-    width: 100%;
-    padding: 0.375rem 0.75rem;
-    color: #fff;
-    background-clip: padding-box;
-    background-color: lighten(#211F39, 3%);
-    border: 1px solid darken($main, 30%);
-    border-radius: $radius;
-    @include transition(0.15s);
-    @include input-placeholder(#fff);
+		input {
+			width: 100%;
+			height: 2.25rem;
+			padding: 0 .875rem;
+			color: $dark;
+			@include border;
+			@include border-radius;
+			@include transition(.15s);
 
-    &--validate {
-      padding-right: 35px;
-    }
+			&:hover {
+				border-color: rgba(#000, .2);
+			}
 
-    &:focus {
-      border-color: darken($main, 15%);
-    }
-  }
+			&:focus {
+				border-color: $main;
+			}
 
-  &__group--valid {
-    color: $success;
+			&:focus + label,
+			&:valid + label,
+			.form__group--invalid & + label {
+				line-height: 1;
+				font-size: $font-size - 2;
+				top: -($font-size - 2) / 2;
+				left: 11px;
+				padding: 0 4px;
+				transform: none;
+				background-color: #fff;
+			}
 
-    .form__input {
-      border-color: $success;
+			&:valid + label {
+				color: rgba($dark, .5);
+			}
 
-      &:focus {
-        border-color: $success;
-      }
-    }
-  }
+			&:focus + label {
+				color: $main;
+			}
 
-  &__group--invalid {
-    color: $danger;
+			.form__group--invalid & + label {
+				color: $danger;
+			}
 
-    .form__input {
-      border-color: $danger;
+			.form__group--invalid & {
+				border-color: $danger;
+			}
 
-      &:focus {
-        border-color: $danger;
-      }
-    }
-  }
+		}
 
-  &__invalid-feedback {
-    display: block;
-    margin-top: 0.25rem;
-    font-size: 12px;
-    font-weight: 500;
-  }
+		label {
+			left: 17px;
+			pointer-events: none;
+			color: rgba($dark, .5);
+			@include position-absolute-y-center;
+			@include transition(.15s);
 
-  td {
-    white-space: nowrap;
-  }
+			.form__group--invalid & {
+				color: $danger;
+			}
+
+		}
+
+	}
+
+	&__icon {
+		right: .5rem;
+		@include position-absolute-y-center;
+
+		&--invalid {
+			color: $danger;
+		}
+
+		&:not(.form__icon--invalid) {
+			cursor: pointer;
+			@include transition(.15s);
+			@include visibility(hidden);
+
+			input:focus ~ & {
+				@include visibility(visible);
+			}
+		}
+
+		.tooltip {
+			@include flex-center;
+			@include square(1.5rem)
+		}
+	}
+
+	&__helper-text {
+		font-size: $font-size - 2;
+		padding: 0 .875rem;
+		display: flex;
+
+		&--right {
+			justify-content: flex-end;
+		}
+	}
+
+	&__invalid-text {
+		@extend .form__helper-text;
+		color: $danger;
+	}
+
+	&__button {
+		@include flex-end;
+	}
+
 }

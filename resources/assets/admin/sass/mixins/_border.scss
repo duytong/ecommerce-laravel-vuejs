@@ -1,0 +1,13 @@
+@mixin border($position: null) {
+	$style: 1px solid rgba(#000, .1);
+
+	@if $position == null {
+		border: $style;
+	} @else {
+		border-#{$position}: $style;
+	}
+}
+
+@mixin border-radius {
+	border-radius: 2px;
+}

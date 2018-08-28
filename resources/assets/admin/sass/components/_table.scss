@@ -1,0 +1,45 @@
+.table {
+	width: 100%;
+	border-collapse: collapse;
+
+	th,
+	td {
+		padding: .75rem;
+		white-space: nowrap;
+	}
+
+	th {
+		font-weight: 500;
+		cursor: pointer;
+		text-align: left;
+	}
+
+	&__action {
+		@include flex-y-center;
+	}
+
+	&__sort {
+		display: flex;
+		margin-right: .25rem;
+
+		i {
+			@include transition(.15s);
+
+			&.active {
+				color: $main;
+			}
+
+			&:not(.active) {
+				opacity: .5;
+			}
+
+			.table__action:hover & {
+				opacity: 1;
+			}
+		}
+	}
+
+	&-responsive {
+		overflow-x: auto;
+	}
+}

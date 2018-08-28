@@ -1,0 +1,41 @@
+.navbar {
+  background-color: #fff;
+  @include box-shadow(.05);
+
+  &__list {
+    @include flex-x-center;
+  }
+
+  &__link {
+    height: 3.5rem;
+    padding: 0 1.5rem;
+    white-space: nowrap;
+    color: $dark;
+    @include flex-column-center;
+
+    &:hover {
+      text-decoration: none;
+      background-color: rgba($main, .05);
+    }
+
+    &:active {
+      background-color: rgba($main, .1);
+    }
+
+    &:focus,
+    &.active,
+    &.exact-active {
+      color: $main;
+    }
+
+  }
+
+}
+
+@media (max-width:1199px) {
+  .navbar__list {
+    overflow-x: auto;
+    justify-content: space-between;
+  }
+
+}

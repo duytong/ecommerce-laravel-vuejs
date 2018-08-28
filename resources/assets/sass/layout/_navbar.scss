@@ -1,0 +1,40 @@
+.navbar {
+  background-color: #fff;
+  @include box-shadow(.05);
+
+  &__wrapper {
+    @include flex-x-center;
+  }
+
+  &__list {
+    display: flex;
+  }
+
+  &__link {
+    height: 3.5rem;
+    padding: 0 1.5rem;
+    color: $dark;
+    @include flex-column-center;
+
+    &:hover {
+      background-color: rgba($main, .05);
+    }
+
+    &:active {
+      background-color: rgba($main, .1);
+    }
+
+    &:focus,
+    &.active,
+    &.exact-active {
+      color: $main;
+    }
+  }
+}
+
+@media (max-width:1199px) {
+  .navbar__wrapper {
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+}

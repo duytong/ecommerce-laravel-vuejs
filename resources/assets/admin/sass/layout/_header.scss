@@ -1,0 +1,28 @@
+.header {
+  padding: .5rem 1rem;
+  background-color: #21263a;
+
+  &__wrapper {
+    @include flex-between;
+  }
+
+  &__logo img {
+    height: 2.5rem;
+    @include border-radius;
+  }
+
+  .dropdown__toggle {
+    color: #afb6d2;
+    align-items: center;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    span {
+      margin-right: .5rem;
+    }
+
+  }
+
+}

@@ -1,0 +1,50 @@
+.btn {
+	line-height: inherit;
+	min-width: 4rem;
+	height: 2.25rem;
+	padding: 0 1rem;
+	cursor: pointer;
+	user-select: none;
+	color: $dark;
+	border: none;
+	background-color: transparent;
+	@include border-radius;
+	@include flex-inline-center;
+	@include transition(.15s);
+
+	&:hover {
+		text-decoration: none;
+	}
+
+	&:disabled {
+		box-shadow: none;
+		@include disable;
+	}
+
+	&-group {
+		display: flex;
+
+		& > *:not(:last-child) {
+			margin-right: .5rem;
+		}
+
+		.btn {
+			@include border;
+
+			&:hover {
+				border-color: rgba(#000, .2);
+			}
+
+			&:active,
+			&:focus {
+				border-color: $main;
+			}
+		}
+	}
+}
+
+@each $color, $value in $theme-colors {
+  .btn--#{$color} {
+    @include button-variant($value);
+  }
+}

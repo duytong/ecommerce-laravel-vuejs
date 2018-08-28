@@ -3,68 +3,67 @@
 namespace App\Repositories;
 
 use App\Permission;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Repositories\BaseRepository;
 
 class PermissionRepository extends BaseRepository
 {
-    /**
-	 * Specify model class name.
-	 * 
-	 * @return string
-	 */
     public function model()
     {
-    	return Permission::class;
+    	return 'App\Permission';
     }
 
-    /**
-     * Create a permission.
-     * 
-     * @param  array  $attributes
-     * @return void
-     */
-    public function create($attributes)
+    public function store($attributes)
     {
-    	if ($attributes->permission_type === 'basic') {
-    		$permission = new Permission;
+        if ($attributes->permissionType === 'basic') {
+            $permission = new Permission;
 
-    		$permission->name = str_slug($attributes->name);
-    		$permission->display_name = ucwords(strtolower($attributes->display_name));
-    		$permission->description = $attributes->description;
+            $permission->name = str_slug($attributes->name);
+            $permission->display_name = ucfirst($attributes->display_name);
+            $permission->description = ucfirst($attributes->description);
 
-    		$permission->save();
+            $permission->save();
+        } else {
+            $actions = $attributes->crud_selected;
+            $resource = $attributes->resource;
+            $permissions = [];
+            $timestamp = Carbon::now();
 
-    	} else {
-    		foreach ($attributes->crud_selected as $value) {
-    			$name = strtolower($value) . '-' . $attributes->resource;
-    			$display_name = $value . ' ' . ucwords(strtolower($attributes->resource));
-    			$description = 'Allows a user to ' . strtoupper($value) . ' a ' . ucwords(strtolower($attributes->resource));
+            foreach ($actions as $action) {
+                $name = str_slug($action . '-' . $resource);
+                $display_name = $action . ' ' . $resource;
+                $description = 'Allow a user to ' . strtolower($action) . ' ' . $resource;
 
-    			$permission = new Permission;
+                $request = new Request([
+                    'name' => $name
+                ]);
 
-    			$permission->name = $name;
-    			$permission->display_name = $display_name;
-    			$permission->description = $description;
+                $request->validate([
+                    'name' => 'unique:permissions'
+                ]);
 
-    			$permission->save();
-    		}
-    	}
+                $permissions[] = [
+                    'name' => $name,
+                    'display_name' => $display_name,
+                    'description' => $description,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp
+                ];
+            }
+
+            Permission::insert($permissions);
+        }
     }
 
-    /**
-     * Get a permission.
-     * 
-     * @param  int  $id
-     * @return json
-     */
-    public function get($id)
+    public function update($attributes, $id)
     {
-    	$permission = Permission::find($id);
+        $permission = Permission::findOrFail($id);
 
-    	return response()->json([
-    		'permission' => $permission,
-    		'created_at' => $permission->created_at->diffForHumans(),
-    		'updated_at' => $permission->updated_at->diffForHumans()
-    	]);
+        $permission->name = str_slug($attributes->name);
+        $permission->display_name = ucfirst($attributes->display_name);
+        $permission->description = ucfirst($attributes->description);
+
+        $permission->save();
     }
 }

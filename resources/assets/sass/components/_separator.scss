@@ -1,0 +1,14 @@
+.separator {
+	@include flex-between;
+
+	&__line {
+		flex: 0 50%;
+		height: 1px;
+		background-color: rgba(#000, .1);
+	}
+
+	&__text {
+		margin: 0 1rem;
+		white-space: nowrap;
+	}
+}

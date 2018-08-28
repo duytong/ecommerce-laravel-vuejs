@@ -1,0 +1,62 @@
+.radio {
+	display: flex;
+
+	&--wrap {
+		flex-wrap: wrap;
+	}
+
+	&--between {
+		justify-content: space-between;
+	}
+
+	&__group {
+		margin-right: 0;
+		margin-bottom: 1rem;
+
+		.radio--wrap & {
+			margin-right: 1.5rem;
+			margin-bottom: 0;
+		}
+
+	}
+
+}
+
+input[type='radio'] {
+	display: none;
+
+	& + label {
+		position: relative;
+		display: block;
+		padding-left: 1.5rem;
+		cursor: pointer;
+	}
+
+	& + label::before {
+		top: 2.5px;
+		left: 0;
+		border-radius: 50%;
+		@include border;
+		@include pseudo-element;
+		@include square(1rem);
+		@include transition(.15s);
+	}
+
+	&:checked + label::before {
+		border-color: $main;
+	}
+
+	& + label::after {
+		top: 6.5px;
+		left: 4px;
+		border-radius: 50%;
+		@include pseudo-element;
+		@include square(.5rem);
+		@include transition(.3s);
+	}
+
+	&:checked + label::after {
+		background-color: $main;
+	}
+
+}

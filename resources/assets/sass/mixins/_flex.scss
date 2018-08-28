@@ -1,0 +1,56 @@
+@mixin flex-column {
+	display: flex;
+	flex-direction: column;
+}
+
+@mixin flex-column-x-center {
+	@include flex-column;
+	align-items: center;
+}
+
+@mixin flex-column-y-center {
+	@include flex-column;
+	justify-content: center;
+}
+
+@mixin flex-column-center {
+	@include flex-column;
+	justify-content: center;
+	align-items: center;
+}
+
+@mixin flex-x-center {
+	display: flex;
+	justify-content: center;
+}
+
+@mixin flex-y-center {
+	display: flex;
+	align-items: center;
+}
+
+@mixin flex-center {
+	@include flex-y-center;
+	justify-content: center;
+}
+
+@mixin flex-inline-center {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@mixin flex-between {
+	@include flex-y-center;
+	justify-content: space-between;
+}
+
+@mixin flex-end {
+	display: flex;
+	justify-content: flex-end;
+}
+
+@mixin flex-wrap {
+	display: flex;
+	flex-wrap: wrap;
+}

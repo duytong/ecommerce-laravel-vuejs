@@ -1,0 +1,4 @@
+@mixin disable {
+	pointer-events: none;
+	opacity: .5;
+}

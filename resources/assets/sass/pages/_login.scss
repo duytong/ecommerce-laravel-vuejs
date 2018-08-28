@@ -1,92 +1,105 @@
-.landing-page {
-	margin: 2rem 0;
-	.grid {
-		-ms-grid-columns: 3fr 2fr 3fr;
-  	grid-template-columns: 3fr 2fr 3fr;
-	}
-}
-.signup {
-	-ms-grid-column: 2;
-  grid-column: 2
-}
-.logo img {
-	width: 3rem;
-	height: 3rem;
-}
-.login,
-.signup {
-	padding: 2rem;
-	border: $border;
-	border-radius: $radius;
-	background-color: white;
-	box-shadow: 0 2px 4px rgba(black, 0.1);
-	&__header {
+.login {
+	display: flex;
+	min-height: 100vh;
+	background-color: #fafafa;
+
+	&__illustration {
 		display: flex;
-		flex-direction: column;
+		height: 100vh;
+		flex: 0 50%;
 		align-items: center;
-	}
-	&__title {
-		font-weight: bold;
-	}
-	&__description {
-		color: #9facbd;
-	}
-	&__body {
-		display: flex;
-		form {
+		align-self: center;
+
+		img {
 			width: 100%;
 		}
-		.form-group:last-child {
-			text-align: center;
-		}
-		.forgot-password {
-			color: $base;
-			&:hover {
-				text-decoration: underline;
-			}
+
+	}
+
+	&__authenticate {
+		background-color: #fff;
+		flex: 0 50%;
+		@include flex-x-center;
+	}
+
+	&__card {
+		position: relative;
+		margin: 1rem;
+		@include flex-column-center;
+
+		&.signing-in::before {
+			@include pseudo-element;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(#fff, .5);
+			z-index: 2;
 		}
 	}
-	.btn {
-		width: 100%;
-		color: white;
+
+	.logo {
+		width: 50px;
 	}
-	&__footer {
+
+	&__header {
+		margin: 1rem 0;
+		@include flex-column-x-center;
+	}
+
+	&__title {
+		font-weight: 600;
+		text-transform: uppercase;
+		font-size: 20px;
+	}
+
+	&__describe {
+		color: rgba($dark, .5);
+	}
+
+	&__body {
+		width: 300px;
+	}
+
+	&__submit {
+		margin-bottom: 1rem;
+		@include flex-between;
+
+	}
+
+	&__social {
 		display: flex;
-		justify-content: center;
+		margin: 1rem 0;
+
+		.btn {
+			width: 100%;
+
+			&:not(:last-child) {
+				margin-right: .5rem;
+			}
+
+		}
+
+	}
+
+	a:not(.btn):hover {
+		text-decoration: underline;
 	}
 }
-.login .form-control:focus {
-	border-color: blue;
-}
-.signup .form-control:focus {
-	border-color: green;
-}
-.btn--signup {
-	background-color: green;
-	&:not(:disabled) {
-		&:hover {
-			background-color: darken(green, 5%);
-		}
-		&:focus {
-			background-color: darken(green, 10%);
-		}
+
+@media (max-width:767px) {
+	.login__illustration {
+		display: none;
 	}
-}
-.btn--login {
-	margin-bottom: 0.5rem;
-	background-color: blue;
-	&:not(:disabled) {
-		&:hover {
-			background-color: darken(blue, 5%);
-		}
-		&:focus {
-			background-color: darken(blue, 10%);
-		}
+
+	.login__authenticate {
+		flex: 1;
 	}
+
 }
-.signup-link {
-	color: blue!important;
-}
-.login-link {
-	color: green!important;
+
+@media (max-width:320px) {
+	.login__card,
+	.login__body {
+		width: 100%;
+	}
+
 }

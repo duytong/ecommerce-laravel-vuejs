@@ -1,0 +1,14 @@
+@mixin button-variant($background) {
+  color: #fff;
+  background-color: $background;
+  box-shadow: 0 .5rem 1rem -.5rem rgba(#000, .25), 0 .5rem 1rem -.5rem rgba($background, 1);
+
+  &:hover {
+    background-color: darken($background, 7.5%);
+  }
+
+  &:active {
+    background-color: darken($background, 10%);
+    box-shadow: none;
+  }
+}

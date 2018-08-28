@@ -1,0 +1,117 @@
+.dropdown {
+	position: relative;
+	display: inline-flex;
+
+	&__toggle {
+		display: flex;
+	}
+
+	&__menu {
+		position: absolute;
+		z-index: 1000;
+		top: 100%;
+		left: 0;
+		padding: .5rem 0;
+		background-color: #fff;
+		@include border-radius;
+		@include box-shadow(.1);
+		@include transition(.15s);
+		@include visibility(hidden);
+
+		&--right {
+			right: 0;
+			left: auto;
+		}
+
+		.dropdown.show & {
+			top: 0;
+			@include visibility(visible);
+		}
+	}
+
+	&__item {
+		height: 2.25rem;
+		padding: 0 1rem;
+		cursor: pointer;
+		white-space: nowrap;
+		color: $dark;
+		@include flex-y-center;
+
+		&:hover {
+			text-decoration: none;
+		}
+
+		&:hover,
+		&:active {
+			color: #fff;
+			background-color: $main;
+		}
+
+		&.disabled {
+			@include disable;
+		}
+	}
+
+	&--select {
+		margin: 0 .5rem;
+		
+		.dropdown__toggle {
+			@include border;
+
+			&:hover {
+				border-color: rgba(#000, .2);
+			}
+
+			&:active {
+				border-color: $main;
+			}
+
+			i {
+				margin-left: .75rem;
+			}
+		}
+
+		.dropdown__item i {
+			margin-left: 1rem;
+		}
+	}
+
+	&--checkbox {
+		input[type='checkbox'] + label {
+			width: auto;
+			height: 2.25rem;
+			padding: 0 1rem 0 2.5rem;
+			@include flex-y-center;
+
+			&:hover {
+				background-color: rgba($main, .1);
+			}
+
+			&:active {
+				background-color: rgba($main, .2);
+			}
+
+			&:focus {
+				color: $main;
+			}
+
+			&::before {
+				top: .625rem;
+				left: 1rem;
+			}
+
+			&::after {
+				top: .625rem;
+				left: 1rem;
+			}
+
+			&.disabled {
+				@include disable;
+			}
+		}
+
+		.dropdown__item {
+			justify-content: flex-end;
+		}
+	}
+}

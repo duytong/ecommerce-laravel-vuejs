@@ -1,0 +1,15 @@
+.flex {
+	display: flex;
+}
+
+.flex-end {
+	@include flex-end;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.pointer {
+	cursor: pointer;
+}
