@@ -17,36 +17,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'admin'], function() {
-    Route::get('{table}/{perPage}/search', 'API\SearchController@search');
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('{table}/search', 'API\SearchController@search');
 
-    Route::get('users/paginate/{perPage}', 'API\UserController@paginate');
-    Route::resource('users', 'API\UserController')->except([
-    	'index', 'create', 'edit'
+    Route::apiResources([
+        'permissions' => 'API\PermissionController',
+        'roles' => 'API\RoleController',
+        'users' => 'API\UserController',
+        'categories' => 'API\CategoryController',
     ]);
 
-    Route::get('roles/paginate/{perPage}', 'API\RoleController@paginate');
-    Route::resource('roles', 'API\RoleController')->except([
-    	'index', 'create', 'edit'
-    ]);
-
-    Route::get('permissions/paginate/{perPage}', 'API\PermissionController@paginate');
-    Route::resource('permissions', 'API\PermissionController')->except([
-    	'create', 'edit'
-    ]);
-
-    Route::get('categories/paginate/{perPage}', 'API\CategoryController@paginate');
-    Route::resource('categories', 'API\CategoryController')->except([
-        'index', 'create', 'edit'
-    ]);
-
-    Route::get('brands/paginate/{perPage}', 'API\BrandController@paginate');
-    Route::resource('brands', 'API\BrandController')->except([
-        'index', 'create', 'edit'
-    ]);
-
-    Route::get('products/paginate/{perPage}', 'API\ProductController@paginate');
-    Route::resource('products', 'API\ProductController')->except([
-        'index', 'create', 'edit'
-    ]);
+    Route::post('add-product', 'testcontroller@addProduct');
+	Route::post('add-attribute', 'testcontroller@addAttribute');
+	Route::post('add-attribute-value', 'testcontroller@addAttributeValue');
+	Route::get('product/{id}', 'testcontroller@getProduct');
 });

@@ -282,7 +282,7 @@
     },
     data() {
       return {
-        inheritUrl: `api/admin/${this.table}/`,
+        inheritUrl: `api/admin/${this.table}`,
         perPage: 10,
         perPages: [10, 25, 50, 100],
         items: [],
@@ -354,12 +354,15 @@
     },
     methods: {
       getData(perPage) {
-        const apiUrl = this.inheritUrl + 'paginate/' + perPage
-
         this.$Progress.start()
         this.loading = true
 
-        axios.get(apiUrl).then(response => {
+        axios.get(this.inheritUrl, {
+          params: {
+            perPage: perPage
+          }
+        })
+        .then(response => {
           this.$Progress.finish()
           this.loading = false
           this.items = response.data.data
@@ -386,12 +389,18 @@
         this.$Progress.start()
 
         if (this.keywords) {
-          var apiUrl = this.inheritUrl + this.perPage + '/search?q=' + this.keywords + '&page=' + page
+          var apiUrl = this.inheritUrl + '/' + this.perPage + '/search?q=' + this.keywords + '&page=' + page
         } else {
-          var apiUrl = this.inheritUrl + 'paginate/' + this.perPage + '?page=' + page
+          var apiUrl = this.inheritUrl
         }
 
-        axios.get(apiUrl).then(response => {
+        axios.get(apiUrl, {
+          params: {
+            perPage: this.perPage,
+            page: page
+          }
+        })
+        .then(response => {
           this.$Progress.finish()
           this.pagination = response.data
           this.items = response.data.data

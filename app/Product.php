@@ -46,4 +46,9 @@ class Product extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    public function attributeValues()
+    {
+        return $this->belongsToMany(AttributeValue::class, 'attribute_product');
+    }
 }

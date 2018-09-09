@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Repositories\BaseRepository;
+use App\Repositories\Repository;
 
-class UserRepository extends BaseRepository
+class UserRepository extends Repository
 {
     public function model()
     {

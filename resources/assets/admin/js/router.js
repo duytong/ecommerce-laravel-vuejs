@@ -14,6 +14,11 @@ import RoleEdit from './components/Role/Edit.vue'
 import User from './components/User/Index.vue'
 import UserList from './components/User/List.vue'
 import UserCreate from './components/User/Create.vue'
+import Category from './components/Category/Index.vue'
+import CategoryList from './components/Category/List.vue'
+import CategoryCreate from './components/Category/Create.vue'
+import CategoryShow from './components/Category/Show.vue'
+import CategoryEdit from './components/Category/Edit.vue'
 import Product from './components/Product/Index.vue'
 import ProductList from './components/Product/List.vue'
 import ProductCreate from './components/Product/Create.vue'
@@ -118,6 +123,40 @@ const router = new Router({
 					component: PermissionEdit,
 					meta: {
 						title: 'Edit permission'
+					}
+				}
+			]
+		},
+		{
+			path: '/categories',
+			component: Category,
+			children: [
+				{
+					path: '',
+					component: CategoryList,
+					meta: {
+						title: 'Category'
+					},
+				},
+				{
+					path: 'create',
+					component: CategoryCreate,
+					meta: {
+						title: 'Create category'
+					}
+				},
+				{
+					path: ':id',
+					component: CategoryShow,
+					meta: {
+						title: 'Show category'
+					}
+				},
+				{
+					path: ':id/edit',
+					component: CategoryEdit,
+					meta: {
+						title: 'Edit category'
 					}
 				}
 			]

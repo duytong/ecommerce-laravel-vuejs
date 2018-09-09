@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\RepositoryInterface;
+use App\Repositories\Repositoryable;
 
-abstract class BaseRepository implements RepositoryInterface
+abstract class Repository implements Repositoryable
 {
-    protected $model;
+    public $model;
 
     abstract public function model();
 
@@ -15,14 +15,13 @@ abstract class BaseRepository implements RepositoryInterface
         $this->model = app($this->model());
     }
 
-    public function all()
+    public function index($attributes)
     {
-        return $this->model->all();
-    }
+        if ($attributes) {
+            return $this->model->paginate($attributes);
+        }
 
-    public function paginate($perPage)
-    {
-        return $this->model->paginate($perPage);
+        return $this->model->all();
     }
 
     public function store($attributes)
@@ -34,7 +33,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         return $this->model->findOrFail($id);
     }
-
+    
     public function update($attributes, $id)
     {
         return $this->model->where('id', $id)->update($attributes);
@@ -43,5 +42,16 @@ abstract class BaseRepository implements RepositoryInterface
     public function destroy($ids)
     {
         return $this->model->destroy(explode(',', $ids));
+    }
+
+    public function showJson($id)
+    {
+        $data = $this->model->findOrFail($id);
+
+        return response()->json([
+            'data' => $data,
+            'created_at' => $data->created_at->diffForHumans(),
+            'updated_at' => $data->updated_at->diffForHumans()
+        ]);
     }
 }

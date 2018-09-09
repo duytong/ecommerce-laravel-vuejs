@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoleRequest;
 use App\Repositories\RoleRepository;
 
 class RoleController extends Controller
 {
-    public $role;
+    protected $role;
 
     public function __construct(RoleRepository $role)
     {
         $this->role = $role;
     }
     
-    public function paginate($perPage)
+    public function index(RoleRequest $request)
     {
-        return $this->role->paginate($perPage);
+        return $this->role->paginate($request);
     }
 
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
         $this->role->store($request);
     }
@@ -30,7 +30,7 @@ class RoleController extends Controller
         return $this->role->showJson($id);
     }
 
-    public function update(Request $request, $id)
+    public function update(RoleRequest $request, $id)
     {
         $this->role->update($request, $id);
     }

@@ -15,7 +15,7 @@ class SearchController extends Controller
      * @param  int  $perPage
      * @return object
      */
-    public function search(Request $request, $modelString, $perPage)
+    public function search(Request $request, $modelString)
     {
         if (substr($modelString, -3)  == 'ies') {
             $model = '\App\\' . ucfirst(substr($modelString, 0, -3)) . 'y';
@@ -23,6 +23,6 @@ class SearchController extends Controller
             $model = '\App\\' . ucfirst(substr($modelString, 0, -1));
         }
 
-        return $model::search($request->q)->paginate($perPage);
+        return $model::search($request->q)->paginate($request->perPage);
     }
 }

@@ -5,9 +5,9 @@ namespace App\Repositories;
 use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Repositories\BaseRepository;
+use App\Repositories\Repository;
 
-class RoleRepository extends BaseRepository
+class RoleRepository extends Repository
 {
     public function model()
     {

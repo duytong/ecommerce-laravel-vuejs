@@ -2,41 +2,41 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Repositories\CategoryRepository;
 
 class CategoryController extends Controller
 {
-    protected $category;
+    protected $categories;
 
-    public function __construct(CategoryRepository $category)
+    public function __construct(CategoryRepository $categories)
     {
-        $this->category = $category;
+        $this->categories = $categories;
     }
     
-    public function paginate($perPage)
+    public function index(CategoryRequest $request)
     {
-        return $this->category->paginate($perPage);
+        return $this->categories->index($request->perPage);
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        return $this->category->store($request->all());
+        return $this->categories->store($request->all());
     }
 
     public function show($id)
     {
-        return $this->category->show($id);
+        return $this->categories->show($id);
     }
 
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
-        return $this->category->update($request->all(), $id);
+        return $this->categories->update($request->all(), $id);
     }
 
     public function destroy($ids)
     {
-        return $this->category->destroy($ids);
+        return $this->categories->destroy($ids);
     }
 }

@@ -41,7 +41,7 @@
         </li>
         <li>
           <router-link
-            to="/a"
+            to="/categories"
             class="navbar__link"
           >
             <i class="fas fa-layer-group"></i>

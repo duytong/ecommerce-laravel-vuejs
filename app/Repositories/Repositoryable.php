@@ -4,9 +4,7 @@ namespace App\Repositories;
 
 interface Repositoryable
 {
-    public function all();
-
-    public function paginate($perPage);
+    public function index($perPage);
 
     public function store($attributes);
 
